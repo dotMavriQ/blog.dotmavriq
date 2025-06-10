@@ -1,13 +1,18 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import RoadAnimation from "../components/RoadAnimation.astro";
 
 const title = "blog.dotMavriQ";
 ---
 
 <BaseLayout title={title}>
   <div class="home-container">
+    <!-- Canvas road animation -->
+    <RoadAnimation />
     <!-- GIF -->  
-    <img alt="Solid Snake GBC" class="hero-image dark:invert" src="/solidsnakegbc.gif"/>
+    <div class="hero-image-container">
+      <img alt="Solid Snake GBC" class="hero-image dark:invert" src="/solidsnakegbc.gif"/>
+    </div>
 
     <!-- Social Icons -->  
     <div class="social-links">
@@ -66,12 +71,24 @@ const title = "blog.dotMavriQ";
     min-height: 100vh;
     padding: 2rem 1rem;
     gap: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-image-container {
+    position: relative;
+    z-index: 10;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .hero-image {
-    margin-bottom: 0.5rem;
     max-width: 100%;
     height: auto;
+    position: relative;
+    z-index: 10;
   }
 
   .social-links {
@@ -79,6 +96,8 @@ const title = "blog.dotMavriQ";
     flex-wrap: wrap;
     justify-content: center;
     gap: 1.5rem;
+    position: relative;
+    z-index: 10;
   }
 
   .social-links a {
@@ -105,6 +124,8 @@ const title = "blog.dotMavriQ";
     justify-content: center;
     gap: 1rem;
     margin: 0.5rem 0;
+    position: relative;
+    z-index: 10;
   }
 
   .btn-primary,
@@ -151,6 +172,8 @@ const title = "blog.dotMavriQ";
     align-items: center;
     justify-content: center;
     gap: 1.5rem;
+    position: relative;
+    z-index: 10;
   }
 
   .quick-link {

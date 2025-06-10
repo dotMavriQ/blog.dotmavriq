@@ -1,0 +1,193 @@
+---
+// Canvas-based road animation component for the homepage
+---
+
+<canvas id="road-canvas" class="road-canvas"></canvas>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('road-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Get hero image for alignment
+    const heroImage = document.querySelector('.hero-image');
+    if (!heroImage) return;
+
+    // Resize canvas to fill the viewport
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Gruvbox dark colors
+    const colors = {
+      bg0: '#282828', // Dark background
+      bg1: '#3c3836', // Slightly lighter background
+      bg2: '#504945', // Lighter background
+      bg3: '#665c54', // Lightest background
+      fg: '#ebdbb2',  // Normal foreground
+      fg2: '#d5c4a1'  // Darker foreground
+    };
+
+    // Animation settings based on reference code
+    const roadSpeed = 2; // Match the roadSpeed from reference code
+
+    // Calculate perspective points and road segments
+    let segments = [];
+    const segmentSpacing = 150; // Vertical spacing from reference code
+
+    // Initialize road segments
+    function initSegments() {
+      segments = [];
+      for (let pos = 0; pos < window.innerHeight; pos += segmentSpacing) {
+        segments.push(pos);
+      }
+    }
+
+    initSegments();
+
+    // Main animation function
+    function animate() {
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Get character position and ensure it's centered properly
+      const rect = heroImage.getBoundingClientRect();
+      const windowCenterX = window.innerWidth / 2;
+      const characterX = windowCenterX; // Always center on the window
+      const characterY = rect.bottom - 5; // Position just below feet
+
+      // Use parameters from reference code for consistency
+      // Define key positions for perspective
+      const vanishingPointY = window.innerHeight * 0.4; // Vanishing point at 40% from top
+      const roadWidthAtVP = 20; // Road width at vanishing point in pixels
+
+      // Calculate road edges based on reference code
+      const leftMargin = 0.2; // Left road edge at 20% of canvas width
+      const rightMargin = 0.8; // Right road edge at 80% of canvas width
+
+      // Calculate bottom points of road
+      const bottomLeftX = window.innerWidth * leftMargin;
+      const bottomRightX = window.innerWidth * rightMargin;
+
+      // Calculate road dimensions
+      const roadHeight = characterY - vanishingPointY;
+      const roadWidthAtTop = roadWidthAtVP;
+      const roadWidthAtBottom = bottomRightX - bottomLeftX;
+
+      // Draw road background - extend to bottom of screen
+      const bottomY = window.innerHeight;
+
+      // Calculate the width at the very bottom of the screen
+      const roadWidthAtScreenBottom = roadWidthAtBottom * 1.2; // Slightly wider at very bottom
+
+      // Create gradient for a more dimensional road
+      const roadGradient = ctx.createLinearGradient(0, vanishingPointY, 0, bottomY);
+      roadGradient.addColorStop(0, colors.bg0); // Darker at vanishing point
+      roadGradient.addColorStop(1, colors.bg1); // Slightly lighter at bottom
+
+      ctx.fillStyle = roadGradient;
+      ctx.beginPath();
+      ctx.moveTo(characterX - roadWidthAtTop / 2, vanishingPointY); // Top left
+      ctx.lineTo(characterX + roadWidthAtTop / 2, vanishingPointY); // Top right
+      ctx.lineTo(characterX + roadWidthAtScreenBottom / 2, bottomY); // Bottom right
+      ctx.lineTo(characterX - roadWidthAtScreenBottom / 2, bottomY); // Bottom left
+      ctx.closePath();
+      ctx.fill();
+
+      // Keep clean appearance without texture
+
+      // Draw road edges - extend to bottom of screen
+      // Create gradient for edges
+      const edgeGradient = ctx.createLinearGradient(0, vanishingPointY, 0, bottomY);
+      edgeGradient.addColorStop(0, colors.bg3); // More visible near top
+      edgeGradient.addColorStop(1, colors.bg2); // Less visible at bottom
+
+      ctx.strokeStyle = edgeGradient;
+      ctx.lineWidth = 1.5; // Slightly thinner line
+
+      // Left edge
+      ctx.beginPath();
+      ctx.moveTo(characterX - roadWidthAtTop / 2, vanishingPointY);
+      ctx.lineTo(characterX - roadWidthAtScreenBottom / 2, bottomY);
+      ctx.stroke();
+
+      // Right edge
+      ctx.beginPath();
+      ctx.moveTo(characterX + roadWidthAtTop / 2, vanishingPointY);
+      ctx.lineTo(characterX + roadWidthAtScreenBottom / 2, bottomY);
+      ctx.stroke();
+
+      // Add subtle grunge overlay like in reference code
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw the moving checkered mid-line segments (matching reference code)
+      for (let i = 0; i < segments.length; i++) {
+        // Update segment position
+        segments[i] += roadSpeed;
+        if (segments[i] > canvas.height) {
+          segments[i] = 0;
+        }
+
+        // Calculate interpolation factor (t=0 at vanishing point, t=1 at bottom)
+        const t = segments[i] / canvas.height;
+
+        // Calculate position using interpolation
+        const yPos = (1 - t) * vanishingPointY + t * bottomY;
+
+        // Adjust segment size for perspective
+        const segmentWidth = 20 * t + 5; // Wider at bottom, narrower at top
+        const segmentHeight = 10 * t + 2; // Taller at bottom, shorter at top
+
+        // Alternate colors for a checkered effect (from reference code)
+        ctx.fillStyle = i % 2 === 0 ? colors.fg2 : colors.bg3;
+
+        // Draw segment
+        ctx.fillRect(
+          characterX - segmentWidth / 2, // Center the rectangle
+          yPos - segmentHeight / 2, // Center vertically
+          segmentWidth,
+          segmentHeight
+        );
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    // Start animation
+    animate(); // Initial call to start the animation loop
+
+    // Handle resize and scroll
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      initSegments(); // Reset segments on resize
+    });
+
+    window.addEventListener('scroll', () => {
+      // The animation function will use the updated position
+    });
+  });
+</script>
+
+<style>
+  .road-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1; /* Keep low to ensure other elements appear above */
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .road-canvas {
+      display: none;
+    }
+  }
+</style>
