@@ -1,0 +1,46 @@
+---
+import "../styles/global.css";
+---
+
+<nav>
+  <a href="/" class="nav-brand">dotBlog</a>
+  <button class="burger" aria-label="Open navigation" tabindex="0">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links">
+    <a href="/about" class="nav-link">About</a>
+    <a href="/cv" class="nav-link">CV</a>
+    <a href="/portfolio" class="nav-link">Portfolio</a>
+    <a href="/blog" class="nav-link">Blog</a>
+    <a href="/contact" class="nav-link">Contact</a>
+  </div>
+</nav>
+<main>
+  <slot />
+</main>
+<footer
+  style="display: flex; align-items: center; justify-content: center; gap: 0.4em; color: var(--fg);"
+>
+  <img
+    src="/lucide/copyleft.svg"
+    alt="Copyleft"
+    style="height:1em;width:1em;vertical-align:middle;display:inline-block;margin-bottom:0.1em;"
+  />
+  <span>2025 dotMavriQ. All base are belong to us.</span>
+</footer>
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", function () {
+    const burger = document.querySelector(".burger");
+    const navLinks = document.querySelector(".nav-links");
+    if (burger && navLinks) {
+      burger.addEventListener("click", function () {
+        navLinks.classList.toggle("open");
+      });
+      burger.addEventListener("keydown", function (e) {
+        if ("key" in e && (e.key === "Enter" || e.key === " ")) {
+          navLinks.classList.toggle("open");
+        }
+      });
+    }
+  });
+</script>
