@@ -17,12 +17,12 @@ import MainLayout from "../layouts/MainLayout.astro";
       <img
         src="/site_icons/solidsnakegbc.gif"
         alt="Running Snake"
-        style="display:block;filter:invert(1);margin-bottom:2.5rem;max-width:100%;height:auto;"
+        style="display:block;filter:invert(1);margin-bottom:2.5rem;max-width:100%;height:auto;margin-top:-2rem;"
       />
       <!-- Socials: rebuilt to match screenshot exactly -->
       <div
         class="socials"
-        style="display:flex;gap:2.1rem;justify-content:center;margin-bottom:2.2rem;align-items:center;"
+        style="display:flex;gap:2.1rem;justify-content:center;margin-bottom:2.2rem;align-items:center;position:relative;z-index:10;"
       >
         <!-- GitHub -->
         <a
@@ -31,6 +31,7 @@ import MainLayout from "../layouts/MainLayout.astro";
           rel="noopener noreferrer"
           aria-label="GitHub"
           class="social-icon"
+          style="z-index:10;position:relative;"
         >
           <svg
             class="social-svg"
@@ -53,6 +54,7 @@ import MainLayout from "../layouts/MainLayout.astro";
           rel="noopener noreferrer"
           aria-label="LinkedIn"
           class="social-icon"
+          style="z-index:10;position:relative;"
         >
           <svg
             class="social-svg"
@@ -75,6 +77,7 @@ import MainLayout from "../layouts/MainLayout.astro";
           rel="noopener noreferrer"
           aria-label="YouTube"
           class="social-icon"
+          style="z-index:10;position:relative;"
         >
           <svg
             class="social-svg"
@@ -97,6 +100,7 @@ import MainLayout from "../layouts/MainLayout.astro";
           rel="noopener noreferrer"
           aria-label="Matrix"
           class="social-icon"
+          style="z-index:10;position:relative;"
         >
           <svg
             class="social-svg"
@@ -121,6 +125,7 @@ import MainLayout from "../layouts/MainLayout.astro";
           rel="noopener noreferrer"
           aria-label="Fediverse"
           class="social-icon"
+          style="z-index:10;position:relative;"
         >
           <svg
             class="social-svg fediverse-svg"
@@ -140,7 +145,7 @@ import MainLayout from "../layouts/MainLayout.astro";
       <!-- Main action buttons -->
       <div
         class="main-actions"
-        style="display:flex;gap:1.2rem;margin-bottom:1.5rem;"
+        style="display:flex;gap:1.2rem;margin-bottom:3.5rem;"
       >
         <a
           href="/portfolio"
