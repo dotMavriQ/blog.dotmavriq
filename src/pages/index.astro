@@ -259,17 +259,17 @@ import MainLayout from "../layouts/MainLayout.astro";
     }
     .action-btn:hover,
     .action-btn:focus {
+      background: #d59a21 !important;
+      color: var(--bg) !important;
       box-shadow:
         0 4px 16px 0 rgba(0, 0, 0, 0.18),
-        0 2px 0 0 var(--accent);
-      background: var(--yellow);
-      color: var(--bg);
+        0 2px 0 0 #d59a21;
     }
     .action-btn.dark:hover,
     .action-btn.dark:focus {
-      background: #3c3836;
-      color: var(--yellow);
-      border-color: var(--yellow);
+      background: #3c3836 !important;
+      color: #d59a21 !important;
+      border-color: #d59a21 !important;
     }
     /* Remove underline from sub-links */
     .sub-link {
@@ -305,10 +305,32 @@ import MainLayout from "../layouts/MainLayout.astro";
       stroke: #ebdbb2 !important;
       color: #ebdbb2 !important;
     }
+    /* Social icon hover: Gruvbox #d59a21 */
+    .social-icon:hover .social-svg path,
+    .social-icon:focus .social-svg path {
+      fill: #d59a21 !important;
+      transition: fill 0.18s;
+    }
+    /* Material button hover: Gruvbox #d59a21 */
+    .action-btn:hover,
+    .action-btn:focus {
+      background: #d59a21 !important;
+      color: var(--bg) !important;
+      box-shadow:
+        0 4px 16px 0 rgba(0, 0, 0, 0.18),
+        0 2px 0 0 #d59a21;
+    }
+    .action-btn.dark:hover,
+    .action-btn.dark:focus {
+      background: #3c3836 !important;
+      color: #d59a21 !important;
+      border-color: #d59a21 !important;
+    }
+    /* Sub-link mail icon hover: Gruvbox #d59a21 */
     .sub-link[href*="contact"]:hover .sublink-svg,
     .sub-link[href*="contact"]:focus .sublink-svg {
-      stroke: #d79921 !important;
-      color: #d79921 !important;
+      stroke: #d59a21 !important;
+      color: #d59a21 !important;
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
