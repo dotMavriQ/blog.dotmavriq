@@ -1,0 +1,42 @@
+---
+const { label, value } = Astro.props; // value 0‑100
+---
+<div class="skill-meter">
+  <div class="skill-meter__header">
+    <label class="skill-meter__label">{label}</label>
+    <span class="skill-meter__value">{value}%</span>
+  </div>
+
+  <div 
+    class="skill-meter__bar" 
+    role="progressbar" 
+    aria-valuenow={value} 
+    aria-valuemin="0" 
+    aria-valuemax="100"
+  >
+    <div 
+      class="skill-meter__progress" 
+      data-value={value}
+    ></div>
+  </div>
+</div>
+
+<script>
+  // Animate skill bars when they come into view
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const skillBar = entry.target;
+          const value = skillBar.getAttribute('data-value');
+          skillBar.style.width = `${value}%`;
+          observer.unobserve(skillBar);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.skill-bar').forEach(bar => {
+      observer.observe(bar);
+    });
+  });
+</script>

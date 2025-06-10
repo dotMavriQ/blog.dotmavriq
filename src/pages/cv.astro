@@ -1,0 +1,164 @@
+---
+import Base from "../layouts/BaseLayout.astro";
+import SkillMeter from "../components/SkillMeter.astro";
+---
+<Base title="CV – Jonatan">
+  <header class="text-center py-lg mb-lg">
+    <h1 class="text-3xl mb-md">Curriculum Vitae</h1>
+    <p class="text-lg max-w-[600px] mx-auto">Full-stack developer with a passion for creating intuitive, high-performance web applications.</p>
+  </header>
+
+  <section class="mb-xl bg-bg1 p-lg rounded-md">
+    <h2 class="text-2xl mb-lg pb-sm border-b border-bg2">Technical Skills</h2>
+
+    <div class="grid md:grid-cols-2 gap-lg">
+      <div>
+        <SkillMeter label="JavaScript" value="90" />
+        <SkillMeter label="TypeScript" value="85" />
+        <SkillMeter label="React" value="88" />
+        <SkillMeter label="Vue" value="75" />
+      </div>
+      <div>
+        <SkillMeter label="Node.js" value="82" />
+        <SkillMeter label="PHP" value="78" />
+        <SkillMeter label="PostgreSQL" value="80" />
+        <SkillMeter label="AWS" value="65" />
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-xl">
+    <h2 class="text-2xl mb-lg">Professional Experience</h2>
+
+    <div class="timeline">
+      <div class="timeline-item mb-lg">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content bg-bg1 p-lg rounded-md">
+          <h3 class="text-xl mb-xs">Senior Developer</h3>
+          <div class="flex justify-between items-center mb-md">
+            <span class="font-bold text-yellow">TechCorp</span>
+            <span class="text-blue">2020–Present</span>
+          </div>
+          <p class="mb-md">Leading development on enterprise-scale React applications, mentoring junior developers, and implementing CI/CD pipelines.</p>
+          <ul class="list-disc pl-lg">
+            <li class="mb-xs">Reduced application load time by 40% through performance optimizations</li>
+            <li class="mb-xs">Implemented test-driven development practices across team</li>
+            <li class="mb-xs">Led migration from monolith to microservices architecture</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item mb-lg">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content bg-bg1 p-lg rounded-md">
+          <h3 class="text-xl mb-xs">Full-Stack Developer</h3>
+          <div class="flex justify-between items-center mb-md">
+            <span class="font-bold text-yellow">StartupXYZ</span>
+            <span class="text-blue">2017–2020</span>
+          </div>
+          <p class="mb-md">Built and maintained Vue.js frontends with Node.js microservices backend.</p>
+          <ul class="list-disc pl-lg">
+            <li class="mb-xs">Developed RESTful APIs serving 1M+ requests daily</li>
+            <li class="mb-xs">Created responsive UI components used across multiple projects</li>
+            <li class="mb-xs">Optimized database queries reducing server load by 30%</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-xl">
+    <h2 class="text-2xl mb-lg">Education</h2>
+
+    <div class="bg-bg1 p-lg rounded-md">
+      <div class="flex justify-between items-center mb-sm">
+        <h3 class="text-xl">BSc Computer Science</h3>
+        <span class="text-blue">2013–2017</span>
+      </div>
+      <p class="font-bold text-yellow mb-md">University of Lisbon</p>
+      <p>Specialized in web technologies and distributed systems. Graduated with honors.</p>
+    </div>
+  </section>
+
+  <section class="mb-xl">
+    <h2 class="text-2xl mb-lg">Languages</h2>
+
+    <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-md">
+      <div class="bg-bg1 p-md rounded-md text-center">
+        <div class="text-2xl mb-xs">🇵🇹</div>
+        <h3 class="font-bold mb-xs">Portuguese</h3>
+        <p class="text-yellow">Native</p>
+      </div>
+
+      <div class="bg-bg1 p-md rounded-md text-center">
+        <div class="text-2xl mb-xs">🇬🇧</div>
+        <h3 class="font-bold mb-xs">English</h3>
+        <p class="text-yellow">Fluent</p>
+      </div>
+
+      <div class="bg-bg1 p-md rounded-md text-center">
+        <div class="text-2xl mb-xs">🇪🇸</div>
+        <h3 class="font-bold mb-xs">Spanish</h3>
+        <p class="text-yellow">Intermediate</p>
+      </div>
+
+      <div class="bg-bg1 p-md rounded-md text-center">
+        <div class="text-2xl mb-xs">🇫🇷</div>
+        <h3 class="font-bold mb-xs">French</h3>
+        <p class="text-yellow">Basic</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="text-center mb-xl">
+    <a 
+      download 
+      href="/Jonatan_CV.pdf" 
+      class="btn bg-yellow text-bg0 hover:bg-blue px-lg py-md font-bold inline-flex items-center gap-sm"
+    >
+      Download Full CV
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+    </a>
+  </div>
+
+  <style>
+    /* Timeline styling */
+    .timeline {
+      position: relative;
+      padding-left: 30px;
+    }
+
+    .timeline:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 2px;
+      background: var(--bg3);
+    }
+
+    .timeline-item {
+      position: relative;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -34px;
+      top: 20px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--yellow);
+      border: 2px solid var(--bg0);
+    }
+
+    .timeline-content {
+      position: relative;
+    }
+  </style>
+</Base>

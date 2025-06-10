@@ -1,0 +1,152 @@
+---
+import Base from "../layouts/BaseLayout.astro";
+---
+<Base title="Contact – Jonatan">
+  <div class="grid md:grid-cols-[3fr,2fr] gap-xl">
+    <div>
+      <header class="mb-lg">
+        <h1 class="text-3xl mb-md">Contact Me</h1>
+        <p class="text-lg">Have a project in mind or just want to chat? Feel free to reach out!</p>
+      </header>
+
+      <form 
+        action="https://getform.io/f/your-form-endpoint" 
+        method="POST" 
+        class="bg-bg1 p-lg rounded-md shadow-lg"
+      >
+        <div class="mb-md">
+          <label for="name" class="block mb-sm font-bold">Name</label>
+          <input 
+            type="text" 
+            id="name" 
+            name="name" 
+            required 
+            class="w-full p-md bg-bg0 border border-bg2 rounded-md focus:outline-none focus:border-yellow transition-colors"
+            placeholder="Your name"
+          >
+        </div>
+
+        <div class="mb-md">
+          <label for="email" class="block mb-sm font-bold">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            required 
+            class="w-full p-md bg-bg0 border border-bg2 rounded-md focus:outline-none focus:border-yellow transition-colors"
+            placeholder="your.email@example.com"
+          >
+        </div>
+
+        <div class="mb-md">
+          <label for="subject" class="block mb-sm font-bold">Subject</label>
+          <select 
+            id="subject" 
+            name="subject" 
+            required 
+            class="w-full p-md bg-bg0 border border-bg2 rounded-md focus:outline-none focus:border-yellow transition-colors"
+          >
+            <option value="" disabled selected>Select a subject</option>
+            <option value="project">Project Inquiry</option>
+            <option value="job">Job Opportunity</option>
+            <option value="collaboration">Collaboration</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="mb-lg">
+          <label for="message" class="block mb-sm font-bold">Message</label>
+          <textarea 
+            id="message" 
+            name="message" 
+            rows="6" 
+            required 
+            class="w-full p-md bg-bg0 border border-bg2 rounded-md focus:outline-none focus:border-yellow transition-colors resize-vertical"
+            placeholder="Your message here..."
+          ></textarea>
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full py-md bg-yellow text-bg0 rounded-md hover:bg-blue transition-colors font-bold flex items-center justify-center gap-sm"
+        >
+          Send Message
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <div>
+      <div class="sticky top-[100px] bg-bg1 p-lg rounded-md shadow-lg">
+        <h2 class="text-xl mb-lg pb-sm border-b border-bg2">Contact Information</h2>
+
+        <div class="space-y-md mb-xl">
+          <div class="flex items-start gap-md">
+            <div class="text-yellow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold mb-xs">Email</h3>
+              <a href="mailto:jonatan@dotmavriq.life" class="text-blue hover:text-yellow transition-colors">
+                jonatan@dotmavriq.life
+              </a>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-md">
+            <div class="text-yellow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold mb-xs">Location</h3>
+              <p>Lisbon, Portugal</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-md">
+            <div class="text-yellow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold mb-xs">Response Time</h3>
+              <p>Usually within 24 hours</p>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="font-bold mb-md">Connect on Social Media</h3>
+        <div class="flex gap-md">
+          <a href="https://github.com/dotmavriq" class="text-fg hover:text-yellow transition-colors" aria-label="GitHub Profile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </svg>
+          </a>
+          <a href="https://linkedin.com/in/dotmavriq" class="text-fg hover:text-yellow transition-colors" aria-label="LinkedIn Profile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect x="2" y="9" width="4" height="12"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+          </a>
+          <a href="https://twitter.com/dotmavriq" class="text-fg hover:text-yellow transition-colors" aria-label="Twitter Profile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>

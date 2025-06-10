@@ -1,0 +1,34 @@
+---
+interface Props {
+  class?: string;
+  narrow?: boolean;
+}
+
+const { class: className = '', narrow = false } = Astro.props;
+---
+
+<div class={`container ${narrow ? 'container-narrow' : ''} ${className}`}>
+  <slot />
+</div>
+
+<style>
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-md, 1rem);
+    padding-right: var(--space-md, 1rem);
+  }
+
+  .container-narrow {
+    max-width: 800px;
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      padding-left: var(--space-lg, 2rem);
+      padding-right: var(--space-lg, 2rem);
+    }
+  }
+</style>

@@ -1,0 +1,157 @@
+---
+import Base from "../../layouts/BaseLayout.astro";
+import { getCollection } from 'astro:content';
+
+// Use Astro's Content Collections API
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  return blogEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const title = entry.data.title;
+const date = new Date(entry.data.date);
+---
+<Base title={title}>
+  <article class="max-w-[800px] mx-auto">
+    <header class="mb-lg">
+      <h1 class="text-3xl mb-md">{title}</h1>
+      <time datetime={date.toISOString()} class="text-md text-blue block">
+        {date.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'})}
+      </time>
+    </header>
+
+    <div class="blog-content">
+      <Content />
+    </div>
+
+    <div class="mt-lg pt-md border-t border-bg1">
+      <a href="/blog" class="text-yellow hover:text-blue transition-colors flex items-center gap-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to all posts
+      </a>
+    </div>
+  </article>
+
+  <style>
+    /* Blog content styling */
+    .blog-content :global(h1),
+    .blog-content :global(h2),
+    .blog-content :global(h3),
+    .blog-content :global(h4),
+    .blog-content :global(h5),
+    .blog-content :global(h6) {
+      margin-top: var(--spacing-lg);
+      margin-bottom: var(--spacing-sm);
+      line-height: 1.3;
+    }
+
+    .blog-content :global(h1) { font-size: var(--font-size-3xl); }
+    .blog-content :global(h2) { 
+      font-size: var(--font-size-2xl); 
+      color: var(--yellow);
+      padding-bottom: var(--spacing-xs);
+      border-bottom: 1px solid var(--bg2);
+    }
+    .blog-content :global(h3) { font-size: var(--font-size-xl); }
+    .blog-content :global(h4) { font-size: var(--font-size-lg); }
+
+    .blog-content :global(p) {
+      margin-bottom: var(--spacing-md);
+      line-height: 1.7;
+    }
+
+    .blog-content :global(ul),
+    .blog-content :global(ol) {
+      margin-bottom: var(--spacing-md);
+      padding-left: var(--spacing-lg);
+    }
+
+    .blog-content :global(li) {
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .blog-content :global(pre) {
+      background-color: var(--bg1);
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius);
+      overflow-x: auto;
+      margin: var(--spacing-md) 0;
+    }
+
+    .blog-content :global(code) {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9em;
+      background-color: var(--bg1);
+      padding: 0.2em 0.4em;
+      border-radius: var(--border-radius);
+    }
+
+    .blog-content :global(a) {
+      color: var(--blue);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+    }
+
+    .blog-content :global(a:hover) {
+      color: var(--yellow);
+    }
+
+    .blog-content :global(blockquote) {
+      border-left: 4px solid var(--blue);
+      padding-left: var(--spacing-md);
+      margin-left: 0;
+      margin-right: 0;
+      font-style: italic;
+    }
+
+    .blog-content :global(img) {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--border-radius);
+    }
+
+    .blog-content :global(hr) {
+      margin: var(--spacing-lg) 0;
+      border: none;
+      border-top: 1px solid var(--bg2);
+    }
+
+    .blog-content :global(table) {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--spacing-md) 0;
+    }
+
+    .blog-content :global(th),
+    .blog-content :global(td) {
+      padding: var(--spacing-sm);
+      border: 1px solid var(--bg2);
+    }
+
+    .blog-content :global(th) {
+      background-color: var(--bg1);
+    }
+  </style>
+  </Base>
+
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": title,
+      "datePublished": date,
+      "author": { "@type": "Person", "name": "Jonatan" },
+      "url": Astro.url
+    })}
+  </script>
+</Base>

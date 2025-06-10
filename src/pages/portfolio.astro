@@ -1,0 +1,150 @@
+---
+import Base from "../layouts/BaseLayout.astro";
+import Card from "../components/Card.astro";
+
+const projects = [
+  {
+    title: "E-commerce Platform",
+    img: "/projects/ecommerce-thumb.jpg",
+    excerpt: "A full-featured online store built with React, Node.js, and PostgreSQL.",
+    href: "#ecommerce",
+    cta: "View Case Study"
+  },
+  {
+    title: "Healthcare Dashboard",
+    img: "/projects/healthcare-thumb.jpg",
+    excerpt: "Real-time analytics dashboard for healthcare providers using Vue and D3.js.",
+    href: "#healthcare",
+    cta: "View Case Study"
+  },
+  {
+    title: "Mobile Banking App",
+    img: "/projects/banking-thumb.jpg",
+    excerpt: "Secure mobile banking application built with React Native and integrated with banking APIs.",
+    href: "#banking",
+    cta: "View Case Study"
+  },
+  {
+    title: "Content Management System",
+    img: "/projects/cms-thumb.jpg",
+    excerpt: "Custom CMS built with PHP and MySQL, featuring a modern admin UI and robust security.",
+    href: "#cms",
+    cta: "View Case Study"
+  }
+];
+---
+<Base title="Portfolio – Jonatan">
+  <header class="text-center py-lg mb-lg">
+    <h1 class="text-3xl mb-md">Portfolio</h1>
+    <p class="text-lg max-w-[600px] mx-auto">Here are some of my recent projects. Each one presented unique challenges and opportunities for growth.</p>
+  </header>
+
+  <div class="grid md:grid-cols-2 gap-xl">
+    {projects.map((project, index) => (
+      <div class={`card overflow-hidden flex flex-col h-full ${index % 2 === 0 ? 'transform-gpu hover:translate-y-[-10px]' : 'transform-gpu hover:translate-x-[10px]'}`}>
+        {project.img && (
+          <div class="relative h-[240px] overflow-hidden">
+            <img 
+              src={project.img} 
+              alt={`${project.title} preview`} 
+              class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" 
+              loading="lazy" 
+            />
+            <div class="absolute bottom-0 right-0 bg-bg0 text-yellow py-xs px-sm text-sm font-bold">
+              Featured Project
+            </div>
+          </div>
+        )}
+
+        <div class="p-lg flex-1 flex flex-col">
+          <h3 class="text-xl text-yellow mb-sm">{project.title}</h3>
+
+          <p class="mb-md flex-1">{project.excerpt}</p>
+
+          <div class="flex flex-wrap gap-xs mb-md">
+            {index === 0 && (
+              <>
+                <span class="bg-bg2 text-xs py-xs px-sm rounded">React</span>
+                <span class="bg-bg2 text-xs py-xs px-sm rounded">Node.js</span>
+                <span class="bg-bg2 text-xs py-xs px-sm rounded">PostgreSQL</span>
+              </>
+            )}
+            {index === 1 && (
+              <>
+                <span class="bg-bg2 text-xs py-xs px-sm rounded">Vue</span>
+                <span class="bg-bg2 text-xs py-xs px-sm rounded">D3.js</span>
+                <span class="bg-bg2 text-xs py-xs px-sm rounded">Firebase</span>
+              </>
+            )}
+            {index === 2 && (
+              <>
+                <span class="bg-bg2 text-xs py-xs px-sm rounded">React Native</span>
+                <span class="bg-bg2 text-xs py-xs px-sm rounded">GraphQL</span>
+                <span class="bg-bg2 text-xs py-xs px-sm rounded">MongoDB</span>
+              </>
+            )}
+            {index === 3 && (
+              <>
+                <span class="bg-bg2 text-xs py-xs px-sm rounded">PHP</span>
+                <span class="bg-bg2 text-xs py-xs px-sm rounded">MySQL</span>
+                <span class="bg-bg2 text-xs py-xs px-sm rounded">Alpine.js</span>
+              </>
+            )}
+          </div>
+
+          <a 
+            href={project.href} 
+            class="inline-block mt-auto px-md py-sm bg-blue hover:bg-yellow transition-colors rounded text-bg0 font-bold text-center"
+          >
+            {project.cta}
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <section class="mt-xl py-lg text-center">
+    <h2 class="text-2xl mb-lg">Other Notable Projects</h2>
+
+    <div class="grid md:grid-cols-3 gap-md">
+      <a href="#weather-app" class="bg-bg1 p-md rounded-md hover:bg-bg2 transition-colors">
+        <h3 class="text-lg text-yellow mb-sm">Weather App</h3>
+        <p class="text-sm mb-xs">Minimal weather forecasting tool with geolocation.</p>
+        <div class="flex gap-xs">
+          <span class="text-xs text-blue">JavaScript</span>
+          <span class="text-xs text-blue">Weather API</span>
+        </div>
+      </a>
+
+      <a href="#blog-engine" class="bg-bg1 p-md rounded-md hover:bg-bg2 transition-colors">
+        <h3 class="text-lg text-yellow mb-sm">Custom Blog Engine</h3>
+        <p class="text-sm mb-xs">Lightweight CMS for personal blogs with Markdown support.</p>
+        <div class="flex gap-xs">
+          <span class="text-xs text-blue">Node.js</span>
+          <span class="text-xs text-blue">Express</span>
+        </div>
+      </a>
+
+      <a href="#recipe-app" class="bg-bg1 p-md rounded-md hover:bg-bg2 transition-colors">
+        <h3 class="text-lg text-yellow mb-sm">Recipe Manager</h3>
+        <p class="text-sm mb-xs">Mobile app for storing and categorizing recipes.</p>
+        <div class="flex gap-xs">
+          <span class="text-xs text-blue">Flutter</span>
+          <span class="text-xs text-blue">Firebase</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="mt-xl py-lg text-center bg-bg1 rounded-md p-lg">
+    <h2 class="text-2xl mb-md">Interested in working together?</h2>
+    <p class="mb-lg max-w-[600px] mx-auto">I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.</p>
+    <a href="/contact" class="btn bg-yellow text-bg0 hover:bg-blue px-lg py-md font-bold inline-flex items-center gap-sm">
+      Let's Talk
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </a>
+  </section>
+</Base>

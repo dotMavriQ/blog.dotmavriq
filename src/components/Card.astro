@@ -1,0 +1,85 @@
+---
+interface Props {
+  title: string;
+  img?: string;
+  excerpt?: string;
+  cta?: string;
+  href: string;
+}
+
+const { title, img, excerpt, cta = 'Read More', href } = Astro.props;
+---
+
+<article class="card">
+  {img && <img src={img} alt={title} class="card__image" loading="lazy" />}
+  <h3 class="card__title">{title}</h3>
+  {excerpt && <p class="card__excerpt">{excerpt}</p>}
+  <a href={href} class="card__cta">{cta}</a>
+</article>
+
+<style>
+  .card {
+    background-color: var(--bg1, #3c3836);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .card__image {
+    width: 100%;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    max-height: 200px;
+    object-fit: cover;
+  }
+
+  .card__title {
+    color: var(--yellow, #fabd2f);
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  .card__excerpt {
+    color: var(--fg2, #d5c4a1);
+    margin-bottom: 1.25rem;
+    flex-grow: 1;
+    line-height: 1.6;
+  }
+
+  .card__cta {
+    display: inline-block;
+    background-color: var(--bg2, #504945);
+    color: var(--fg0, #fbf1c7);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+    text-align: center;
+    margin-top: auto;
+  }
+
+  .card__cta:hover {
+    background-color: var(--bg3, #665c54);
+    color: var(--yellow, #fabd2f);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card, .card__cta {
+      transition: none;
+    }
+    .card:hover {
+      transform: none;
+    }
+  }
+</style>

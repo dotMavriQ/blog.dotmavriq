@@ -1,0 +1,75 @@
+---
+title: "Getting Started with Astro"
+excerpt: "A quick guide to setting up your first Astro project with all the essential features."
+date: 2023-06-15
+---
+
+# Getting Started with Astro
+
+Astro is a modern static site builder that delivers lightning-fast performance with a developer experience you'll love. Let's explore how to get started with it.
+
+## Why Astro?
+
+Astro offers several advantages over traditional frameworks:
+
+- **Zero JS by default** - Ship less JavaScript automatically
+- **Component Islands** - A new web architecture for building faster websites
+- **Server-first API design** - Move expensive hydration off of your users' devices
+- **Edge-ready** - Deploy anywhere, even a global edge runtime like Deno or Cloudflare
+
+## Setting Up Your First Project
+
+```bash
+# Create a new project with npm
+npm create astro@latest my-astro-project
+
+# Navigate to your new project
+cd my-astro-project
+
+# Start the dev server
+npm run dev
+```
+
+## Project Structure
+
+Here's what a typical Astro project looks like:
+
+```
+/
+├── public/
+│   └── favicon.svg
+├── src/
+│   ├── components/
+│   │   └── Card.astro
+│   ├── layouts/
+│   │   └── Layout.astro
+│   └── pages/
+│       └── index.astro
+└── package.json
+```
+
+## Adding Integrations
+
+One of Astro's strengths is its integration system:
+
+```bash
+# Add React components support
+npx astro add react
+
+# Add Tailwind CSS
+npx astro add tailwind
+```
+
+## Deployment
+
+Astro builds to static HTML by default, which means you can deploy to any hosting service:
+
+```bash
+# Build your site
+npm run build
+
+# Preview the build locally
+npm run preview
+```
+
+That's it for the basics! Stay tuned for more advanced Astro tutorials.

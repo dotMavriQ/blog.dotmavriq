@@ -1,47 +1,89 @@
-# Astro Starter Kit: Minimal
+# Jonatan's DevBlog
 
-```sh
-npm create astro@latest -- --template minimal
+A fast, accessible, gruvbox-dark themed developer blog and portfolio, built with Astro and deployable to GitHub Pages.
+
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build locally
+npm run preview
+
+# Deploy to GitHub Pages
+npm run deploy
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+## 🧰 Tech Stack
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- **[Astro](https://astro.build/)** - Core framework with static site generation
+- **[MDX](https://mdxjs.com/)** - Markdown with JSX for rich content
+- **Gruvbox Dark** - Color scheme
 
-## 🚀 Project Structure
+## 📁 Project Structure
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+.
+├─ public/
+│  ├─ favicon.svg
+│  ├─ social‑icons/
+│  └─ robots.txt, sitemap.xml (auto‑generated)
+├─ src/
+│  ├─ components/
+│  │  ├─ Nav.astro
+│  │  ├─ Footer.astro
+│  │  ├─ SkillMeter.astro
+│  │  └─ Card.astro
+│  ├─ layouts/
+│  │  └─ BaseLayout.astro
+│  ├─ pages/
+│  │  ├─ index.astro              ← landing
+│  │  ├─ about.astro
+│  │  ├─ cv.astro
+│  │  ├─ portfolio.astro
+│  │  ├─ contact.astro
+│  │  └─ blog/
+│  │     ├─ index.astro           ← blog list
+│  │     └─ [slug].astro          ← dynamic post route
+│  └─ styles/theme.css            ← gruvbox dark
+└─ astro.config.mjs
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🌟 Features
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- **Fast Performance**: Static site generation with minimal JavaScript
+- **Accessible**: Semantic HTML, ARIA attributes, and keyboard navigation
+- **Responsive**: Mobile-first design that works on all devices
+- **Dark Theme**: Gruvbox dark color scheme for reduced eye strain
+- **Blog with MDX**: Write content in Markdown with component support
+- **GitHub Pages Deployment**: Simple deployment process
 
-Any static assets, like images, can be placed in the `public/` directory.
+## 🔄 Deployment
 
-## 🧞 Commands
+The site is configured to deploy to GitHub Pages under the domain `blog.dotmavriq.life`.
 
-All commands are run from the root of the project, from a terminal:
+To deploy:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+```bash
+npm run deploy
+```
 
-## 👀 Want to learn more?
+This builds the site and pushes it to the `gh-pages` branch, which GitHub Pages serves automatically.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## 🌐 Custom Domain
+
+The site is configured to use `blog.dotmavriq.life` as its custom domain. This is set up via:
+
+1. The `CNAME` file in the repository root
+2. DNS settings pointing to GitHub Pages
+
+## 📝 License
+
+Copyleft 2023. All rights reserved.

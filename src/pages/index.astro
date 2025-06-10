@@ -1,16 +1,182 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
 
+const title = "blog.dotMavriQ";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title={title}>
+  <div class="home-container">
+    <!-- GIF -->  
+    <img alt="Solid Snake GBC" class="hero-image dark:invert" src="/solidsnakegbc.gif"/>
+
+    <!-- Social Icons -->  
+    <div class="social-links">
+      <a href="https://github.com/dotMavriQ" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+        <img alt="GitHub" class="social-icon" src="/github.svg"/>
+      </a>
+      <a href="https://www.linkedin.com/in/janssonjonatan/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+        <img alt="LinkedIn" class="social-icon" src="/linkedin.svg"/>
+      </a>
+      <a href="https://www.youtube.com/@dotMavriq/videos" target="_blank" rel="noopener noreferrer" aria-label="YouTube channel">
+        <img alt="YouTube" class="social-icon" src="/youtube.svg"/>
+      </a>
+      <a href="https://matrix.to/#/@dotmavriq:chat.dotmavriq.life" target="_blank" rel="noopener noreferrer" aria-label="Matrix chat">
+        <img alt="Matrix" class="social-icon" src="/matrix.svg"/>
+      </a>
+      <a href="https://social.dotmavriq.life/users/dotmavriq" target="_blank" rel="noopener noreferrer" aria-label="Fediverse profile">
+        <img alt="Fediverse" class="social-icon" src="/fediverse.svg"/>
+      </a>
+    </div>
+
+    <!-- Action Buttons -->  
+    <div class="action-buttons">
+      <a class="btn-primary" href="/portfolio">
+        <svg class="icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+        </svg>
+        View Portfolio
+      </a>
+      <a class="btn-secondary" href="/blog">Read Blog</a>
+    </div>
+
+    <!-- Quick Links -->  
+    <div class="quick-links">
+      <a href="/about" class="quick-link">
+        <img src="/file.svg" alt="" class="quick-link-icon" aria-hidden="true">
+        About Me
+      </a>
+      <a href="/cv" class="quick-link">
+        <img src="/globe.svg" alt="" class="quick-link-icon" aria-hidden="true">
+        My CV
+      </a>
+      <a href="/contact" class="quick-link">
+        <img src="/window.svg" alt="" class="quick-link-icon" aria-hidden="true">
+        Contact
+      </a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    gap: 2rem;
+  }
+
+  .hero-image {
+    margin-bottom: 0.5rem;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .social-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .social-links a {
+    transition: opacity 0.2s ease;
+  }
+
+  .social-links a:hover {
+    opacity: 0.75;
+  }
+
+  .social-icon {
+    width: 40px;
+    height: auto;
+  }
+
+  .quick-link-icon {
+    width: 16px;
+    height: auto;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    padding: 0 1.25rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary {
+    background-color: var(--fg-color);
+    color: var(--bg-color);
+    gap: 0.5rem;
+    border: 1px solid transparent;
+  }
+
+  .btn-primary:hover {
+    background-color: #383838;
+  }
+
+  .btn-secondary {
+    border: 1px solid rgba(255, 255, 255, 0.145);
+    min-width: 11rem;
+  }
+
+  .btn-secondary:hover {
+    background-color: #1a1a1a;
+    border-color: transparent;
+  }
+
+  .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .quick-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .quick-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* Responsive adjustments */
+  @media (min-width: 640px) {
+    .btn-primary,
+    .btn-secondary {
+      height: 3rem;
+      padding: 0 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .quick-links {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,343 @@
+# Jonatan’s Astro DevBlog – Project Blueprint
+
+> **Goal:** A fast, accessible, gruvbox‑dark themed developer blog and portfolio, built with **Astro** (static output) and deployable both locally and to **GitHub Pages** (`gh-pages` branch) under **blog.dotmavriq.life**.
+
+---
+
+## 1  Quick Start
+
+```bash
+# 1. Create project skeleton
+npm create astro@latest jonatan-devblog -- --template minimal
+cd jonatan-devblog
+
+# 2. Install the only extra dep we need right now (MDX)
+npm install @astrojs/mdx
+
+# 3. Enable MDX & static output
+npx astro add mdx
+
+# 4. Dev server
+npm run dev
+
+# 5. Build for prod (generates dist/)
+npm run build
+
+# 6. Preview build locally
+npm run preview
+```
+
+---
+
+## 2  Key Config Files
+
+### **astro.config.mjs** (replace default)
+
+```js
+import { defineConfig } from "astro/config";
+import mdx from "@astrojs/mdx";
+
+export default defineConfig({
+  site: "https://blog.dotmavriq.life",     // required for sitemap & canonical
+  integrations: [mdx()],
+  output: "static",
+  experimental: { viewTransitions: true }, // smooth page‑to‑page fade
+  build: {
+    format: "file",                        // keeps /about/index.html pattern
+  },
+});
+```
+
+### **package.json – useful scripts**
+
+```jsonc
+"scripts": {
+  "dev": "astro dev",
+  "build": "astro build",
+  "preview": "astro preview",
+  "deploy": "npm run build && gh-pages -d dist -b gh-pages"
+},
+"devDependencies": {
+  "gh-pages": "^6.0.0"
+}
+```
+
+### **CNAME**
+
+```
+blog.dotmavriq.life
+```
+
+### **.nojekyll**
+
+*(empty file – prevents GitHub Pages from messing with static output)*
+
+---
+
+## 3  Folder Structure (after you add the bits below)
+
+```
+.
+├─ public/
+│  ├─ favicon.svg
+│  ├─ social‑cards/
+│  └─ robots.txt, sitemap.xml (auto‑generated)
+├─ src/
+│  ├─ components/
+│  │  ├─ Nav.astro
+│  │  ├─ Footer.astro
+│  │  ├─ SkillMeter.astro
+│  │  └─ Card.astro
+│  ├─ layouts/
+│  │  └─ BaseLayout.astro
+│  ├─ pages/
+│  │  ├─ index.astro              ← landing
+│  │  ├─ about.astro
+│  │  ├─ cv.astro
+│  │  ├─ portfolio.astro
+│  │  ├─ contact.astro
+│  │  └─ blog/
+│  │     ├─ index.astro           ← blog list
+│  │     └─ [slug].astro          ← dynamic post route
+│  └─ styles/theme.css            ← gruvbox dark
+└─ astro.config.mjs
+```
+
+---
+
+## 4  Global Styling – `src/styles/theme.css`
+
+```css
+:root {
+  --bg0: #282828;
+  --bg1: #3c3836;
+  --fg:  #ebdbb2;
+  --blue: #83a598;
+  --green: #b8bb26;
+  --yellow: #fabd2f;
+  --a11y-focus: #8ec07c;
+  color-scheme: dark;
+}
+html,body {margin:0;padding:0;background:var(--bg0);color:var(--fg);font-family:'Inter',sans-serif;}
+a {color:var(--blue);text-decoration:none;}
+a:focus-visible {outline:2px dashed var(--a11y-focus);outline-offset:2px;}
+/* simple motion */
+@media (prefers-reduced-motion: reduce) {
+  * {animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;}
+}
+```
+
+Import once in `src/layouts/BaseLayout.astro`:
+
+```astro
+---
+import "../styles/theme.css";
+---
+```
+
+---
+
+## 5  Shared Layout – `src/layouts/BaseLayout.astro`
+
+```astro
+---
+const { title = "Jonatan – DevBlog" } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <slot name="head" />
+  </head>
+  <body>
+    <Nav />
+    <main class="mx-auto max-w-4xl p-4">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+```
+
+---
+
+## 6  Core Components
+
+### **Nav.astro**
+
+```astro
+---
+const routes = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/cv", label: "CV" },
+  { href: "/portfolio", label: "Portfolio" },
+  { href: "/blog", label: "Blog" },
+  { href: "/contact", label: "Contact" },
+];
+---
+<nav class="flex flex-wrap items-center justify-between p-4 bg-[var(--bg1)]">
+  <a class="font-bold" href="/">dotmavriq</a>
+  <button class="sm:hidden" aria-label="toggle nav" x-data="{open:false}" @click="open=!open">☰</button>
+  <ul class="w-full sm:w-auto" :class="{'hidden': !open, 'block': open}" x-cloak>
+    {routes.map(r => (
+      <li class="sm:inline-block block m-2"><a href={r.href}>{r.label}</a></li>
+    ))}
+  </ul>
+</nav>
+```
+
+*(uses Alpine‑style inline script tags available in Astro island; swap for your preferred micro‑JS)*
+
+### **Footer.astro**
+
+```astro
+<footer class="text-center text-xs py-6 bg-[var(--bg1)]">
+  ¤copyleft¤ {new Date().getFullYear()}. All your base are belong to us
+</footer>
+```
+
+### **SkillMeter.astro**
+
+```astro
+---
+const { label, value } = Astro.props; // value 0‑100
+---
+<div class="my-2">
+  <label class="block mb-1">{label}</label>
+  <div class="w-full h-3 bg-[var(--bg1)] rounded-full overflow-hidden" role="progressbar" aria-valuenow={value} aria-valuemin="0" aria-valuemax="100">
+    <div class="h-full bg-[var(--green)]" style={`width:${value}%`}></div>
+  </div>
+</div>
+```
+
+### **Card.astro** *(generic for Portfolio & Blog previews)*
+
+```astro
+---
+const { title, img, excerpt, cta, href } = Astro.props;
+---
+<article class="bg-[var(--bg1)] rounded-xl p-4 shadow-lg flex flex-col">
+  {img && <img src={img} alt="" class="rounded-md mb-3" loading="lazy" />}
+  <h3 class="text-lg mb-2">{title}</h3>
+  <p class="flex-1 mb-4">{excerpt}</p>
+  <a href={href} class="inline-block mt-auto px-3 py-1 bg-[var(--blue)] rounded text-[var(--bg0)]">{cta}</a>
+</article>
+```
+
+---
+
+## 7  Pages
+
+### Landing – `src/pages/index.astro`
+
+```astro
+---
+import Base from "../layouts/BaseLayout.astro";
+---
+<Base title="Welcome – Jonatan">
+  <section class="grid place-items-center h-80">
+    <svg width="120" height="120" viewBox="0 0 100 100" class="animate-spin-slow">
+      <circle cx="50" cy="50" r="45" stroke="var(--yellow)" stroke-width="4" fill="none" />
+    </svg>
+    <h1 class="text-3xl mt-6">Olá, sou Jonatan 👋</h1>
+    <p class="mt-2">Full‑stack dev & bassist – hacking in Portugal.</p>
+    <div class="flex gap-4 mt-4">
+      <a href="https://github.com/dotmavriq" aria-label="GitHub"><img src="/social-icons/github.svg" width="24" /></a>
+      <a href="https://linkedin.com/in/dotmavriq" aria-label="LinkedIn"><img src="/social-icons/linkedin.svg" width="24" /></a>
+    </div>
+  </section>
+</Base>
+```
+
+*(animation respects prefers‑reduced‑motion via global CSS)*
+
+### About – simple markdown or Astro.
+
+### CV – `src/pages/cv.astro`
+
+Use `<SkillMeter label="JavaScript" value="80" />` etc. Provide a link: `<a download href="/Jonatan_CV.pdf">Download full résumé ↗</a>`
+
+### Portfolio – loop through an array of projects.
+
+### Blog listing – `src/pages/blog/index.astro`
+
+```astro
+---
+import Base from "../../layouts/BaseLayout.astro";
+import Card from "../../components/Card.astro";
+const posts = await Astro.glob("../../content/blog/*.mdx");
+posts.sort((a,b)=>b.frontmatter.date - a.frontmatter.date);
+---
+<Base title="Blog">
+  <h1 class="text-2xl mb-4">Blog</h1>
+  <div class="grid sm:grid-cols-2 gap-6">
+    {posts.map(p => (
+      <Card title={p.frontmatter.title} excerpt={p.frontmatter.excerpt} href={p.url} cta="Read →" />
+    ))}
+  </div>
+</Base>
+```
+
+### Individual post route – `src/pages/blog/[...slug].astro`
+
+```astro
+---
+import Base from "../../layouts/BaseLayout.astro";
+const { Content, frontmatter } = await Astro.resolve("../../content/blog/" + Astro.params.slug + ".mdx");
+---
+<Base title={frontmatter.title}>
+  <article>
+    <h1>{frontmatter.title}</h1>
+    <time datetime={frontmatter.date.toISOString()}>{frontmatter.date.toLocaleDateString()}</time>
+    <Content />
+  </article>
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: frontmatter.title,
+      datePublished: frontmatter.date,
+      author: { "@type": "Person", name: "Jonatan" },
+      url: Astro.url
+    })}
+  </script>
+</Base>
+```
+
+### Contact – simple form that posts to `https://getform.io/…` or mailto link.
+
+---
+
+## 8  Accessibility & Performance Notes
+
+* Semantic HTML elements and ARIA labels where needed.
+* Visible skip‑to‑content link.
+* All focusable items pass WCAG 2.2 contrast.
+* `prefers-reduced-motion` honoured globally.
+* `loading="lazy"` on images.
+* Lighthouse dark‑mode contrast passes on default viewport.
+
+---
+
+## 9  Deploy to GitHub Pages
+
+1. Create repo `jonatan-devblog` and push.
+2. Add `gh-pages` package and the deploy script (see **package.json** above).
+3. In repo settings → Pages → build from `gh-pages` branch.
+4. After first deploy, add DNS `CNAME` record for **blog.dotmavriq.life** → `username.github.io`.
+5. Commit **CNAME** & **.nojekyll** files at project root so future deploys keep them.
+
+---
+
+## 10  Local vs Pages URL overlap
+
+Set `site` in `astro.config.mjs` to your prod domain; locally Astro’s dev server rewrites links automatically. For image paths use relative `/` root so both environments work.
+
+---
+
+**You now have a lean, gruvbox‑dark, a11y‑friendly Astro devblog that runs `npm run dev` locally and `npm run deploy` to GitHub Pages.**
+
+Happy hacking! 🎸

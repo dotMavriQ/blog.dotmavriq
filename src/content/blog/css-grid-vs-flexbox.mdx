@@ -1,0 +1,142 @@
+---
+title: "CSS Grid vs Flexbox: When to Use What"
+excerpt: "Understanding the key differences between CSS Grid and Flexbox and choosing the right tool for the job."
+date: 2023-04-18
+---
+
+# CSS Grid vs Flexbox: When to Use What
+
+When it comes to modern CSS layout, developers have two powerful systems at their disposal: Grid and Flexbox. But which one should you use, and when? Let's break it down.
+
+## The Key Differences
+
+### Flexbox: One-Dimensional Layout
+
+Flexbox was designed for one-dimensional layouts - either a row OR a column:
+
+```css
+.flex-container {
+  display: flex;
+  flex-direction: row; /* or column */
+}
+```
+
+It excels at:
+- Distributing space among items in a single dimension
+- Aligning items on a single axis
+- Creating flexible elements that adapt to available space
+
+### Grid: Two-Dimensional Layout
+
+Grid was designed for two-dimensional layouts - rows AND columns simultaneously:
+
+```css
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+}
+```
+
+It excels at:
+- Creating complex grid-based layouts
+- Precise placement of elements in both dimensions
+- Creating gaps between elements
+
+## When to Use Flexbox
+
+Choose Flexbox when:
+
+1. **You need a linear layout** (row or column)
+2. **Content should drive the layout** rather than the other way around
+3. **You're aligning elements** within a container
+4. **Creating navigation menus** or toolbars
+5. **Centering elements** vertically and horizontally
+
+## When to Use Grid
+
+Choose Grid when:
+
+1. **You need a two-dimensional layout** with rows and columns
+2. **The layout should drive the content** (not the other way around)
+3. **Creating complex, grid-based designs** with precise control
+4. **Building overall page layouts** with clearly defined regions
+5. **Creating gap patterns** between elements is important
+
+## They Work Great Together!
+
+The beauty of modern CSS is that you can use both systems together:
+
+```css
+/* Grid for the overall layout */
+.page-layout {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-areas: "sidebar main";
+}
+
+/* Flexbox for components inside the grid areas */
+.navigation {
+  display: flex;
+  justify-content: space-between;
+}
+```
+
+## Real-World Example
+
+Here's a common pattern that combines both:
+
+```html
+<div class="product-grid">
+  <div class="product-card">
+    <img src="product.jpg">
+    <div class="product-info">
+      <h3>Product Title</h3>
+      <p>Product description here...</p>
+      <div class="price-buy">
+        <span class="price">$99.99</span>
+        <button>Add to Cart</button>
+      </div>
+    </div>
+  </div>
+  <!-- More product cards... -->
+</div>
+```
+
+```css
+/* Grid for the overall product layout */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Flexbox for the internal card structure */
+.product-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-info {
+  flex: 1; /* Take remaining space */
+  display: flex;
+  flex-direction: column;
+}
+
+.price-buy {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto; /* Push to bottom */
+}
+```
+
+## Conclusion
+
+Neither Grid nor Flexbox is "better" - they're designed for different purposes. Understanding their strengths lets you choose the right tool for each layout challenge.
+
+A good rule of thumb:
+- **Think Flexbox** for components and one-dimensional layouts
+- **Think Grid** for overall page structure and two-dimensional layouts
+
+By mastering both, you'll have all the tools you need for modern CSS layouts!

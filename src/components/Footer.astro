@@ -1,0 +1,40 @@
+---
+// Current year for copyright
+const currentYear = new Date().getFullYear();
+---
+
+<footer>
+  <div class="container">
+    <div class="footer__content">
+      <div>
+        <p class="footer__copyright">🄯 {currentYear} dotMavriQ. <a href="https://archive.org/details/flash_allyourbase" target="_blank" rel="noopener noreferrer" class="easter-egg" title="All your base are belong to us">All base are belong to us.</a></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    padding: 1rem;
+    text-align: center;
+    background-color: var(--bg-color);
+    background-opacity: 0.9;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--bg3);
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: var(--fg-color);
+    margin: 0;
+  }
+
+  .easter-egg {
+    text-decoration: none;
+    color: inherit;
+    cursor: default;
+  }
+</style>
+    </div>
+  </div>
+</footer>

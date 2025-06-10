@@ -1,0 +1,258 @@
+/* Typography styles */
+
+/* Base typography */
+body {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: var(--spacing-md);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+}
+
+p {
+  margin-bottom: var(--spacing-md);
+}
+
+small {
+  font-size: var(--font-size-sm);
+}
+
+/* Links */
+a {
+  color: var(--blue);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--yellow);
+}
+
+/* Code */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background-color: var(--bg1);
+  padding: 0.2em 0.4em;
+  border-radius: var(--border-radius);
+}
+
+pre {
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  background-color: var(--bg1);
+  overflow-x: auto;
+  margin-bottom: var(--spacing-md);
+}
+/* Typography styles with Gruvbox theming */
+
+/* Base typography */
+body {
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  color: var(--fg);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: var(--fg0);
+  margin-top: 0.5em;
+}
+
+h2 {
+  font-size: 2rem;
+  color: var(--yellow);
+}
+
+h3 {
+  font-size: 1.5rem;
+  color: var(--blue);
+}
+
+h4 {
+  font-size: 1.25rem;
+  color: var(--aqua);
+}
+
+h5 {
+  font-size: 1.1rem;
+  color: var(--purple);
+}
+
+h6 {
+  font-size: 1rem;
+  color: var(--orange);
+}
+
+/* Paragraphs and general text */
+p {
+  margin-bottom: 1.5rem;
+}
+
+strong, b {
+  font-weight: 700;
+  color: var(--fg0);
+}
+
+em, i {
+  font-style: italic;
+  color: var(--fg2);
+}
+
+/* Links */
+a {
+  color: var(--blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  border-bottom: 1px solid transparent;
+}
+
+a:hover {
+  color: var(--yellow);
+  border-bottom-color: var(--yellow);
+}
+
+a:focus-visible {
+  outline: 2px dashed var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* Lists */
+ul, ol {
+  margin: 0 0 1.5rem 1.5rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+/* Blockquotes */
+blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 3px solid var(--yellow);
+  background-color: var(--bg1);
+  font-style: italic;
+  color: var(--fg3);
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code blocks */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--bg1);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  color: var(--orange);
+}
+
+pre {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: var(--bg1);
+  border-radius: 4px;
+  overflow-x: auto;
+  border-left: 3px solid var(--yellow);
+}
+
+pre code {
+  padding: 0;
+  background: transparent;
+  color: var(--fg);
+}
+
+/* Small text and metadata */
+small, .text-small {
+  font-size: 0.875rem;
+  color: var(--fg4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.4rem; }
+  h4 { font-size: 1.2rem; }
+  body { font-size: 0.95rem; }
+}
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Text colors */
+.text-red { color: var(--red); }
+.text-green { color: var(--green); }
+.text-yellow { color: var(--yellow); }
+.text-blue { color: var(--blue); }
+.text-purple { color: var(--purple); }
+.text-aqua { color: var(--aqua); }
+.text-orange { color: var(--orange); }
+.text-muted { color: var(--text-muted); }
+
+/* Text sizes */
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+
+/* Text alignment */
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/* Text weight */
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-bold { font-weight: 700; }
+
+/* Other typography */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uppercase { text-transform: uppercase; }
+.lowercase { text-transform: lowercase; }
+.capitalize { text-transform: capitalize; }
+
+/* Responsive typography */
+@media (max-width: 640px) {
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+  h4 { font-size: 1.125rem; }
+}

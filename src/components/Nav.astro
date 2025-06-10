@@ -1,0 +1,159 @@
+---
+// Define navigation items with their colors
+const navItems = [
+  { href: '/about', label: 'About', color: '#83a598' },
+  { href: '/cv', label: 'CV', color: '#fe8019' },
+  { href: '/portfolio', label: 'Portfolio', color: '#b8bb26' },
+  { href: '/blog', label: 'Blog', color: '#fabd2f' },
+  { href: '/contact', label: 'Contact', color: '#fb4934' }
+];
+
+// Get current path to highlight active link
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.endsWith('/') 
+  ? pathname 
+  : `${pathname}/`;
+---
+
+<header>
+  <div class="header-container">
+    <h1><a href="/">blog.dotMavriQ</a></h1>
+
+    <nav>
+      <div class="mobile-menu-toggle">
+        <button aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <ul class="nav-items">
+        {navItems.map(item => (
+          <li>
+            <a href={item.href}>
+              <span style={`color:${item.color}`}>{item.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem;
+    background-color: var(--bg-color);
+    background-opacity: 0.9;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--bg3);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  h1 a {
+    color: var(--fg-color);
+    text-decoration: none;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-items {
+    display: none;
+    gap: 1.5rem;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-items li a {
+    text-decoration: none;
+  }
+
+  .nav-items li a span {
+    font-weight: 700;
+  }
+
+  .nav-items li a:hover span {
+    text-decoration: underline;
+  }
+
+  .mobile-menu-toggle button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Media queries for responsive design */
+  @media (min-width: 768px) {
+    .mobile-menu-toggle {
+      display: none;
+    }
+
+    .nav-items {
+      display: flex;
+    }
+  }
+
+  /* For mobile menu functionality - to be handled by JavaScript */
+  .nav-items.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    background-color: var(--bg-color);
+    padding: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
+<script>
+  // Handle mobile menu toggle
+  const menuButton = document.querySelector('.mobile-menu-toggle button');
+  const navItems = document.querySelector('.nav-items');
+
+  if (menuButton && navItems) {
+    menuButton.addEventListener('click', () => {
+      const expanded = menuButton.getAttribute('aria-expanded') === 'true';
+      menuButton.setAttribute('aria-expanded', !expanded);
+      navItems.classList.toggle('open');
+    });
+  }
+</script>
