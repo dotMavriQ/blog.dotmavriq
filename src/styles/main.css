@@ -23,8 +23,14 @@
 }
 
 /* Base Elements */
+:root {
+  --header-height: 60px; /* Approximate header height */
+  --footer-height: 40px; /* Approximate footer height */
+}
+
 html {
-  scroll-behavior: smooth;
+  /* Disable smooth scrolling to prevent any scroll momentum */
+  scroll-behavior: auto;
 }
 
 body {
@@ -32,9 +38,11 @@ body {
   background-color: var(--bg0);
   color: var(--fg);
   line-height: 1.6;
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 main {
@@ -336,9 +344,10 @@ nav a.active::after {
 /* Footer */
 footer {
   background-color: var(--bg1);
-  padding: var(--space-lg) 0;
-  margin-top: var(--space-xl);
+  padding: 0.5rem 0;
+  margin-top: 0;
   border-top: 1px solid var(--bg3);
+  flex-shrink: 0;
 }
 
 .footer__content {

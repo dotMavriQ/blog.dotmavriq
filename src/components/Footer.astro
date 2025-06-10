@@ -40,3 +40,22 @@ const currentYear = new Date().getFullYear();
     </div>
   </div>
 </footer>
+
+<style>
+  footer {
+    padding: 0.5rem 0;
+    height: var(--footer-height);
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+  }
+  .footer__content {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  .footer__copyright {
+    font-size: clamp(0.7rem, 2vw, 0.875rem);
+    margin: 0;
+  }
+</style>
