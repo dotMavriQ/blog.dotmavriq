@@ -241,26 +241,41 @@
 
       // Moving stripe segments (parallel stripes) — driven by segments array
       if (animationActive) {
+        // Checkered mid-line (inspired by RoadAnimation.tsx)
+        // Move segments upward (toward vanishing point) and wrap
+        const baseSpeed = Math.abs(roadSpeed) || 4;
         for (let i = 0; i < segments.length; i++) {
-          segments[i] += roadSpeed;
-          if (segments[i] > bottomY) segments[i] = vanishingY;
-          else if (segments[i] < vanishingY) segments[i] = bottomY;
+          // Move upward: subtract positive amount
+          segments[i] += roadSpeed; // roadSpeed is negative; keeps existing behavior
+          if (segments[i] < vanishingY) segments[i] += (bottomY - vanishingY);
+          else if (segments[i] > bottomY) segments[i] -= (bottomY - vanishingY);
 
           const yPos = segments[i];
           if (yPos >= vanishingY && yPos <= bottomY) {
-            const prog = (yPos - vanishingY) / (bottomY - vanishingY);
-            const lineW = roadTopW + prog * (roadBottomW - roadTopW);
-            const segW = Math.max(8, lineW * 0.2);
-            const segH = Math.max(4, lineW * 0.03);
+            // Perspective factor (0 at vanishing point, 1 at bottom)
+            const t = (yPos - vanishingY) / (bottomY - vanishingY);
 
-            ctx.fillStyle = colors.yellow;
-            // left stripe
-            ctx.fillRect(cx - lineW * 0.25, yPos - segH / 2, segW, segH);
-            // right stripe
-            ctx.fillRect(cx + lineW * 0.25 - segW, yPos - segH / 2, segW, segH);
+            // Interpolate size for perspective — similar to TSX formula
+            const minSegW = 5;
+            const minSegH = 2;
+            const segW = Math.max(minSegW, (1 - t) * 20 + 5);
+            const segH = Math.max(minSegH, (1 - t) * 10 + 2);
+
+            // Compute x position: centerish but slightly biased toward vanishing point for perspective
+            const xPos = cx; // keep center aligned with hero
+
+            // Alternate colors for checkered effect
+            const checkColor = (i % 2 === 0) ? colors.fg : colors.bg3;
+            ctx.fillStyle = checkColor;
+
+            ctx.fillRect(Math.round(xPos - segW / 2), Math.round(yPos - segH / 2), Math.round(segW), Math.round(segH));
           }
         }
       }
+
+      // Optional subtle grunge overlay (like TSX)
+      ctx.fillStyle = 'rgba(0,0,0,0.04)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Top fade overlay
       try {
