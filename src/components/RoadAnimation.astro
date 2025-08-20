@@ -27,6 +27,31 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
+    // Cache hero dimensions to avoid per-frame jitter caused by small CSS animations
+    const getHeroRect = () => heroImage.getBoundingClientRect();
+    let heroRect = getHeroRect();
+    let cachedCharX = heroRect.left + heroRect.width / 2;
+    let cachedCharY = heroRect.bottom - 5;
+    let cachedCharWidth = heroRect.width;
+    let cachedVanishingPointY = Math.max(window.innerHeight * 0.05, cachedCharY - Math.min(cachedCharWidth * 3, window.innerHeight * 0.4));
+
+    function updateHeroCache() {
+      heroRect = getHeroRect();
+      cachedCharX = heroRect.left + heroRect.width / 2;
+      cachedCharY = heroRect.bottom - 5;
+      cachedCharWidth = heroRect.width;
+      cachedVanishingPointY = Math.max(window.innerHeight * 0.05, cachedCharY - Math.min(cachedCharWidth * 3, window.innerHeight * 0.4));
+    }
+
+    // Update caches initially and on resize only
+    updateHeroCache();
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      updateHeroCache();
+      updateRoadSpeed(); // Recalculate speed based on new character size
+      initSegments(); // Reset segments with new spacing
+    });
+
     // Gruvbox dark colors
     const colors = {
       bg0: '#282828', // Dark background
@@ -122,7 +147,8 @@
       // Create evenly spaced segments from vanishing point to bottom
       const footer = document.querySelector('footer');
       const bottomY = footer ? footer.getBoundingClientRect().top : window.innerHeight;
-      const vanishingPointY = window.innerHeight * 0.05;
+      // Use cachedVanishingPointY so segments line up with the cached geometry
+      const vanishingPointY = (typeof cachedVanishingPointY !== 'undefined') ? cachedVanishingPointY : window.innerHeight * 0.05;
 
       // Calculate number of segments needed to fill the road
       const roadHeight = bottomY - vanishingPointY;
@@ -147,17 +173,14 @@
       // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Get character position from the GIF image (ninja)
-      const rect = heroImage.getBoundingClientRect();
-      const characterX = window.innerWidth / 2; // Center horizontally
-      const characterY = rect.bottom - 5; // Position just below character's feet
+      // Use cached hero geometry (prevents micro-jitter because the GIF has a subtle CSS animation)
+      const characterX = cachedCharX;
+      const characterY = cachedCharY;
+      const vanishingPointY = cachedVanishingPointY;
 
-      // Calculate vanishing point based on character position
-      // Place vanishing point higher above the character for more dramatic perspective
-      const vanishingPointY = Math.max(window.innerHeight * 0.05, characterY - Math.min(rect.height * 3, window.innerHeight * 0.4));
+      // Calculate road width proportionally to cached character size
+      const charWidth = cachedCharWidth;
 
-      // Calculate road width proportionally to character size
-      const charWidth = rect.width;
       // Make the road narrower at vanishing point for stronger perspective
       const roadWidthAtVP = Math.max(15, charWidth * 0.2); 
 
@@ -181,165 +204,72 @@
       // Draw road edges with solid color for cleaner look
       ctx.strokeStyle = colors.yellow; // Use solid yellow for edges
       ctx.lineWidth = 2.5; // Thicker line for better visibility
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
 
-      // Left edge
+      // Draw left edge (use rounded integer coords to avoid subpixel jitter)
+      const leftTopX = Math.round(characterX - roadWidthAtTop / 2);
+      const leftBottomX = Math.round(characterX - roadWidthAtScreenBottom / 2);
+      const rightTopX = Math.round(characterX + roadWidthAtTop / 2);
+      const rightBottomX = Math.round(characterX + roadWidthAtScreenBottom / 2);
+
       ctx.beginPath();
-      ctx.moveTo(characterX - roadWidthAtTop / 2, vanishingPointY);
-      ctx.lineTo(characterX - roadWidthAtScreenBottom / 2, bottomY);
+      ctx.moveTo(leftTopX, Math.round(vanishingPointY));
+      ctx.lineTo(leftBottomX, Math.round(bottomY));
       ctx.stroke();
 
       // Right edge
       ctx.beginPath();
-      ctx.moveTo(characterX + roadWidthAtTop / 2, vanishingPointY);
-      ctx.lineTo(characterX + roadWidthAtScreenBottom / 2, bottomY);
+      ctx.moveTo(rightTopX, Math.round(vanishingPointY));
+      ctx.lineTo(rightBottomX, Math.round(bottomY));
       ctx.stroke();
 
-      // Add center line divider
-      // Draw a dashed center line
-      if (animationActive) {
-        // Create center segments for the dashed line
-        const dashLength = segmentSpacing * 0.5;
-        const gapLength = dashLength * 0.5;
-        const totalLength = dashLength + gapLength;
-
-        // Calculate how many dashes we need to fill the road
-        const numDashes = Math.ceil((bottomY - vanishingPointY) / totalLength) + 1;
-
-        for (let i = 0; i < numDashes; i++) {
-          // Calculate position based on animation frame
-          const baseY = vanishingPointY + ((roadSpeed * 0.2 + i * totalLength) % (totalLength * numDashes));
-
-          // Only draw if within visible road area
-          if (baseY >= vanishingPointY && baseY <= bottomY) {
-            // Calculate progress from vanishing point to bottom
-            const t = (baseY - vanishingPointY) / (bottomY - vanishingPointY);
-
-            // Calculate width at this position
-            const lineWidthAtPos = roadWidthAtTop + t * (roadWidthAtScreenBottom - roadWidthAtTop);
-
-            // Calculate dash length based on perspective
-            const perspectiveDashLength = dashLength * (0.1 + t * 0.9);
-
-            // Draw center line
-            ctx.beginPath();
-            ctx.moveTo(characterX, baseY);
-            ctx.lineTo(characterX, baseY + perspectiveDashLength);
-            ctx.strokeStyle = colors.yellow;
-            ctx.lineWidth = 2 + 3 * t; // Thicker at bottom for perspective
-            ctx.stroke();
-          }
-        }
-      }
-
-      // Removed shadow effect for cleaner animation
-
-      // Draw roadside elements to enhance depth perception
-      if (animationActive) {
-        for (let i = 0; i < sideElements.length; i++) {
-          // Update side element position with consistent speed
-          sideElements[i].y += roadSpeed * 0.8; // More consistent speed, less random variation
-          if (sideElements[i].y > bottomY) {
-            sideElements[i].y = vanishingPointY;
-            sideElements[i].size = 4 + Math.random() * 8;
-          }
-
-          // Calculate position on the road edge with perspective
-          const t = (sideElements[i].y - vanishingPointY) / (bottomY - vanishingPointY);
-          const sideWidth = roadWidthAtTop + t * (roadWidthAtScreenBottom - roadWidthAtTop);
-          const sideX = characterX + (sideElements[i].side === 'left' ? -sideWidth/2 - sideElements[i].size/2 : sideWidth/2 + sideElements[i].size/2);
-
-          // Size increases with distance from vanishing point
-          const perspectiveSize = sideElements[i].size * (0.2 + t * 0.8);
-
-          // Only draw if between vanishing point and bottom
-          if (sideElements[i].y >= vanishingPointY && sideElements[i].y <= bottomY) {
-            ctx.fillStyle = sideElements[i].color;
-
-            // Draw different shapes based on the element type
-            switch(sideElements[i].shape) {
-              case 0: // Circle
-                ctx.beginPath();
-                ctx.arc(sideX, sideElements[i].y, perspectiveSize/2, 0, Math.PI * 2);
-                ctx.fill();
-                break;
-              case 1: // Square
-                ctx.fillRect(
-                  sideX - perspectiveSize/2,
-                  sideElements[i].y - perspectiveSize/2,
-                  perspectiveSize,
-                  perspectiveSize
-                );
-                break;
-              case 2: // Triangle
-                ctx.beginPath();
-                ctx.moveTo(sideX, sideElements[i].y - perspectiveSize/2);
-                ctx.lineTo(sideX + perspectiveSize/2, sideElements[i].y + perspectiveSize/2);
-                ctx.lineTo(sideX - perspectiveSize/2, sideElements[i].y + perspectiveSize/2);
-                ctx.closePath();
-                ctx.fill();
-                break;
-              case 3: // Dash
-                ctx.fillRect(
-                  sideX - perspectiveSize,
-                  sideElements[i].y - perspectiveSize/4,
-                  perspectiveSize * 2,
-                  perspectiveSize/2
-                );
-                break;
-            }
-          }
-        }
-      }
+      // Note: the moving center stripes are drawn using the 'segments' array below.
+      // This avoids a separate dashed algorithm and keeps movement consistent.
 
       // Draw the moving road stripes/segments
       if (animationActive) {
+        const range = bottomY - vanishingPointY || 1;
         for (let i = 0; i < segments.length; i++) {
-          // Update segment position
-          segments[i] += roadSpeed; // Use consistent roadSpeed
+          // Modular wrapping to avoid jumps
+          segments[i] = ((segments[i] - vanishingPointY + roadSpeed) % range + range) % range + vanishingPointY;
 
-          // Fix the wrapping logic to ensure proper movement
-          if (segments[i] > bottomY) {
-            segments[i] = vanishingPointY;
-          } else if (segments[i] < vanishingPointY) {
-            segments[i] = bottomY;
-          }
-
-          // Calculate interpolation factor (t=0 at vanishing point, t=1 at bottom)
-          const t = (segments[i] - vanishingPointY) / (bottomY - vanishingPointY);
-
-          // Calculate position using interpolation
           const yPos = segments[i];
 
           // Only draw segments that are between the vanishing point and bottom
           if (yPos >= vanishingPointY && yPos <= bottomY) {
-            // Calculate width at this y-position (interpolate from top to bottom)
             const segmentProgress = (yPos - vanishingPointY) / (bottomY - vanishingPointY);
-
-            // Adjust segment size for perspective - proportional to road width
             const roadWidthAtThisPoint = roadWidthAtTop + segmentProgress * (roadWidthAtBottom - roadWidthAtTop);
 
-            // Road stripe dimensions - longer for more visible stripes
-            const segmentWidth = Math.max(8, roadWidthAtThisPoint * 0.2); // Wider for better visibility
-            const segmentHeight = Math.max(4, roadWidthAtThisPoint * 0.03); // Slightly taller
+            const segmentWidth = Math.max(8, roadWidthAtThisPoint * 0.2);
+            const segmentHeight = Math.max(4, roadWidthAtThisPoint * 0.03);
 
-            // Use the updated yellow color (ebdbb2) for road stripes with no opacity for better contrast
-            ctx.fillStyle = colors.yellow; // Now using #ebdbb2
+            ctx.fillStyle = colors.yellow;
 
-            // Draw two parallel stripes for a more road-like appearance
             // Left stripe
             ctx.fillRect(
-              characterX - (roadWidthAtThisPoint * 0.25), // Position at 1/4 from center
-              yPos - segmentHeight / 2, // Center vertically
-              segmentWidth,
-              segmentHeight
+              Math.round(characterX - (roadWidthAtThisPoint * 0.25) - segmentWidth/2),
+              Math.round(yPos - segmentHeight / 2),
+              Math.round(segmentWidth),
+              Math.round(segmentHeight)
             );
 
             // Right stripe
             ctx.fillRect(
-              characterX + (roadWidthAtThisPoint * 0.25) - segmentWidth, // Position at 1/4 from center
-              yPos - segmentHeight / 2, // Center vertically
-              segmentWidth,
-              segmentHeight
+              Math.round(characterX + (roadWidthAtThisPoint * 0.25) - segmentWidth/2),
+              Math.round(yPos - segmentHeight / 2),
+              Math.round(segmentWidth),
+              Math.round(segmentHeight)
+            );
+
+            // Center dashed stripe (small vertical dash centered on characterX)
+            const centerWidth = Math.max(3, segmentWidth * 0.35);
+            const centerHeight = Math.max(4, segmentHeight * 0.9);
+            ctx.fillRect(
+              Math.round(characterX - centerWidth / 2),
+              Math.round(yPos - centerHeight / 2),
+              Math.round(centerWidth),
+              Math.round(centerHeight)
             );
           }
         }
@@ -361,7 +291,7 @@
           // Save/restore so we don't affect other drawings
           ctx.save();
           ctx.globalCompositeOperation = 'source-over';
-          ctx.globalAlpha = 0.95; // strong but not fully opaque fade
+          ctx.globalAlpha = 0.7; // less strong so stripes remain visible
           ctx.fillStyle = grad;
           ctx.fillRect(0, fadeTop, canvas.width, fadeBottom);
           ctx.restore();
