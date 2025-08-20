@@ -172,36 +172,12 @@
 
       // Get the footer position to determine where road should visually end
       const footerRect = footer.getBoundingClientRect();
-      // Draw road background - adjust to end at footer if visible
+      // Determine drawing bottom (do not exceed viewport)
       const bottomY = Math.min(window.innerHeight, footerRect.top);
 
-      // Use solid color for road instead of gradient for cleaner look
-      ctx.fillStyle = colors.bg1; // Use a single solid color
-      ctx.beginPath();
-      ctx.moveTo(characterX - roadWidthAtTop / 2, vanishingPointY); // Top left
-      ctx.lineTo(characterX + roadWidthAtTop / 2, vanishingPointY); // Top right
-      ctx.lineTo(characterX + roadWidthAtScreenBottom / 2, bottomY); // Bottom right
-      ctx.lineTo(characterX - roadWidthAtScreenBottom / 2, bottomY); // Bottom left
-      ctx.closePath();
-      ctx.fill();
-
-      // Add subtle road texture (horizontal lines for asphalt effect)
-      const textureCount = 40;
-      ctx.globalAlpha = 0.03; // Very subtle
-      for (let i = 0; i < textureCount; i++) {
-        const y = vanishingPointY + (bottomY - vanishingPointY) * (i / textureCount);
-        const progressToBottom = i / textureCount;
-        const lineWidth = roadWidthAtTop + progressToBottom * (roadWidthAtScreenBottom - roadWidthAtTop);
-
-        ctx.beginPath();
-        ctx.moveTo(characterX - lineWidth / 2, y);
-        ctx.lineTo(characterX + lineWidth / 2, y);
-        ctx.strokeStyle = i % 2 === 0 ? colors.bg0 : colors.bg3;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-      ctx.globalAlpha = 1.0;
-
+      // Intentionally do NOT draw a filled road background so the page content
+      // remains visible. We'll only draw road edges and center/stripe markings.
+ 
       // Draw road edges with solid color for cleaner look
       ctx.strokeStyle = colors.yellow; // Use solid yellow for edges
       ctx.lineWidth = 2.5; // Thicker line for better visibility
@@ -369,6 +345,32 @@
         }
       }
 
+      // Top fade overlay: taper the road out smoothly near the vanishing point.
+      // Draw a vertical gradient from the very top of the canvas to the vanishing point
+      // that fades from the background color to transparent. Because the hero GIF
+      // sits above the canvas (higher z-index), the fade will not affect the GIF.
+      (function drawTopFade() {
+        try {
+          const fadeTop = 0;
+          const fadeBottom = Math.max(0, vanishingPointY); // where the fade becomes fully transparent
+          const grad = ctx.createLinearGradient(0, fadeTop, 0, fadeBottom);
+          // Use background color at the top and transparent at the vanishing point
+          grad.addColorStop(0, colors.bg0);
+          grad.addColorStop(1, 'rgba(0,0,0,0)');
+
+          // Save/restore so we don't affect other drawings
+          ctx.save();
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.globalAlpha = 0.95; // strong but not fully opaque fade
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, fadeTop, canvas.width, fadeBottom);
+          ctx.restore();
+        } catch (e) {
+          // Non-fatal: if gradient drawing fails, ignore and continue
+          // console.warn('Top fade draw failed', e);
+        }
+      })();
+
       // Removed vignette effect for cleaner animation
 
       // Continue animation if active
@@ -404,7 +406,7 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 1; /* Keep low to ensure other elements appear above */
+    z-index: 5; /* Higher so stripes render above page content but below the hero GIF */
     touch-action: none; /* Prevent touch scrolling */
     -webkit-user-select: none; /* Prevent selection */
     user-select: none;
@@ -417,6 +419,7 @@
     transform-origin: bottom center;
     /* Use much more subtle animation for the GIF */
     animation: snake-move 1s infinite alternate ease-in-out;
+    z-index: 20; /* Keep hero above the canvas stripes */
   }
 
   @keyframes snake-move {
