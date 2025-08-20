@@ -1,0 +1,23 @@
+---
+// This component provides a script that ensures dark mode works correctly
+---
+
+<script>
+  // Function to set dark mode based on preference
+  function setDarkMode() {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const storedTheme = localStorage.getItem('theme');
+
+    if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }
+
+  // Run on page load
+  setDarkMode();
+
+  // Listen for changes in system preference
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setDarkMode);
+</script>

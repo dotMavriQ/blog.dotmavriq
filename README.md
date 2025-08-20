@@ -1,5 +1,83 @@
 # Jonatan's DevBlog
+# Jonatan's Astro DevBlog
 
+A fast, accessible, gruvbox-dark themed developer blog and portfolio, built with Astro and deployable to GitHub Pages.
+
+## Getting Started
+
+### Installation
+
+```bash
+# Install dependencies
+npm install
+```
+
+### Development
+
+```bash
+# Start the development server
+npm run dev
+```
+
+If you encounter issues with the `astro` command not being found, try one of these solutions:
+
+1. Use the included script to fix dependencies:
+```bash
+# Make the script executable
+chmod +x fix-dependencies.sh
+
+# Run the script
+./fix-dependencies.sh
+```
+
+2. Use the alternative start script:
+```bash
+# Make the script executable
+chmod +x start-dev.sh
+
+# Run the script
+./start-dev.sh
+```
+
+3. Run Astro directly with npx:
+```bash
+npx astro dev
+```
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+### Deployment
+
+```bash
+npm run deploy
+```
+
+This will build the site and deploy it to the `gh-pages` branch.
+
+## Project Structure
+
+- `src/components/`: Reusable UI components
+- `src/layouts/`: Page layouts
+- `src/pages/`: Routes and pages
+- `src/styles/`: Global stylesheets (including gruvbox.css)
+- `public/`: Static assets
+
+## Features
+
+- Gruvbox dark color theme
+- Responsive design
+- Canvas-based road animation on the homepage
+- Blog posts with MDX support
+- GitHub Pages deployment
+- Accessibility features
+
+## Note on Animation
+
+The homepage features a canvas-based road animation where a ninja character appears to be running toward the viewer. The animation respects user preferences for reduced motion.
 A fast, accessible, gruvbox-dark themed developer blog and portfolio, built with Astro and deployable to GitHub Pages.
 
 ## 🚀 Quick Start

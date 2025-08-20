@@ -11,8 +11,24 @@ const title = "blog.dotMavriQ";
     <RoadAnimation />
     <!-- GIF -->  
     <div class="hero-image-container">
-      <img alt="Solid Snake GBC" class="hero-image dark:invert" src="/solidsnakegbc.gif"/>
+      <img alt="Solid Snake GBC" class="hero-image" id="snake-gif" src="/solidsnakegbc.gif"/>
     </div>
+    <script>
+      // Ensure the GIF is inverted in dark mode
+      document.addEventListener('DOMContentLoaded', function() {
+        const snakeGif = document.getElementById('snake-gif');
+        if (snakeGif && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          snakeGif.style.filter = 'invert(1)';
+        }
+
+        // Update on system preference change
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          if (snakeGif) {
+            snakeGif.style.filter = e.matches ? 'invert(1)' : 'none';
+          }
+        });
+      });
+    </script>
 
     <!-- Social Icons -->  
     <div class="social-links">
@@ -94,6 +110,11 @@ const title = "blog.dotMavriQ";
     width: clamp(120px, 20vw, 180px); /* Responsive sizing */
     position: relative;
     z-index: 10;
+  }
+
+  /* Dark mode inversion for the GIF - simplified selector */
+  .hero-image.dark\:invert {
+    filter: invert(1);
   }
 
   .social-links {

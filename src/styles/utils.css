@@ -1,0 +1,12 @@
+/* Dark mode utility classes */
+
+@media (prefers-color-scheme: dark) {
+  .dark\:invert {
+    filter: invert(1);
+  }
+}
+
+/* For class-based dark mode if you're using a toggle */
+.dark .dark\:invert {
+  filter: invert(1);
+}
