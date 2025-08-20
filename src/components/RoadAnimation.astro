@@ -139,14 +139,13 @@
       if (heroImg) {
         // Adjust segment spacing based on character size
         const rect = heroImg.getBoundingClientRect();
-        // Create more frequent road markings for better animation
-        segmentSpacing = Math.max(40, rect.height * 0.5); // Shorter spacing for more frequent stripes
+        // Create denser road markings for clearer motion (smaller multiplier)
+        segmentSpacing = Math.max(26, rect.height * 0.25); // denser stripes
       }
 
       segments = [];
       // Create evenly spaced segments from vanishing point to bottom
       const footer = document.querySelector('footer');
-      const bottomY = footer ? footer.getBoundingClientRect().top : window.innerHeight;
       // Use cachedVanishingPointY so segments line up with the cached geometry
       const vanishingPointY = (typeof cachedVanishingPointY !== 'undefined') ? cachedVanishingPointY : window.innerHeight * 0.05;
 
@@ -230,21 +229,29 @@
       // Draw the moving road stripes/segments
       if (animationActive) {
         const range = bottomY - vanishingPointY || 1;
+        // Stripes should appear to travel from bottom -> up (toward vanishing point)
+        const stripeSpeed = -Math.max(2, Math.abs(roadSpeed) * 0.6); // negative = upward movement
         for (let i = 0; i < segments.length; i++) {
-          // Modular wrapping to avoid jumps
-          segments[i] = ((segments[i] - vanishingPointY + roadSpeed) % range + range) % range + vanishingPointY;
+          // Move segment upwards; wrap smoothly when it crosses the vanishing point
+          segments[i] += stripeSpeed;
+          if (segments[i] < vanishingPointY) {
+            segments[i] += range;
+          } else if (segments[i] > bottomY) {
+            segments[i] -= range;
+          }
 
           const yPos = segments[i];
 
           // Only draw segments that are between the vanishing point and bottom
           if (yPos >= vanishingPointY && yPos <= bottomY) {
-            const segmentProgress = (yPos - vanishingPointY) / (bottomY - vanishingPointY);
-            const roadWidthAtThisPoint = roadWidthAtTop + segmentProgress * (roadWidthAtBottom - roadWidthAtTop);
+            const t = (yPos - vanishingPointY) / (bottomY - vanishingPointY);
+            const roadWidthAtThisPoint = roadWidthAtTop + t * (roadWidthAtBottom - roadWidthAtTop);
 
-            const segmentWidth = Math.max(8, roadWidthAtThisPoint * 0.2);
-            const segmentHeight = Math.max(4, roadWidthAtThisPoint * 0.03);
+            const segmentWidth = Math.max(10, roadWidthAtThisPoint * 0.22);
+            const segmentHeight = Math.max(5, roadWidthAtThisPoint * 0.035);
 
-            ctx.fillStyle = colors.yellow;
+            // Stronger contrast for center stripes
+            ctx.fillStyle = colors.fg; // use foreground for better visibility
 
             // Left stripe
             ctx.fillRect(
@@ -262,9 +269,9 @@
               Math.round(segmentHeight)
             );
 
-            // Center dashed stripe (small vertical dash centered on characterX)
-            const centerWidth = Math.max(3, segmentWidth * 0.35);
-            const centerHeight = Math.max(4, segmentHeight * 0.9);
+            // Center dashed stripe (more prominent)
+            const centerWidth = Math.max(4, segmentWidth * 0.4);
+            const centerHeight = Math.max(6, segmentHeight * 1.1);
             ctx.fillRect(
               Math.round(characterX - centerWidth / 2),
               Math.round(yPos - centerHeight / 2),
