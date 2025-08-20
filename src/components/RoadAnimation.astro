@@ -1,98 +1,82 @@
 ---
-// Canvas-based road animation component for the homepage
+// RoadAnimation.astro
+// Improved, stable implementation for Astro — inspired by the deployed (hoisted) runtime
 ---
 
 <canvas id="road-canvas" class="road-canvas"></canvas>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('road-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Get hero image for alignment (solid snake gif)
-    const heroImage = document.querySelector('.hero-image');
-    if (!heroImage) return;
-
-    // Get footer for detecting where road should end
+    const hero = document.querySelector('.hero-image');
     const footer = document.querySelector('footer');
-    if (!footer) return;
+    if (!hero || !footer) return;
 
-    // Resize canvas to fill the viewport
+    // Resize helper
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
 
-    // Cache hero dimensions to avoid per-frame jitter caused by small CSS animations
-    const getHeroRect = () => heroImage.getBoundingClientRect();
-    let heroRect = getHeroRect();
+    // Cache hero geometry to avoid per-frame jitter
+    let heroRect = hero.getBoundingClientRect();
     let cachedCharX = heroRect.left + heroRect.width / 2;
     let cachedCharY = heroRect.bottom - 5;
-    let cachedCharWidth = heroRect.width;
-    let cachedVanishingPointY = Math.max(window.innerHeight * 0.05, cachedCharY - Math.min(cachedCharWidth * 3, window.innerHeight * 0.4));
+    let cachedCharW = heroRect.width;
+    let cachedVanishingY = Math.max(window.innerHeight * 0.05, cachedCharY - Math.min(cachedCharW * 3, window.innerHeight * 0.4));
 
     function updateHeroCache() {
-      heroRect = getHeroRect();
+      heroRect = hero.getBoundingClientRect();
       cachedCharX = heroRect.left + heroRect.width / 2;
       cachedCharY = heroRect.bottom - 5;
-      cachedCharWidth = heroRect.width;
-      cachedVanishingPointY = Math.max(window.innerHeight * 0.05, cachedCharY - Math.min(cachedCharWidth * 3, window.innerHeight * 0.4));
+      cachedCharW = heroRect.width;
+      cachedVanishingY = Math.max(window.innerHeight * 0.05, cachedCharY - Math.min(cachedCharW * 3, window.innerHeight * 0.4));
     }
 
-    // Update caches initially and on resize only
-    updateHeroCache();
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-      updateHeroCache();
-      updateRoadSpeed(); // Recalculate speed based on new character size
-      initSegments(); // Reset segments with new spacing
-    });
-
-    // Gruvbox dark colors
+    // Colors
     const colors = {
-      bg0: '#282828', // Dark background
-      bg1: '#3c3836', // Slightly lighter background
-      bg2: '#504945', // Lighter background
-      bg3: '#665c54', // Lightest background
-      bg4: '#7c6f64', // Lightest greys
-      fg: '#ebdbb2',  // Normal foreground
-      fg2: '#d5c4a1', // Darker foreground
-      fg3: '#bdae93', // Even darker foreground
-      yellow: '#ebdbb2', // Accent color for road markings (changed from #fabd2f to #ebdbb2)
-      green: '#b8bb26'  // Alternative accent color
+      bg0: '#282828',
+      bg1: '#3c3836',
+      bg2: '#504945',
+      bg3: '#665c54',
+      bg4: '#7c6f64',
+      fg: '#ebdbb2',
+      fg2: '#d5c4a1',
+      fg3: '#bdae93',
+      yellow: '#ebdbb2',
+      green: '#b8bb26'
     };
 
-    // Animation settings
-    let roadSpeed = -5; // Negative means stripes moving toward viewer - increased speed
-
-    // Adjust speed based on character size and screen height
+    // Animation parameters (tweak for feel)
+    let roadSpeed = -5; // negative -> stripes move toward vanishing point
     function updateRoadSpeed() {
-      const heroImg = document.querySelector('.hero-image');
-      if (heroImg) {
-        const rect = heroImg.getBoundingClientRect();
-        // Set a faster speed for more dramatic motion
-        roadSpeed = -Math.max(4, Math.min(6, rect.height / 30));
-      }
+      const r = hero.getBoundingClientRect();
+      roadSpeed = -Math.max(4, Math.min(6, r.height / 30));
     }
     updateRoadSpeed();
 
-    // Track if animation should be active
-    let animationActive = true;
+    // Reduced-motion respect
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      // disable animation entirely
+      canvas.style.display = 'none';
+      return;
+    }
 
-    // Check if we're at the footer and should stop animation
+    // Footer visibility check
+    let animationActive = true;
     function checkFooterVisibility() {
-      if (!footer) return;
-      const footerRect = footer.getBoundingClientRect();
-      // If footer is in view, gradually slow down the animation
-      if (footerRect.top < window.innerHeight) {
-        const visibleRatio = (window.innerHeight - footerRect.top) / footerRect.height;
-        animationActive = visibleRatio < 0.8; // Stop completely when footer is 80% visible
-        // Gradually slow down as footer becomes visible
+      const f = footer.getBoundingClientRect();
+      if (f.top < window.innerHeight) {
+        const visibleRatio = (window.innerHeight - f.top) / f.height;
+        animationActive = visibleRatio < 0.8;
         if (animationActive && visibleRatio > 0) {
+          // Slow animation progressively
           roadSpeed = roadSpeed * (1 - visibleRatio);
         }
       } else {
@@ -100,238 +84,218 @@
       }
     }
 
-    // Calculate perspective points and road segments
+    // Segments and side elements
     let segments = [];
-    let segmentSpacing = 120; // Default spacing that will be adjusted
+    let segmentSpacing = 120;
+    const sideElements = [];
+    const sideCount = 12;
 
-    // Add side elements for more depth perception
-    let sideElements = [];
-    const numSideElements = 12; // Number of elements on each side
-
-    // Create side elements for enhanced depth perception
     function initSideElements() {
-      sideElements = [];
-      // Create different side elements with varied shapes/sizes for both sides
-      for (let i = 0; i < numSideElements; i++) {
-        // Left side elements
-        sideElements.push({
-          side: 'left',
-          y: Math.random() * window.innerHeight,
-          size: 4 + Math.random() * 8,
-          color: i % 3 === 0 ? colors.green : colors.fg3,
-          shape: i % 4 // 0: circle, 1: square, 2: triangle, 3: dash
-        });
-
-        // Right side elements
-        sideElements.push({
-          side: 'right',
-          y: Math.random() * window.innerHeight,
-          size: 4 + Math.random() * 8,
-          color: i % 3 === 0 ? colors.green : colors.fg3,
-          shape: i % 4
-        });
+      sideElements.length = 0;
+      for (let i = 0; i < sideCount; i++) {
+        sideElements.push({ side: 'left', y: Math.random() * window.innerHeight, size: 4 + Math.random() * 8, color: i % 3 === 0 ? colors.green : colors.fg3, shape: i % 4 });
+        sideElements.push({ side: 'right', y: Math.random() * window.innerHeight, size: 4 + Math.random() * 8, color: i % 3 === 0 ? colors.green : colors.fg3, shape: i % 4 });
       }
     }
 
-    // Initialize road segments with spacing based on character size
     function initSegments() {
-      const heroImg = document.querySelector('.hero-image');
-      if (heroImg) {
-        // Adjust segment spacing based on character size
-        const rect = heroImg.getBoundingClientRect();
-        // Create denser road markings for clearer motion (smaller multiplier)
-        segmentSpacing = Math.max(26, rect.height * 0.25); // denser stripes
-      }
+      const r = hero.getBoundingClientRect();
+      // Denser center dashes for stronger motion perception
+      segmentSpacing = Math.max(40, r.height * 0.5);
 
       segments = [];
-      // Create evenly spaced segments from vanishing point to bottom
-      const footer = document.querySelector('footer');
-      // Use cachedVanishingPointY so segments line up with the cached geometry
-      const vanishingPointY = (typeof cachedVanishingPointY !== 'undefined') ? cachedVanishingPointY : window.innerHeight * 0.05;
+      const footerRect = footer.getBoundingClientRect();
+      const bottomY = footerRect ? footerRect.top : window.innerHeight;
+      const vanishingY = cachedVanishingY || window.innerHeight * 0.05;
 
-      // Calculate number of segments needed to fill the road
-      const roadHeight = bottomY - vanishingPointY;
-      const numSegments = Math.ceil(roadHeight / segmentSpacing) + 2; // Add extra segments for smooth scrolling
+      const roadHeight = bottomY - vanishingY;
+      const numSegments = Math.ceil(roadHeight / segmentSpacing) + 2;
+      for (let i = 0; i < numSegments; i++) segments.push(vanishingY + i * segmentSpacing);
 
-      // Create segments with precise spacing
-      for (let i = 0; i < numSegments; i++) {
-        segments.push(vanishingPointY + (i * segmentSpacing));
-      }
-
-      // Initialize side elements
       initSideElements();
     }
 
     initSegments();
 
-    // Main animation function
+    // Main draw loop
     function animate() {
-      // Check if we're at the footer and should stop/slow animation
       checkFooterVisibility();
 
-      // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Use cached hero geometry (prevents micro-jitter because the GIF has a subtle CSS animation)
-      const characterX = cachedCharX;
-      const characterY = cachedCharY;
-      const vanishingPointY = cachedVanishingPointY;
+      // Use cached hero geometry (stable)
+      const cx = Math.round(window.innerWidth / 2);
+      const cy = Math.round(cachedCharY);
+      const vanishingY = Math.max(window.innerHeight * 0.05, cachedVanishingY);
+      const charW = cachedCharW;
+      const roadTopW = Math.max(15, charW * 0.2);
+      const roadBottomW = Math.min(window.innerWidth * 0.5, charW * 5);
+      const roadScreenBottomW = roadBottomW * 1.4;
 
-      // Calculate road width proportionally to cached character size
-      const charWidth = cachedCharWidth;
-
-      // Make the road narrower at vanishing point for stronger perspective
-      const roadWidthAtVP = Math.max(15, charWidth * 0.2); 
-
-      // Make road wider at bottom for stronger perspective effect
-      const roadWidthAtBottom = Math.min(window.innerWidth * 0.5, charWidth * 5);
-
-      // Calculate road dimensions
-      const roadHeight = characterY - vanishingPointY;
-      const roadWidthAtTop = roadWidthAtVP;
-      // Wider road at bottom of screen creates more dramatic perspective
-      const roadWidthAtScreenBottom = roadWidthAtBottom * 1.4; 
-
-      // Get the footer position to determine where road should visually end
       const footerRect = footer.getBoundingClientRect();
-      // Determine drawing bottom (do not exceed viewport)
       const bottomY = Math.min(window.innerHeight, footerRect.top);
 
-      // Intentionally do NOT draw a filled road background so the page content
-      // remains visible. We'll only draw road edges and center/stripe markings.
- 
-      // Draw road edges with solid color for cleaner look
-      ctx.strokeStyle = colors.yellow; // Use solid yellow for edges
-      ctx.lineWidth = 2.5; // Thicker line for better visibility
+      // Draw filled road polygon (keeps parity with deployed animation)
+      ctx.fillStyle = colors.bg1;
+      ctx.beginPath();
+      ctx.moveTo(cx - roadTopW / 2, vanishingY);
+      ctx.lineTo(cx + roadTopW / 2, vanishingY);
+      ctx.lineTo(cx + roadScreenBottomW / 2, bottomY);
+      ctx.lineTo(cx - roadScreenBottomW / 2, bottomY);
+      ctx.closePath();
+      ctx.fill();
+
+      // Subtle road texture
+      const textureCount = 40;
+      ctx.globalAlpha = 0.03;
+      for (let i = 0; i < textureCount; i++) {
+        const y = vanishingY + (bottomY - vanishingY) * (i / textureCount);
+        const prog = i / textureCount;
+        const widthAt = roadTopW + prog * (roadScreenBottomW - roadTopW);
+        ctx.beginPath();
+        ctx.moveTo(cx - widthAt / 2, y);
+        ctx.lineTo(cx + widthAt / 2, y);
+        ctx.strokeStyle = i % 2 === 0 ? colors.bg0 : colors.bg3;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+
+      // Road edges
+      ctx.strokeStyle = colors.yellow;
+      ctx.lineWidth = 2.5;
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
-
-      // Draw left edge (use rounded integer coords to avoid subpixel jitter)
-      const leftTopX = Math.round(characterX - roadWidthAtTop / 2);
-      const leftBottomX = Math.round(characterX - roadWidthAtScreenBottom / 2);
-      const rightTopX = Math.round(characterX + roadWidthAtTop / 2);
-      const rightBottomX = Math.round(characterX + roadWidthAtScreenBottom / 2);
-
       ctx.beginPath();
-      ctx.moveTo(leftTopX, Math.round(vanishingPointY));
-      ctx.lineTo(leftBottomX, Math.round(bottomY));
+      ctx.moveTo(cx - roadTopW / 2, vanishingY);
+      ctx.lineTo(cx - roadScreenBottomW / 2, bottomY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cx + roadTopW / 2, vanishingY);
+      ctx.lineTo(cx + roadScreenBottomW / 2, bottomY);
       ctx.stroke();
 
-      // Right edge
-      ctx.beginPath();
-      ctx.moveTo(rightTopX, Math.round(vanishingPointY));
-      ctx.lineTo(rightBottomX, Math.round(bottomY));
-      ctx.stroke();
-
-      // Note: the moving center stripes are drawn using the 'segments' array below.
-      // This avoids a separate dashed algorithm and keeps movement consistent.
-
-      // Draw the moving road stripes/segments
+      // Center dashes (from deployed behavior) — draw short vertical strokes spaced by totalLength
       if (animationActive) {
-        const range = bottomY - vanishingPointY || 1;
-        // Stripes should appear to travel from bottom -> up (toward vanishing point)
-        const stripeSpeed = -Math.max(2, Math.abs(roadSpeed) * 0.6); // negative = upward movement
-        for (let i = 0; i < segments.length; i++) {
-          // Move segment upwards; wrap smoothly when it crosses the vanishing point
-          segments[i] += stripeSpeed;
-          if (segments[i] < vanishingPointY) {
-            segments[i] += range;
-          } else if (segments[i] > bottomY) {
-            segments[i] -= range;
+        const dashLen = segmentSpacing * 0.5;
+        const gap = dashLen * 0.5;
+        const totalLen = dashLen + gap;
+        const num = Math.ceil((bottomY - vanishingY) / totalLen) + 1;
+
+        for (let s = 0; s < num; s++) {
+          const base = vanishingY + ((roadSpeed * 0.2 + s * totalLen) % (totalLen * num));
+          if (base >= vanishingY && base <= bottomY) {
+            const t = (base - vanishingY) / (bottomY - vanishingY);
+            const widthAt = roadTopW + t * (roadScreenBottomW - roadTopW);
+            const pDash = dashLen * (0.1 + t * 0.9);
+            ctx.beginPath();
+            ctx.moveTo(cx, base);
+            ctx.lineTo(cx, base + pDash);
+            ctx.strokeStyle = colors.yellow;
+            ctx.lineWidth = 2 + 3 * t;
+            ctx.stroke();
           }
+        }
+      }
+
+      // Side elements
+      if (animationActive) {
+        for (let i = 0; i < sideElements.length; i++) {
+          sideElements[i].y += roadSpeed * 0.8;
+          if (sideElements[i].y > bottomY) {
+            sideElements[i].y = vanishingY;
+            sideElements[i].size = 4 + Math.random() * 8;
+          }
+
+          const t = (sideElements[i].y - vanishingY) / (bottomY - vanishingY);
+          const sideWidth = roadTopW + t * (roadScreenBottomW - roadTopW);
+          const sideX = cx + (sideElements[i].side === 'left' ? -sideWidth / 2 - sideElements[i].size / 2 : sideWidth / 2 + sideElements[i].size / 2);
+          const size = sideElements[i].size * (0.2 + t * 0.8);
+
+          if (sideElements[i].y >= vanishingY && sideElements[i].y <= bottomY) {
+            ctx.fillStyle = sideElements[i].color;
+            switch (sideElements[i].shape) {
+              case 0:
+                ctx.beginPath();
+                ctx.arc(sideX, sideElements[i].y, size / 2, 0, Math.PI * 2);
+                ctx.fill();
+                break;
+              case 1:
+                ctx.fillRect(sideX - size / 2, sideElements[i].y - size / 2, size, size);
+                break;
+              case 2:
+                ctx.beginPath();
+                ctx.moveTo(sideX, sideElements[i].y - size / 2);
+                ctx.lineTo(sideX + size / 2, sideElements[i].y + size / 2);
+                ctx.lineTo(sideX - size / 2, sideElements[i].y + size / 2);
+                ctx.closePath();
+                ctx.fill();
+                break;
+              case 3:
+                ctx.fillRect(sideX - size, sideElements[i].y - size / 4, size * 2, size / 2);
+                break;
+            }
+          }
+        }
+      }
+
+      // Moving stripe segments (parallel stripes) — driven by segments array
+      if (animationActive) {
+        for (let i = 0; i < segments.length; i++) {
+          segments[i] += roadSpeed;
+          if (segments[i] > bottomY) segments[i] = vanishingY;
+          else if (segments[i] < vanishingY) segments[i] = bottomY;
 
           const yPos = segments[i];
+          if (yPos >= vanishingY && yPos <= bottomY) {
+            const prog = (yPos - vanishingY) / (bottomY - vanishingY);
+            const lineW = roadTopW + prog * (roadBottomW - roadTopW);
+            const segW = Math.max(8, lineW * 0.2);
+            const segH = Math.max(4, lineW * 0.03);
 
-          // Only draw segments that are between the vanishing point and bottom
-          if (yPos >= vanishingPointY && yPos <= bottomY) {
-            const t = (yPos - vanishingPointY) / (bottomY - vanishingPointY);
-            const roadWidthAtThisPoint = roadWidthAtTop + t * (roadWidthAtBottom - roadWidthAtTop);
-
-            const segmentWidth = Math.max(10, roadWidthAtThisPoint * 0.22);
-            const segmentHeight = Math.max(5, roadWidthAtThisPoint * 0.035);
-
-            // Stronger contrast for center stripes
-            ctx.fillStyle = colors.fg; // use foreground for better visibility
-
-            // Left stripe
-            ctx.fillRect(
-              Math.round(characterX - (roadWidthAtThisPoint * 0.25) - segmentWidth/2),
-              Math.round(yPos - segmentHeight / 2),
-              Math.round(segmentWidth),
-              Math.round(segmentHeight)
-            );
-
-            // Right stripe
-            ctx.fillRect(
-              Math.round(characterX + (roadWidthAtThisPoint * 0.25) - segmentWidth/2),
-              Math.round(yPos - segmentHeight / 2),
-              Math.round(segmentWidth),
-              Math.round(segmentHeight)
-            );
-
-            // Center dashed stripe (more prominent)
-            const centerWidth = Math.max(4, segmentWidth * 0.4);
-            const centerHeight = Math.max(6, segmentHeight * 1.1);
-            ctx.fillRect(
-              Math.round(characterX - centerWidth / 2),
-              Math.round(yPos - centerHeight / 2),
-              Math.round(centerWidth),
-              Math.round(centerHeight)
-            );
+            ctx.fillStyle = colors.yellow;
+            // left stripe
+            ctx.fillRect(cx - lineW * 0.25, yPos - segH / 2, segW, segH);
+            // right stripe
+            ctx.fillRect(cx + lineW * 0.25 - segW, yPos - segH / 2, segW, segH);
           }
         }
       }
 
-      // Top fade overlay: taper the road out smoothly near the vanishing point.
-      // Draw a vertical gradient from the very top of the canvas to the vanishing point
-      // that fades from the background color to transparent. Because the hero GIF
-      // sits above the canvas (higher z-index), the fade will not affect the GIF.
-      (function drawTopFade() {
-        try {
-          const fadeTop = 0;
-          const fadeBottom = Math.max(0, vanishingPointY); // where the fade becomes fully transparent
-          const grad = ctx.createLinearGradient(0, fadeTop, 0, fadeBottom);
-          // Use background color at the top and transparent at the vanishing point
-          grad.addColorStop(0, colors.bg0);
-          grad.addColorStop(1, 'rgba(0,0,0,0)');
-
-          // Save/restore so we don't affect other drawings
-          ctx.save();
-          ctx.globalCompositeOperation = 'source-over';
-          ctx.globalAlpha = 0.7; // less strong so stripes remain visible
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, fadeTop, canvas.width, fadeBottom);
-          ctx.restore();
-        } catch (e) {
-          // Non-fatal: if gradient drawing fails, ignore and continue
-          // console.warn('Top fade draw failed', e);
-        }
-      })();
-
-      // Removed vignette effect for cleaner animation
-
-      // Continue animation if active
-      if (animationActive) {
-        requestAnimationFrame(animate);
-      } else {
-        // Check periodically if we should resume animation
-        setTimeout(() => requestAnimationFrame(animate), 500);
+      // Top fade overlay
+      try {
+        const fadeTop = 0;
+        const fadeBottom = Math.max(0, vanishingY);
+        const grad = ctx.createLinearGradient(0, fadeTop, 0, fadeBottom);
+        grad.addColorStop(0, colors.bg0);
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.save();
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.globalAlpha = 0.95;
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, fadeTop, canvas.width, fadeBottom);
+        ctx.restore();
+      } catch (e) {
+        // ignore
       }
+
+      if (animationActive) requestAnimationFrame(animate);
+      else setTimeout(() => requestAnimationFrame(animate), 500);
     }
 
-    // Start animation
-    animate(); // Initial call to start the animation loop
+    // Start loop
+    requestAnimationFrame(animate);
 
-    // Handle resize and scroll
+    // Recompute caches and layout on resize
     window.addEventListener('resize', () => {
       resizeCanvas();
-      updateRoadSpeed(); // Recalculate speed based on new character size
-      initSegments(); // Reset segments with new spacing
+      updateHeroCache();
+      updateRoadSpeed();
+      initSegments();
     });
 
-    window.addEventListener('scroll', () => {
-      checkFooterVisibility(); // Check if footer is visible to adjust animation
-    });
+    // Footer visibility listener
+    window.addEventListener('scroll', checkFooterVisibility);
   });
 </script>
 
@@ -343,35 +307,24 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 5; /* Higher so stripes render above page content but below the hero GIF */
-    touch-action: none; /* Prevent touch scrolling */
-    -webkit-user-select: none; /* Prevent selection */
+    z-index: 1; /* hero GIF kept above */
+    touch-action: none;
+    -webkit-user-select: none;
     user-select: none;
-    image-rendering: pixelated; /* Makes road edges crisper */
+    image-rendering: pixelated;
   }
 
-  /* Create perspective for the hero image with shadow */
   :global(.hero-image) {
-    filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0 10px 8px rgba(0,0,0,0.5));
     transform-origin: bottom center;
-    /* Use much more subtle animation for the GIF */
     animation: snake-move 1s infinite alternate ease-in-out;
-    z-index: 20; /* Keep hero above the canvas stripes */
+    z-index: 20;
   }
 
-  @keyframes snake-move {
-    from { transform: translateY(0); }
-    to { transform: translateY(-2px); }
-  }
+  @keyframes snake-move { from { transform: translateY(0); } to { transform: translateY(-2px); } }
 
   @media (prefers-reduced-motion: reduce) {
-    .road-canvas {
-      display: none;
-    }
-
-    :global(.hero-image) {
-      animation: none;
-      filter: none;
-    }
+    .road-canvas { display: none; }
+    :global(.hero-image) { animation: none; filter: none; }
   }
 </style>
