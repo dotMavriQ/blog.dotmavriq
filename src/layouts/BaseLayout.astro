@@ -7,33 +7,44 @@ import "../styles/utils.css";
 
 const { title = "Jonatan – DevBlog" } = Astro.props;
 ---
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Jonatan's personal developer blog and portfolio - Full-stack developer and bassist based in Portugal" />
+    <meta
+      name="description"
+      content="Jonatan's personal developer blog and portfolio - Full-stack developer and bassist based in Portugal"
+    />
+    <!-- Favicon: provide ICO fallback plus SVG for modern browsers -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
-      <script is:inline>
-        // Immediate dark mode detection
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          document.documentElement.classList.add('dark');
-        }
-      </script>
-      <script src="/dark-mode.js" defer></script>
-        <script is:inline>
-          // Immediate dark mode script to prevent flash of incorrect theme
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          const storedTheme = localStorage.getItem('theme');
+    <script is:inline>
+      // Immediate dark mode detection
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+    <script src="/dark-mode.js" defer></script>
+    <script is:inline>
+      // Immediate dark mode script to prevent flash of incorrect theme
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      const storedTheme = localStorage.getItem("theme");
 
-          if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
-            document.documentElement.classList.add('dark');
-          }
-        </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+      if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <script src="/scripts/main.js" defer></script>
     <slot name="head" />
   </head>
