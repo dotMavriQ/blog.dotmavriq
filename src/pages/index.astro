@@ -6,11 +6,11 @@ const title = "blog.dotMavriQ";
 ---
 
 <BaseLayout title={title}>
-  <div class="relative flex flex-col h-full p-4 sm:p-8 md:p-16 bg-background text-foreground" style="font-family:var(--font-geist-sans)">
+  <div class="relative flex flex-col min-h-screen p-4 sm:p-8 md:p-16 bg-background text-foreground" style="font-family:var(--font-geist-sans)">
     <!-- Road animation (background) -->
     <RoadAnimation />
 
-    <div class="relative z-10 flex flex-col flex-grow items-center justify-center gap-8">
+    <div class="relative z-20 flex flex-col flex-grow items-center justify-center gap-8">
       <!-- Hero GIF -->
       <img alt="Solid Snake GBC" class="hero-image dark:invert" src="/solidsnakegbc.gif" width="180" height="38" />
 
@@ -54,5 +54,5 @@ const title = "blog.dotMavriQ";
 
 <style>
   .social-icon { width: clamp(30px, 6vw, 40px); height: auto; }
-  .hero-image { max-width: 100%; height: auto; width: clamp(120px, 20vw, 180px); }
+  .hero-image { max-width: 100%; height: auto; width: clamp(120px, 20vw, 180px); display:block; }
 </style>
