@@ -17,8 +17,13 @@ const { title = "Jonatan – DevBlog" } = Astro.props;
       name="description"
       content="Jonatan's personal developer blog and portfolio - Full-stack developer and bassist based in Portugal"
     />
-    <!-- Favicon: provide ICO fallback plus SVG for modern browsers -->
-    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <!-- Favicon set (mirrors production); replace placeholder PNGs when added -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
+    <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <!-- Keep SVG for capable browsers if you want scalable version; can remove if not desired -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <script is:inline>
