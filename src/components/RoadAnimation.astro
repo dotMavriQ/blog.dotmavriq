@@ -11,171 +11,218 @@
 <canvas id="road-canvas" class="road-canvas" aria-hidden="true"></canvas>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const canvas = document.getElementById('road-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
+  // @ts-nocheck
+  // Provide ambient declaration for tooling (ignored at runtime)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /**
+   * @typedef {Object} RoadAnimationAPI
+   * @property {() => void} stop
+   * @property {() => void} start
+   * @property {() => { w:number, h:number, heroRect:DOMRect, segmentsCount:number }} info
+   */
+  document.addEventListener("DOMContentLoaded", () => {
+    /** @type {HTMLCanvasElement | null} */
+    const canvas = document.getElementById("road-canvas");
+    if (!canvas) return;
+    /** @type {CanvasRenderingContext2D | null} */
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const win = /** @type {any} */ (window);
 
-  // Respect prefers-reduced-motion
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    canvas.style.display = 'none';
-    return;
-  }
-
-  canvas.style.pointerEvents = 'none';
-
-  let dpr = Math.max(1, window.devicePixelRatio || 1);
-  let w = 0, h = 0;
-
-  function setSize() {
-    dpr = Math.max(1, window.devicePixelRatio || 1);
-    w = Math.max(1, window.innerWidth);
-    h = Math.max(1, window.innerHeight);
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
-    canvas.width = Math.round(w * dpr);
-    canvas.height = Math.round(h * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  setSize();
-  window.addEventListener('resize', setSize);
-
-  // Hero element; fallback if not present
-  function getHeroRect() {
-    const el = document.querySelector('.hero-image');
-    if (!el) {
-      const size = Math.min(180, Math.max(120, w * 0.18));
-      return { left: (w - size) / 2, top: h * 0.35, width: size, height: size, bottom: h * 0.35 + size };
-    }
-    return el.getBoundingClientRect();
-  }
-
-  let heroRect = getHeroRect();
-
-  // Keep heroRect current
-  if (window.ResizeObserver) {
-    const heroEl = document.querySelector('.hero-image');
-    if (heroEl) {
-      new ResizeObserver(() => { heroRect = heroEl.getBoundingClientRect(); }).observe(heroEl);
-    }
-  }
-
-  // Road geometry helpers
-  const leftX = () => Math.round(w * 0.14);
-  const rightX = () => Math.round(w * 0.86);
-  const bottomY = () => Math.round(h - 2);
-
-  // Center-line segments defined by parameter u in [0..1] (0 == vanishing point, 1 == bottom)
-  let segments = [];
-  const gapU = 0.08; // spacing in parameter space
-  function initSegments() {
-    segments = [];
-    const count = Math.ceil(1 / gapU) + 6;
-    for (let i = 0; i < count; i++) segments.push((i * gapU) % 1);
-  }
-  initSegments();
-
-  // Animation state
-  let last = performance.now();
-  let running = true;
-
-  function animate(now) {
-    if (!running) return;
-    const dt = Math.min(40, now - last) / 1000; // seconds
-    last = now;
-
-    // update sizes in case of change
-    heroRect = getHeroRect();
-
-    // vanishing point ("hips") - slightly above bottom of hero
-    const vpX = (heroRect.left || 0) + (heroRect.width || 0) / 2;
-    const vpY = (heroRect.bottom || (h * 0.55)) - (heroRect.height || 0) * 0.32;
-
-    // clear
-    ctx.clearRect(0, 0, w, h);
-
-    // draw road edges (stroked lines, no fill)
-    const edgeWidth = Math.max(2, (heroRect.width || 120) * 0.02);
-    ctx.lineWidth = edgeWidth;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = 'rgba(220,200,150,0.98)';
-
-    ctx.beginPath();
-    ctx.moveTo(leftX(), bottomY());
-    ctx.lineTo(vpX - Math.max(12, (heroRect.width || 120) * 0.12), vpY);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(rightX(), bottomY());
-    ctx.lineTo(vpX + Math.max(12, (heroRect.width || 120) * 0.12), vpY);
-    ctx.stroke();
-
-    // faint center guide line (not the visible dashes)
-    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(Math.round(w / 2), bottomY());
-    ctx.lineTo(vpX, vpY);
-    ctx.stroke();
-
-    // animate center checkered dashes
-    // SLOW, REVERSED: move dashes from bottom toward the vanishing point much slower
-    const speedPx = Math.max(18, (heroRect.width || 120) * 1.2); // much slower baseline
-    // convert to parameter-space speed (approx): when u moves from 0 to 1, y goes from vpY to bottom
-    const approxLength = bottomY() - vpY;
-    const speedU = (speedPx * dt) / Math.max(approxLength, 1);
-
-    for (let i = 0; i < segments.length; i++) {
-      // reverse direction: segments decrease (bottom -> vanishing point)
-      segments[i] -= speedU;
-      if (segments[i] < 0) segments[i] += 1;
-       
-      const u = segments[i];
-      // interpolate position between VP and bottom
-      const x = (1 - u) * vpX + u * (w / 2);
-      const y = (1 - u) * vpY + u * bottomY();
-
-      // size based on perspective (closer to bottom -> larger)
-      const scale = Math.max(0.2, 1 - u);
-      const segW = Math.max(6, 26 * scale);
-      const segH = Math.max(4, 12 * scale);
-
-      // alternate colors for checkered look
-      ctx.fillStyle = (i % 2 === 0) ? 'rgba(240,230,200,0.98)' : 'rgba(60,55,50,0.95)';
-      ctx.fillRect(Math.round(x - segW / 2), Math.round(y - segH / 2), Math.round(segW), Math.round(segH));
+    // Respect prefers-reduced-motion
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      canvas.style.display = "none";
+      return;
     }
 
-    // subtle global vignette/grunge
-    ctx.fillStyle = 'rgba(0,0,0,0.02)';
-    ctx.fillRect(0, 0, w, h);
+    canvas.style.pointerEvents = "none";
 
-    requestAnimationFrame(animate);
-  }
+    let dpr = Math.max(1, window.devicePixelRatio || 1);
+    let w = 0,
+      h = 0;
 
-  requestAnimationFrame((ts) => { last = ts; animate(ts); });
+    function setSize() {
+      dpr = Math.max(1, window.devicePixelRatio || 1);
+      w = Math.max(1, window.innerWidth);
+      h = Math.max(1, window.innerHeight);
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
 
-  // Expose to window for quick debugging
-  window.roadAnimation = {
-    stop() { running = false; },
-    start() { if (!running) { running = true; last = performance.now(); requestAnimationFrame(animate); } },
-    info() { return { w,h, heroRect, segmentsCount: segments.length }; }
-  };
-});
+    setSize();
+    window.addEventListener("resize", setSize);
+
+    // Hero element; fallback if not present
+    function getHeroRect() {
+      const el = document.querySelector(".hero-image");
+      if (!el) {
+        const size = Math.min(180, Math.max(120, w * 0.18));
+        return {
+          left: (w - size) / 2,
+          top: h * 0.35,
+          width: size,
+          height: size,
+          bottom: h * 0.35 + size,
+        };
+      }
+      return el.getBoundingClientRect();
+    }
+
+    let heroRect = getHeroRect();
+
+    // Keep heroRect current
+    if (window.ResizeObserver) {
+      const heroEl = document.querySelector(".hero-image");
+      if (heroEl) {
+        new ResizeObserver(() => {
+          heroRect = heroEl.getBoundingClientRect();
+        }).observe(heroEl);
+      }
+    }
+
+    // Road geometry helpers
+    const leftX = () => Math.round(w * 0.14);
+    const rightX = () => Math.round(w * 0.86);
+    const bottomY = () => Math.round(h - 2);
+
+    // Center-line segments defined by parameter u in [0..1] (0 == vanishing point, 1 == bottom)
+    /** @type {number[]} */
+    let segments = [];
+    const gapU = 0.08; // spacing in parameter space
+    function initSegments() {
+      segments = [];
+      const count = Math.ceil(1 / gapU) + 6;
+      for (let i = 0; i < count; i++) segments.push((i * gapU) % 1);
+    }
+    initSegments();
+
+    // Animation state
+    let last = performance.now();
+    let running = true;
+
+    function animate(now) {
+      if (!running) return;
+      const dt = Math.min(40, now - last) / 1000; // seconds
+      last = now;
+
+      // update sizes in case of change
+      heroRect = getHeroRect();
+
+      // vanishing point ("hips") - slightly above bottom of hero
+      const vpX = (heroRect.left || 0) + (heroRect.width || 0) / 2;
+      const vpY = (heroRect.bottom || h * 0.55) - (heroRect.height || 0) * 0.32;
+
+      // clear
+      ctx.clearRect(0, 0, w, h);
+
+      // draw road edges (stroked lines, no fill)
+      const edgeWidth = Math.max(2, (heroRect.width || 120) * 0.02);
+      ctx.lineWidth = edgeWidth;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "rgba(220,200,150,0.98)";
+
+      ctx.beginPath();
+      ctx.moveTo(leftX(), bottomY());
+      ctx.lineTo(vpX - Math.max(12, (heroRect.width || 120) * 0.12), vpY);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(rightX(), bottomY());
+      ctx.lineTo(vpX + Math.max(12, (heroRect.width || 120) * 0.12), vpY);
+      ctx.stroke();
+
+      // Center guide line – recolored to blend with dark background (#282828) per request
+      ctx.strokeStyle = "#282828";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(Math.round(w / 2), bottomY());
+      ctx.lineTo(vpX, vpY);
+      ctx.stroke();
+
+      // Animate center dashes
+      // Further slowed down & perspective adjusted (bottom large -> top small)
+      const speedPx = Math.max(10, (heroRect.width || 120) * 0.35); // slower baseline speed
+      // convert to parameter-space speed (approx): when u moves from 0 to 1, y goes from vpY to bottom
+      const approxLength = bottomY() - vpY;
+      const speedU = (speedPx * dt) / Math.max(approxLength, 1);
+
+      for (let i = 0; i < segments.length; i++) {
+        // reverse direction: segments decrease (bottom -> vanishing point)
+        segments[i] -= speedU;
+        if (segments[i] < 0) segments[i] += 1;
+
+        const u = segments[i];
+        // interpolate position between VP and bottom
+        const x = (1 - u) * vpX + u * (w / 2);
+        const y = (1 - u) * vpY + u * bottomY();
+
+        // Perspective scaling (u=1 bottom -> largest, u=0 top -> smallest)
+        const scale = 0.25 + 0.75 * u; // bottom ~1.0, top ~0.25
+        // Make dashes longer (vertical) than wide to resemble a road center stripe
+        const segW = Math.max(4, 10 * scale); // narrower
+        const segH = Math.max(10, 34 * scale); // longer
+
+        // alternate colors for checkered look
+        ctx.fillStyle =
+          i % 2 === 0 ? "rgba(240,230,200,0.98)" : "rgba(60,55,50,0.95)";
+        ctx.fillRect(
+          Math.round(x - segW / 2),
+          Math.round(y - segH / 2),
+          Math.round(segW),
+          Math.round(segH)
+        );
+      }
+
+      // subtle global vignette/grunge
+      ctx.fillStyle = "rgba(0,0,0,0.02)";
+      ctx.fillRect(0, 0, w, h);
+
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame((ts) => {
+      last = ts;
+      animate(ts);
+    });
+
+    // Expose to window for quick debugging
+    win.roadAnimation = {
+      stop() {
+        running = false;
+      },
+      start() {
+        if (!running) {
+          running = true;
+          last = performance.now();
+          requestAnimationFrame(animate);
+        }
+      },
+      info() {
+        return { w, h, heroRect, segmentsCount: segments.length };
+      },
+    };
+  });
 </script>
 
 <style>
-.road-canvas {
-  position: fixed;
-  inset: 0; /* top:0; right:0; bottom:0; left:0; */
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0; /* sits underneath page content which should use higher z-index */
-  mix-blend-mode: normal;
-}
-@media (prefers-reduced-motion: reduce) {
-  .road-canvas { display: none; }
-}
+  .road-canvas {
+    position: fixed;
+    inset: 0; /* top:0; right:0; bottom:0; left:0; */
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0; /* sits underneath page content which should use higher z-index */
+    mix-blend-mode: normal;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .road-canvas {
+      display: none;
+    }
+  }
 </style>
