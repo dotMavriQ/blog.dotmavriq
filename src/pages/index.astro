@@ -124,8 +124,11 @@ const title = "blog.dotMavriQ";
           aria-label="Read Blog">Read Blog</a
         >
       </div>
-  <!-- Quick links -->
-  <div class="quick-links-row relative z-10 flex flex-wrap items-center justify-center gap-6" aria-label="Secondary navigation">
+      <!-- Quick links -->
+      <div
+        class="quick-links-row relative z-10 flex flex-wrap items-center justify-center gap-6"
+        aria-label="Secondary navigation"
+      >
         <a
           class="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="/about"
@@ -174,6 +177,8 @@ const title = "blog.dotMavriQ";
     height: auto;
     width: clamp(120px, 20vw, 180px);
     display: block;
+    /* Lower only the GIF without impacting other clusters */
+    margin-top: 1.8vh;
   }
 </style>
 <style>
@@ -188,50 +193,79 @@ const title = "blog.dotMavriQ";
     margin-bottom: 1rem;
   }
   .quick-links-row {
-    margin-top: 0.4rem;
+    margin-top: 1.2rem;
+    gap: 1.25rem;
   }
   @media (min-width: 640px) {
     .social-links-row {
       margin-bottom: 1.3rem;
     }
     .hero-actions {
+      margin-top: 1.2vh;
       margin-bottom: 1.05rem;
     }
     .quick-links-row {
-      margin-top: 0.55rem;
+      margin-top: 1.6rem;
+      gap: 2rem;
     }
   }
-  .hero-btn { position: relative; display:inline-flex; align-items:center; gap:0.55rem; font-weight:500; font-size:clamp(0.9rem,0.86rem + 0.2vw,1.02rem); line-height:1.15; border-radius:9999px; padding:0.58rem 1.15rem; min-height:2.4rem; text-decoration:none; cursor:pointer; -webkit-font-smoothing:antialiased; transition:background-color .18s ease,color .18s ease,border-color .18s ease, box-shadow .18s ease; }
-  .hero-btn svg { width:1.05rem; height:1.05rem; flex-shrink:0; display:block; }
-  .hero-btn-primary { background:#cdbfa1; color:#282828; box-shadow:0 0 0 1px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.22); }
-  .hero-btn-primary:hover { background:#bdae93; color:#282828; }
-  .hero-btn-primary:active { background:#a89984; }
-  .hero-btn-secondary { background:#282828; border:1px solid rgba(255,255,255,0.10); color: var(--text-primary); }
-  .hero-btn-secondary:hover { background:#323232; border-color:rgba(255,255,255,0.18); }
-  .hero-btn-secondary:active { background:#3a3a3a; }
-  .hero-btn:focus-visible { outline:2px solid var(--text-primary); outline-offset:2px; }
-  @media (max-width:560px){ .hero-btn { font-size:.85rem; padding:.52rem 1rem; min-height:2.25rem; gap:.45rem; } }
+  @media (min-width: 1100px) {
+    .quick-links-row {
+      margin-top: 2.1rem;
+      gap: 2.4rem;
+    }
+  }
+  .hero-btn {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: clamp(0.9rem, 0.86rem + 0.2vw, 1.02rem);
+    line-height: 1.15;
+    border-radius: 9999px;
+    padding: 0.58rem 1.15rem;
+    min-height: 2.4rem;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-font-smoothing: antialiased;
+    transition:
+      background-color 0.18s ease,
+      color 0.18s ease,
+      border-color 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+  .hero-btn svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    flex-shrink: 0;
+    display: block;
+  }
+  .hero-btn-primary {
+    background: #cdbfa1;
+    color: #282828;
+    box-shadow:
       0 0 0 1px rgba(0, 0, 0, 0.06),
       0 1px 2px rgba(0, 0, 0, 0.22);
   }
   .hero-btn-primary:hover {
-    background: #d5c4a1;
-    color: var(--bg-primary);
+    background: #bdae93;
+    color: #282828;
   }
   .hero-btn-primary:active {
-    background: #c8b794;
+    background: #a89984;
   }
   .hero-btn-secondary {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: #282828;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
   }
   .hero-btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.22);
+    background: #323232;
+    border-color: rgba(255, 255, 255, 0.18);
   }
   .hero-btn-secondary:active {
-    background: rgba(255, 255, 255, 0.12);
+    background: #3a3a3a;
   }
   .hero-btn:focus-visible {
     outline: 2px solid var(--text-primary);
@@ -240,9 +274,11 @@ const title = "blog.dotMavriQ";
   @media (max-width: 560px) {
     .hero-btn {
       font-size: 0.85rem;
-      padding: 0.55rem 1rem;
-      min-height: 2.3rem;
+      padding: 0.52rem 1rem;
+      min-height: 2.25rem;
       gap: 0.45rem;
     }
   }
+  /* Removed duplicate legacy style block below */
+  /* Removed duplicate legacy style block below; per-element vertical offsets used instead */
 </style>
