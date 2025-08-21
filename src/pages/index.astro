@@ -6,53 +6,243 @@ const title = "blog.dotMavriQ";
 ---
 
 <BaseLayout title={title}>
-  <div class="relative flex flex-col min-h-screen p-4 sm:p-8 md:p-16 bg-background text-foreground" style="font-family:var(--font-geist-sans)">
+  <div
+    class="relative flex flex-col min-h-screen p-4 sm:p-8 md:p-16 bg-background text-foreground"
+    style="font-family:var(--font-geist-sans)"
+  >
     <!-- Road animation (background) -->
     <RoadAnimation />
 
-    <div class="relative z-20 flex flex-col flex-grow items-center justify-center gap-8">
+    <div
+      class="relative z-30 flex flex-col flex-grow items-center justify-center"
+    >
       <!-- Hero GIF -->
-      <img alt="Solid Snake GBC" class="hero-image dark:invert" src="/solidsnakegbc.gif" width="180" height="38" />
+      <img
+        alt="Solid Snake GBC"
+        class="hero-image dark:invert mb-8"
+        src="/solidsnakegbc.gif"
+        width="180"
+        height="38"
+      />
 
       <!-- Social links -->
-      <div class="flex flex-wrap justify-center gap-6">
-        <a href="https://github.com/dotMavriQ" target="_blank" rel="noopener noreferrer" class="transition hover:opacity-75" aria-label="GitHub profile">
-          <img alt="GitHub" class="social-icon" src="/github.svg" width="40" height="40" />
+      <div class="social-links-row flex flex-wrap justify-center gap-6">
+        <a
+          href="https://github.com/dotMavriQ"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="transition hover:opacity-75"
+          aria-label="GitHub profile"
+        >
+          <img
+            alt="GitHub"
+            class="social-icon"
+            src="/github.svg"
+            width="40"
+            height="40"
+          />
         </a>
-        <a href="https://www.linkedin.com/in/janssonjonatan/" target="_blank" rel="noopener noreferrer" class="transition hover:opacity-75" aria-label="LinkedIn profile">
-          <img alt="LinkedIn" class="social-icon" src="/linkedin.svg" width="40" height="40" />
+        <a
+          href="https://www.linkedin.com/in/janssonjonatan/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="transition hover:opacity-75"
+          aria-label="LinkedIn profile"
+        >
+          <img
+            alt="LinkedIn"
+            class="social-icon"
+            src="/linkedin.svg"
+            width="40"
+            height="40"
+          />
         </a>
-        <a href="https://www.youtube.com/@dotMavriq/videos" target="_blank" rel="noopener noreferrer" class="transition hover:opacity-75" aria-label="YouTube channel">
-          <img alt="YouTube" class="social-icon" src="/youtube.svg" width="40" height="40" />
+        <a
+          href="https://www.youtube.com/@dotMavriq/videos"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="transition hover:opacity-75"
+          aria-label="YouTube channel"
+        >
+          <img
+            alt="YouTube"
+            class="social-icon"
+            src="/youtube.svg"
+            width="40"
+            height="40"
+          />
         </a>
-        <a href="https://matrix.to/#/@dotmavriq:chat.dotmavriq.life" target="_blank" rel="noopener noreferrer" class="transition hover:opacity-75" aria-label="Matrix chat">
-          <img alt="Matrix" class="social-icon" src="/matrix.svg" width="40" height="40" />
+        <a
+          href="https://matrix.to/#/@dotmavriq:chat.dotmavriq.life"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="transition hover:opacity-75"
+          aria-label="Matrix chat"
+        >
+          <img
+            alt="Matrix"
+            class="social-icon"
+            src="/matrix.svg"
+            width="40"
+            height="40"
+          />
         </a>
-        <a href="https://social.dotmavriq.life/users/dotmavriq" target="_blank" rel="noopener noreferrer" class="transition hover:opacity-75" aria-label="Fediverse profile">
-          <img alt="Fediverse" class="social-icon" src="/fediverse.svg" width="40" height="40" />
+        <a
+          href="https://social.dotmavriq.life/users/dotmavriq"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Fediverse profile"
+        >
+          <img
+            alt="Fediverse"
+            class="social-icon"
+            src="/fediverse.svg"
+            width="40"
+            height="40"
+          />
         </a>
       </div>
 
       <!-- Action buttons -->
-      <div class="flex flex-wrap justify-center gap-4">
-        <a class="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5" href="/portfolio">
-          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/></svg>
-          View Portfolio
+      <div class="hero-actions relative z-30" aria-label="Primary actions">
+        <a
+          href="/portfolio"
+          class="hero-btn hero-btn-primary"
+          aria-label="View Portfolio"
+        >
+          <svg aria-hidden="true" viewBox="0 0 20 20"
+            ><path
+              fill-rule="evenodd"
+              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+              clip-rule="evenodd"></path></svg
+          >
+          <span>View Portfolio</span>
         </a>
-        <a class="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44" href="/blog">Read Blog</a>
+        <a
+          href="/blog"
+          class="hero-btn hero-btn-secondary"
+          aria-label="Read Blog">Read Blog</a
+        >
       </div>
-
-      <!-- Quick links -->
-      <div class="relative z-10 mt-4 flex flex-wrap items-center justify-center gap-6">
-        <a class="flex items-center gap-2 hover:underline hover:underline-offset-4" href="/about"><img aria-hidden="true" alt="" src="/file.svg" width="16" height="16"/> About Me</a>
-        <a class="flex items-center gap-2 hover:underline hover:underline-offset-4" href="/cv"><img aria-hidden="true" alt="" src="/globe.svg" width="16" height="16"/> My CV</a>
-        <a class="flex items-center gap-2 hover:underline hover:underline-offset-4" href="/contact"><img aria-hidden="true" alt="" src="/window.svg" width="16" height="16"/> Contact</a>
+  <!-- Quick links -->
+  <div class="quick-links-row relative z-10 flex flex-wrap items-center justify-center gap-6" aria-label="Secondary navigation">
+        <a
+          class="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="/about"
+          ><img
+            aria-hidden="true"
+            alt=""
+            src="/file.svg"
+            width="16"
+            height="16"
+          /> About Me</a
+        >
+        <a
+          class="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="/cv"
+          ><img
+            aria-hidden="true"
+            alt=""
+            src="/globe.svg"
+            width="16"
+            height="16"
+          /> My CV</a
+        >
+        <a
+          class="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="/contact"
+          ><img
+            aria-hidden="true"
+            alt=""
+            src="/window.svg"
+            width="16"
+            height="16"
+          /> Contact</a
+        >
       </div>
     </div>
   </div>
 </BaseLayout>
 
 <style>
-  .social-icon { width: clamp(30px, 6vw, 40px); height: auto; }
-  .hero-image { max-width: 100%; height: auto; width: clamp(120px, 20vw, 180px); display:block; }
+  .social-icon {
+    width: clamp(30px, 6vw, 40px);
+    height: auto;
+  }
+  .hero-image {
+    max-width: 100%;
+    height: auto;
+    width: clamp(120px, 20vw, 180px);
+    display: block;
+  }
+</style>
+<style>
+  .social-links-row {
+    margin-bottom: 1.1rem;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  .quick-links-row {
+    margin-top: 0.4rem;
+  }
+  @media (min-width: 640px) {
+    .social-links-row {
+      margin-bottom: 1.3rem;
+    }
+    .hero-actions {
+      margin-bottom: 1.05rem;
+    }
+    .quick-links-row {
+      margin-top: 0.55rem;
+    }
+  }
+  .hero-btn { position: relative; display:inline-flex; align-items:center; gap:0.55rem; font-weight:500; font-size:clamp(0.9rem,0.86rem + 0.2vw,1.02rem); line-height:1.15; border-radius:9999px; padding:0.58rem 1.15rem; min-height:2.4rem; text-decoration:none; cursor:pointer; -webkit-font-smoothing:antialiased; transition:background-color .18s ease,color .18s ease,border-color .18s ease, box-shadow .18s ease; }
+  .hero-btn svg { width:1.05rem; height:1.05rem; flex-shrink:0; display:block; }
+  .hero-btn-primary { background:#cdbfa1; color:#282828; box-shadow:0 0 0 1px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.22); }
+  .hero-btn-primary:hover { background:#bdae93; color:#282828; }
+  .hero-btn-primary:active { background:#a89984; }
+  .hero-btn-secondary { background:#282828; border:1px solid rgba(255,255,255,0.10); color: var(--text-primary); }
+  .hero-btn-secondary:hover { background:#323232; border-color:rgba(255,255,255,0.18); }
+  .hero-btn-secondary:active { background:#3a3a3a; }
+  .hero-btn:focus-visible { outline:2px solid var(--text-primary); outline-offset:2px; }
+  @media (max-width:560px){ .hero-btn { font-size:.85rem; padding:.52rem 1rem; min-height:2.25rem; gap:.45rem; } }
+      0 0 0 1px rgba(0, 0, 0, 0.06),
+      0 1px 2px rgba(0, 0, 0, 0.22);
+  }
+  .hero-btn-primary:hover {
+    background: #d5c4a1;
+    color: var(--bg-primary);
+  }
+  .hero-btn-primary:active {
+    background: #c8b794;
+  }
+  .hero-btn-secondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: var(--text-primary);
+  }
+  .hero-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+  .hero-btn-secondary:active {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .hero-btn:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+  }
+  @media (max-width: 560px) {
+    .hero-btn {
+      font-size: 0.85rem;
+      padding: 0.55rem 1rem;
+      min-height: 2.3rem;
+      gap: 0.45rem;
+    }
+  }
 </style>
