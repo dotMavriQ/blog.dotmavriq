@@ -16,7 +16,6 @@ const title = "blog.dotMavriQ";
     <div
       class="relative z-30 flex flex-col flex-grow items-center justify-center"
     >
-      <!-- Hero GIF -->
       <img
         alt="Solid Snake GBC"
         class="hero-image dark:invert mb-8"
@@ -173,12 +172,13 @@ const title = "blog.dotMavriQ";
     height: auto;
   }
   .hero-image {
+    --hero-offset: 28.5rem; /* consumed by RoadAnimation to virtually keep apex higher */
     max-width: 100%;
     height: auto;
     width: clamp(120px, 20vw, 180px);
     display: block;
-    /* Lower only the GIF without impacting other clusters */
-    margin-top: 1.8vh;
+    image-rendering: pixelated;
+    margin-top: var(--hero-offset);
   }
 </style>
 <style>

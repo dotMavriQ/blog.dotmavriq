@@ -71,7 +71,26 @@
           bottom: h * 0.35 + size,
         };
       }
-      return el.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
+      // Virtual upward shift: if CSS --hero-offset (margin pushing GIF down) exists, subtract it so
+      // road apex calculation still uses the original visual attachment point while allowing the
+      // GIF to be displayed lower without shortening the apparent road above.
+      let offset = 0;
+      try {
+        const cs = getComputedStyle(el);
+        const v = cs.getPropertyValue("--hero-offset");
+        if (v) offset = parseFloat(v) || 0;
+      } catch {}
+      if (offset) {
+        return {
+          left: rect.left,
+          top: rect.top - offset,
+          width: rect.width,
+          height: rect.height,
+          bottom: rect.bottom - offset,
+        };
+      }
+      return rect;
     }
 
     let heroRect = getHeroRect();
@@ -132,11 +151,20 @@
       // clear
       ctx.clearRect(0, 0, w, h);
 
-      // draw road edges (stroked lines, no fill)
+      // draw road edges (stroked lines, no fill) with subtle top fade into background
       const edgeWidth = Math.max(2, (heroRect.width || 120) * 0.02);
       ctx.lineWidth = edgeWidth;
       ctx.lineCap = "round";
-      ctx.strokeStyle = "rgba(220,200,150,0.98)";
+      const edgeColor = "rgba(220,200,150,0.97)";
+      // Fade only a short distance ("not too much") from the vanishing point downward
+      const fadeHeight = Math.min(140, Math.max(70, h * 0.14));
+      // Gradient goes from background (#282828) at vpY to edgeColor after fadeHeight
+      const g = ctx.createLinearGradient(0, vpY, 0, vpY + fadeHeight);
+      g.addColorStop(0, "#282828");
+      g.addColorStop(0.35, "rgba(40,40,40,0.4)"); // gentle transition ramp
+      g.addColorStop(0.7, edgeColor);
+      g.addColorStop(1, edgeColor);
+      ctx.strokeStyle = g;
 
       ctx.beginPath();
       ctx.moveTo(leftX(), h); // draw edge to visible bottom only
@@ -150,11 +178,14 @@
 
       // (Removed center guide line to avoid visual overlap with hero & icons)
 
-      // Animate center dashes (uniform speed, no lateral drift)
-      const speedPx = Math.max(14, (heroRect.width || 120) * 0.4);
-      // convert to parameter-space speed (approx): when u moves from 0 to 1, y goes from vpY to bottom
-      const approxLength = roadBottomY() - vpY;
-      const speedU = (speedPx * dt) / Math.max(approxLength, 1);
+      // Animate center dashes (natural speed tied to perspective length, independent of hero offset)
+      const perspectiveLength = Math.max(1, roadBottomY() - vpY);
+      // Slower, more natural base speed tied to perspective length
+      const speedPx = (() => {
+        const raw = perspectiveLength * 0.14; // slightly slower factor
+        return Math.min(240, Math.max(85, raw));
+      })();
+      const speedU = (speedPx * dt) / perspectiveLength; // parameter space speed
 
       // Update positions & wrap
       for (let i = 0; i < segments.length; i++) {
@@ -169,17 +200,23 @@
         const centerX = (1 - eased) * vpX + eased * (w / 2);
         // Map to extended bottom then shift upward so emergence happens off-screen
         const logicalY = (1 - eased) * vpY + eased * roadBottomY();
-        const centerY = logicalY - bottomExtra; // shift into visible space later, causing spawn below
+        // Spawn well BELOW viewport then glide in (immersive emergence from "under footer")
+        const spawnBelow = 240; // px below bottom edge
+        const centerY = logicalY - bottomExtra + spawnBelow;
         // Smooth cubic easing for size (less abrupt near midpoint)
-        const sizeEase = eased * eased * (3 - 2 * eased); // smoothstep
-        // Start bottom bigger relative to previous (increase max height + width)
-        const scale = 0.18 + 0.9 * sizeEase; // 0.18 top -> ~1.08 bottom
-        const segW = Math.max(3, 6 * scale); // keep narrow
-        const segH = Math.max(10, 48 * scale); // taller for stronger approach effect
+        const sizeEase = eased * eased * (3 - 2 * eased); // smoothstep 0..1
+        // Smoother, more gradual growth (slightly smaller top, a bit taller bottom)
+        const scale = 0.12 + 1.05 * sizeEase; // 0.12 top -> ~1.17 bottom
+        // Width/height derived with gentle non-linear easing to reduce popping
+        // Make initial (near top) dashes a bit larger for readability while keeping bottom similar.
+        // Raise base sizes and slightly reduce growth amplitude.
+        const segW = 4 + 3.8 * Math.pow(sizeEase, 0.7); // 4 -> ~7.8px
+        const segH = 18 + 46 * sizeEase; // 18 -> 64px
         const taperShift = (1 - u) * (vpX - w / 2) * 0.015;
-        // Smooth alpha ramp (quadratic) to reduce choppiness at top emergence
-        const rawA = Math.min(1, Math.max(0, (u - 0.02) / 0.98));
-        const alpha = rawA * rawA * (3 - 2 * rawA); // smoothstep
+        // Alpha ramp (earlier presence, slower fade): extend pre-fade domain for small top dashes
+        const rawA = Math.min(1, Math.max(0, (u - 0.006) / 0.955));
+        const smooth = rawA * rawA * (3 - 2 * rawA);
+        const alpha = 0.35 * rawA + 0.65 * smooth; // lean a bit more on smooth curve
         dashData.push({
           u,
           eased,
@@ -194,8 +231,9 @@
 
       let prevBottom = -Infinity;
       // Safe zone: suppress dash rendering near hero & link cluster so center line always reads as *under* UI
+      // Allow dashes to come closer to the hero feet: reduce buffer from 25% height to ~5%.
       const safeZoneLimit =
-        (heroRect.bottom || h * 0.55) + (heroRect.height || 120) * 0.25; // small buffered region
+        (heroRect.bottom || h * 0.55) + (heroRect.height || 120) * 0.05; // tighter buffer so dashes meet feet visually
       for (const d of dashData) {
         // Skip any dash whose lower edge intrudes into safe zone
         if (d.y + d.h / 2 < safeZoneLimit) {
@@ -204,14 +242,28 @@
         }
         // dynamic minimum gap in pixels: smaller near top, larger near bottom
         const gapEase = d.eased * d.eased * (3 - 2 * d.eased);
-        const gap = 5 + 16 * gapEase; // smoother growth of spacing
+        // Increase growth a bit for natural perspective spacing (tighter near top, wider near bottom)
+        const gap = 4 + 22 * gapEase;
         const halfH = d.h / 2;
         const top = d.y - halfH;
         if (top < prevBottom + gap) continue; // skip to avoid collision / overlap
         const segX = Math.round(d.x - d.w / 2);
         const segY = Math.round(d.y - halfH);
-        ctx.fillStyle = `rgba(235,219,178,${(0.9 * d.alpha).toFixed(3)})`;
-        ctx.fillRect(segX, segY, Math.round(d.w), Math.round(d.h));
+        // Fade-in for below-viewport spawn
+        let a = d.alpha;
+        if (d.y > h) {
+          const fadeSpan = 260; // fade span depth
+          const distBelow = Math.min(fadeSpan, d.y - h);
+          const t = 1 - distBelow / fadeSpan; // 0 far below -> 1 at viewport edge
+          const eased = t * t * (3 - 2 * t); // smoothstep for softness
+          a *= eased;
+        }
+        const brightnessBias = 0.18 + 0.82 * a;
+        ctx.fillStyle = `rgba(235,219,178,${(0.9 * brightnessBias).toFixed(3)})`;
+        // Only draw if meaningful opacity (saves fill calls)
+        if (brightnessBias > 0.02) {
+          ctx.fillRect(segX, segY, Math.round(d.w), Math.round(d.h));
+        }
         prevBottom = segY + d.h;
       }
 
