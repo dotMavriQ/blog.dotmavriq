@@ -30,7 +30,7 @@ const title = "blog.dotMavriQ";
           href="https://github.com/dotMavriQ"
           target="_blank"
           rel="noopener noreferrer"
-          class="transition hover:opacity-75"
+          class="social-link github"
           aria-label="GitHub profile"
         >
           <img
@@ -45,7 +45,7 @@ const title = "blog.dotMavriQ";
           href="https://www.linkedin.com/in/janssonjonatan/"
           target="_blank"
           rel="noopener noreferrer"
-          class="transition hover:opacity-75"
+          class="social-link linkedin"
           aria-label="LinkedIn profile"
         >
           <img
@@ -60,7 +60,7 @@ const title = "blog.dotMavriQ";
           href="https://www.youtube.com/@dotMavriq/videos"
           target="_blank"
           rel="noopener noreferrer"
-          class="transition hover:opacity-75"
+          class="social-link youtube"
           aria-label="YouTube channel"
         >
           <img
@@ -75,7 +75,7 @@ const title = "blog.dotMavriQ";
           href="https://matrix.to/#/@dotmavriq:chat.dotmavriq.life"
           target="_blank"
           rel="noopener noreferrer"
-          class="transition hover:opacity-75"
+          class="social-link matrix"
           aria-label="Matrix chat"
         >
           <img
@@ -90,6 +90,7 @@ const title = "blog.dotMavriQ";
           href="https://social.dotmavriq.life/users/dotmavriq"
           target="_blank"
           rel="noopener noreferrer"
+          class="social-link fediverse"
           aria-label="Fediverse profile"
         >
           <img
@@ -129,7 +130,7 @@ const title = "blog.dotMavriQ";
         aria-label="Secondary navigation"
       >
         <a
-          class="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          class="quick-link about-link flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="/about"
           ><img
             aria-hidden="true"
@@ -137,10 +138,11 @@ const title = "blog.dotMavriQ";
             src="/file.svg"
             width="16"
             height="16"
-          /> About Me</a
+          />
+          <span>About Me</span></a
         >
         <a
-          class="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          class="quick-link cv-link flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="/cv"
           ><img
             aria-hidden="true"
@@ -148,10 +150,11 @@ const title = "blog.dotMavriQ";
             src="/globe.svg"
             width="16"
             height="16"
-          /> My CV</a
+          />
+          <span>My CV</span></a
         >
         <a
-          class="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          class="quick-link contact-link flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="/contact"
           ><img
             aria-hidden="true"
@@ -159,7 +162,8 @@ const title = "blog.dotMavriQ";
             src="/window.svg"
             width="16"
             height="16"
-          /> Contact</a
+          />
+          <span>Contact</span></a
         >
       </div>
     </div>
@@ -185,6 +189,74 @@ const title = "blog.dotMavriQ";
   .social-links-row {
     margin-bottom: 1.1rem;
   }
+  .social-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+  }
+  .social-link {
+    transition: transform 0.18s ease;
+  }
+  .social-link:focus-visible {
+    outline: 2px solid var(--fg-color);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .social-link:hover {
+    transform: translateY(-2px);
+  }
+  .social-link:active {
+    transform: translateY(-1px) scale(0.96);
+  }
+  /* Accent glow using pseudo-element (keeps original logos intact) */
+  .social-link::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 14px;
+    background: var(--accent-color, transparent);
+    opacity: 0;
+    transform: scale(0.6);
+    filter: blur(10px);
+    transition:
+      opacity 0.28s ease,
+      transform 0.28s ease;
+    z-index: -1;
+  }
+  .social-link:hover::after {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  .social-link.github {
+    --accent-color: var(--orange);
+  }
+  .social-link.linkedin {
+    --accent-color: var(--blue);
+  }
+  .social-link.youtube {
+    --accent-color: var(--red);
+  }
+  .social-link.matrix {
+    --accent-color: var(--green);
+  }
+  .social-link.fediverse {
+    --accent-color: var(--yellow);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .social-link {
+      transition: none;
+    }
+    .social-link:hover,
+    .social-link:active {
+      transform: none;
+    }
+    .social-link::after,
+    .social-link:hover::after {
+      transition: none;
+    }
+  }
   .hero-actions {
     display: flex;
     flex-wrap: wrap;
@@ -195,6 +267,47 @@ const title = "blog.dotMavriQ";
   .quick-links-row {
     margin-top: 1.2rem;
     gap: 1.25rem;
+  }
+  .quick-link {
+    position: relative;
+    font-weight: 500;
+    color: var(--fg-color);
+    transition:
+      color 0.18s ease,
+      transform 0.18s ease;
+    line-height: 1.2;
+  }
+  .quick-link span {
+    display: inline-block;
+  }
+  .quick-link:hover {
+    transform: translateY(-1px);
+  }
+  .quick-link:active {
+    transform: translateY(-1px) scale(0.97);
+  }
+  .quick-link:focus-visible {
+    outline: 2px solid var(--fg-color);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  /* Gruvbox hover accents matching nav colors */
+  .quick-link.about-link:hover {
+    color: var(--blue);
+  }
+  .quick-link.cv-link:hover {
+    color: var(--orange);
+  }
+  .quick-link.contact-link:hover {
+    color: var(--red);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .quick-link,
+    .quick-link:hover,
+    .quick-link:active {
+      transition: color 0.18s ease;
+      transform: none;
+    }
   }
   @media (min-width: 640px) {
     .social-links-row {
@@ -249,11 +362,16 @@ const title = "blog.dotMavriQ";
       0 1px 2px rgba(0, 0, 0, 0.22);
   }
   .hero-btn-primary:hover {
-    background: #bdae93;
+    background: var(--green); /* Portfolio color */
     color: #282828;
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
   }
   .hero-btn-primary:active {
     background: #a89984;
+    transform: translateY(-1px) scale(0.97);
   }
   .hero-btn-secondary {
     background: #282828;
@@ -261,11 +379,33 @@ const title = "blog.dotMavriQ";
     color: var(--text-primary);
   }
   .hero-btn-secondary:hover {
-    background: #323232;
-    border-color: rgba(255, 255, 255, 0.18);
+    background: var(--yellow); /* Blog color */
+    border-color: var(--yellow);
+    color: #282828;
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
   }
   .hero-btn-secondary:active {
     background: #3a3a3a;
+    transform: translateY(-1px) scale(0.97);
+  }
+  .hero-btn {
+    will-change: transform;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-btn {
+      transition:
+        background-color 0.18s ease,
+        color 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+    }
+    .hero-btn:hover,
+    .hero-btn:active {
+      transform: none;
+    }
   }
   .hero-btn:focus-visible {
     outline: 2px solid var(--text-primary);
