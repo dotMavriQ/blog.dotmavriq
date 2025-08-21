@@ -217,20 +217,42 @@ const title = "blog.dotMavriQ";
     inset: 0;
     background: var(--accent-color, transparent);
     opacity: 0;
-    transition: opacity .22s ease;
+    transition: opacity 0.22s ease;
     pointer-events: none;
     /* default mask none; set per-icon */
   }
   /* Assign mask images per icon */
-  .social-link.github::after { mask: url(/github.svg) center/contain no-repeat; -webkit-mask: url(/github.svg) center/contain no-repeat; }
-  .social-link.linkedin::after { mask: url(/linkedin.svg) center/contain no-repeat; -webkit-mask: url(/linkedin.svg) center/contain no-repeat; }
-  .social-link.youtube::after { mask: url(/youtube.svg) center/contain no-repeat; -webkit-mask: url(/youtube.svg) center/contain no-repeat; }
-  .social-link.matrix::after { mask: url(/matrix.svg) center/contain no-repeat; -webkit-mask: url(/matrix.svg) center/contain no-repeat; }
-  .social-link.fediverse::after { mask: url(/fediverse.svg) center/contain no-repeat; -webkit-mask: url(/fediverse.svg) center/contain no-repeat; }
-  .social-link:hover::after { opacity:1; }
+  .social-link.github::after {
+    mask: url(/github.svg) center/contain no-repeat;
+    -webkit-mask: url(/github.svg) center/contain no-repeat;
+  }
+  .social-link.linkedin::after {
+    mask: url(/linkedin.svg) center/contain no-repeat;
+    -webkit-mask: url(/linkedin.svg) center/contain no-repeat;
+  }
+  .social-link.youtube::after {
+    mask: url(/youtube.svg) center/contain no-repeat;
+    -webkit-mask: url(/youtube.svg) center/contain no-repeat;
+  }
+  .social-link.matrix::after {
+    mask: url(/matrix.svg) center/contain no-repeat;
+    -webkit-mask: url(/matrix.svg) center/contain no-repeat;
+  }
+  .social-link.fediverse::after {
+    mask: url(/fediverse.svg) center/contain no-repeat;
+    -webkit-mask: url(/fediverse.svg) center/contain no-repeat;
+  }
+  .social-link:hover::after {
+    opacity: 1;
+  }
   /* Slight dim of base icon on hover so tint reads clearly */
-  .social-link:hover img { filter: brightness(0.2) saturate(0); transition: filter .22s ease; }
-  .social-link img { transition: filter .22s ease; }
+  .social-link:hover img {
+    filter: brightness(0.2) saturate(0);
+    transition: filter 0.22s ease;
+  }
+  .social-link img {
+    transition: filter 0.22s ease;
+  }
   .social-link.github {
     --accent-color: var(--orange);
   }
@@ -247,10 +269,21 @@ const title = "blog.dotMavriQ";
     --accent-color: var(--yellow);
   }
   @media (prefers-reduced-motion: reduce) {
-    .social-link { transition: none; }
-    .social-link:hover, .social-link:active { transform: none; }
-    .social-link::after, .social-link:hover::after { transition: none; }
-    .social-link img, .social-link:hover img { transition: none; }
+    .social-link {
+      transition: none;
+    }
+    .social-link:hover,
+    .social-link:active {
+      transform: none;
+    }
+    .social-link::after,
+    .social-link:hover::after {
+      transition: none;
+    }
+    .social-link img,
+    .social-link:hover img {
+      transition: none;
+    }
   }
   .hero-actions {
     display: flex;
