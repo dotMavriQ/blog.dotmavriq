@@ -210,25 +210,27 @@ const title = "blog.dotMavriQ";
   .social-link:active {
     transform: translateY(-1px) scale(0.96);
   }
-  /* Accent glow using pseudo-element (keeps original logos intact) */
+  /* Color tint overlay (masked) instead of glow; preserves original SVG beneath */
   .social-link::after {
     content: "";
     position: absolute;
-    inset: -6px;
-    border-radius: 14px;
+    inset: 0;
     background: var(--accent-color, transparent);
     opacity: 0;
-    transform: scale(0.6);
-    filter: blur(10px);
-    transition:
-      opacity 0.28s ease,
-      transform 0.28s ease;
-    z-index: -1;
+    transition: opacity .22s ease;
+    pointer-events: none;
+    /* default mask none; set per-icon */
   }
-  .social-link:hover::after {
-    opacity: 0.75;
-    transform: scale(1);
-  }
+  /* Assign mask images per icon */
+  .social-link.github::after { mask: url(/github.svg) center/contain no-repeat; -webkit-mask: url(/github.svg) center/contain no-repeat; }
+  .social-link.linkedin::after { mask: url(/linkedin.svg) center/contain no-repeat; -webkit-mask: url(/linkedin.svg) center/contain no-repeat; }
+  .social-link.youtube::after { mask: url(/youtube.svg) center/contain no-repeat; -webkit-mask: url(/youtube.svg) center/contain no-repeat; }
+  .social-link.matrix::after { mask: url(/matrix.svg) center/contain no-repeat; -webkit-mask: url(/matrix.svg) center/contain no-repeat; }
+  .social-link.fediverse::after { mask: url(/fediverse.svg) center/contain no-repeat; -webkit-mask: url(/fediverse.svg) center/contain no-repeat; }
+  .social-link:hover::after { opacity:1; }
+  /* Slight dim of base icon on hover so tint reads clearly */
+  .social-link:hover img { filter: brightness(0.2) saturate(0); transition: filter .22s ease; }
+  .social-link img { transition: filter .22s ease; }
   .social-link.github {
     --accent-color: var(--orange);
   }
@@ -245,17 +247,10 @@ const title = "blog.dotMavriQ";
     --accent-color: var(--yellow);
   }
   @media (prefers-reduced-motion: reduce) {
-    .social-link {
-      transition: none;
-    }
-    .social-link:hover,
-    .social-link:active {
-      transform: none;
-    }
-    .social-link::after,
-    .social-link:hover::after {
-      transition: none;
-    }
+    .social-link { transition: none; }
+    .social-link:hover, .social-link:active { transform: none; }
+    .social-link::after, .social-link:hover::after { transition: none; }
+    .social-link img, .social-link:hover img { transition: none; }
   }
   .hero-actions {
     display: flex;
