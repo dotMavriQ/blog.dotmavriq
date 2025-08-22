@@ -1,85 +1,181 @@
 ---
 import Base from "../layouts/BaseLayout.astro";
 ---
+
 <Base title="About – Jonatan">
-  <div class="grid md:grid-cols-[2fr,1fr] gap-xl">
-    <div>
-      <h1 class="text-3xl mb-lg">About Me</h1>
+  <article class="about" aria-labelledby="about-title">
+    <section class="intro" aria-label="Intro">
+      <h1 id="about-title">About Me</h1>
+      <p class="lede">
+        Hi, my name is Jonatan—though many online know me as <strong
+          >dotMavriQ</strong
+        >. My journey into technology began in the mid-1990s when my father
+        brought home a computer, opening up an entirely new world for me. I
+        still remember those early days with Windows 95—exploring games,
+        experimenting with software, and becoming captivated by the emerging
+        Internet.
+      </p>
+    </section>
 
-      <div class="space-y-md">
-        <p class="text-lg">Hello! I'm <span class="text-yellow font-bold">Jonatan</span>, a full-stack developer with a passion for bass guitar and clean code. Currently hacking away in beautiful Portugal.</p>
+    <section class="content">
+      <figure class="portrait">
+        <img
+          src="/sepiaface.png"
+          alt="Portrait of Jonatan (dotMavriQ)"
+          width="320"
+          height="320"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
 
-        <p>My journey in programming started with PHP and JavaScript, but I've since expanded my toolkit to include modern frameworks like React, Vue, and of course, Astro. With over 7 years of professional experience, I've worked on projects ranging from small business websites to enterprise-scale applications.</p>
+      <p>
+        My passion for programming truly ignited when I stumbled upon Game Maker
+        on a CD from a Swedish PC magazine. That discovery sparked a deep love
+        for coding and creative digital experiences. Over time, this passion
+        evolved into web development. I started by building simple, static
+        websites in XHTML, soon expanding into more dynamic creations using CSS
+        and PHP. I worked with phpBB early on and adopted WordPress just before
+        it reached version 4.
+      </p>
 
-        <h2 class="text-2xl mt-xl mb-md">My Philosophy</h2>
-        <p>I believe in creating fast, accessible, and user-friendly applications. Performance isn't just a technical concern—it's a user experience one. Every millisecond counts when it comes to keeping users engaged.</p>
+      <p>
+        During my college years, I built websites for local businesses and
+        earned a Silver Medal for Best Service at
+        <a
+          href="https://www.mynewsdesk.com/se/ung_foeretagsamhet_skaraborg/pressreleases/vaaga-vara-egen-skaraborg-resultat-606181"
+          target="_blank"
+          rel="noopener noreferrer">Vara UF‑mässa</a
+        > for a web forum I coded entirely from scratch. A formative traineeship
+        at
+        <a
+          href="https://www.snus24.com/about-us"
+          target="_blank"
+          rel="noopener noreferrer">Nordic Goods</a
+        > provided hands-on experience setting up Ubuntu servers, configuring Magento
+        sites, and designing SEO-optimized websites. My deep-rooted expertise in
+        Linux has remained a cornerstone of my work—whether fine-tuning servers or
+        building robust, scalable systems.
+      </p>
 
-        <blockquote class="border-l-4 border-yellow pl-md py-sm my-lg italic bg-bg1 rounded-r-md">
-          "Good code is like a good joke - it needs no explanation." — <span class="not-italic">Russ Olsen</span>
-        </blockquote>
+      <p>
+        At
+        <a href="https://ember.se/" target="_blank" rel="noopener noreferrer"
+          >Ember</a
+        > and
+        <a href="https://duva.se/" target="_blank" rel="noopener noreferrer"
+          >Duva</a
+        >, I transitioned from low-code WordPress solutions to Full-Stack
+        Development. On the back end, I honed my skills with server technologies
+        like Docker and Kubernetes. On the front end, I embraced modern
+        frameworks such as Tailwind CSS, React, and TypeScript. I also served as
+        President of Makerspace Lidköping for two years, contributing to the
+        national organization (riksorganisation) with web and tech solutions.
+        This role not only deepened my practical expertise but also expanded my
+        network and strategic perspective. Later, I pursued further
+        opportunities at
+        <a href="https://iptor.com/" target="_blank" rel="noopener noreferrer"
+          >IPTOR</a
+        > and
+        <a
+          href="https://www.blocklabs.io/"
+          target="_blank"
+          rel="noopener noreferrer">Block Labs</a
+        >, where I refined my understanding of best practices for marketing and
+        RAD (Rapid Application Development).
+      </p>
 
-        <p>I'm a strong advocate for web standards, semantic HTML, and progressive enhancement. My approach is to build solid foundations that work for everyone, then enhance the experience for those with modern browsers.</p>
+      <p>
+        What drives me is a relentless curiosity and a commitment to delivering
+        user-centered solutions that work. My diverse experience, combined with
+        a genuine passion for technology, makes me a reliable
+        problem-solver—someone who brings both technical expertise and a
+        thoughtful, human approach to every project.
+      </p>
 
-        <h2 class="text-2xl mt-xl mb-md">When I'm Not Coding</h2>
-        <p>You'll find me playing bass, exploring Portugal's beautiful coastline, or contributing to open source projects. I also enjoy reading technical books and attending local tech meetups.</p>
-      </div>
-    </div>
+      <p>
+        Today I work as a Senior Growth Developer at
+        <a
+          href="https://nordhealth.com"
+          target="_blank"
+          rel="noopener noreferrer">Nordhealth</a
+        >. In many ways, this role brings together everything I have built
+        throughout my career.
+      </p>
 
-    <aside class="md:mt-[100px]">
-      <div class="bg-bg1 p-lg rounded-md mb-lg sticky top-[100px]">
-        <h3 class="text-xl mb-md border-b border-bg2 pb-sm">Quick Facts</h3>
+      <p>
+        Outside of work, I enjoy playing bass guitar, cooking, philosophy,
+        reading, trekking, and spending quality time with my partner.
+      </p>
+    </section>
+  </article>
 
-        <ul class="space-y-md">
-          <li class="flex items-start gap-sm">
-            <span class="text-yellow">📍</span>
-            <span><strong>Location:</strong> Lisbon, Portugal</span>
-          </li>
-          <li class="flex items-start gap-sm">
-            <span class="text-yellow">🔧</span>
-            <span><strong>Specialization:</strong> Full-stack web development</span>
-          </li>
-          <li class="flex items-start gap-sm">
-            <span class="text-yellow">🎸</span>
-            <span><strong>Passion:</strong> Bass guitar & music production</span>
-          </li>
-          <li class="flex items-start gap-sm">
-            <span class="text-yellow">👨‍💻</span>
-            <span><strong>Experience:</strong> 7+ years professional</span>
-          </li>
-          <li class="flex items-start gap-sm">
-            <span class="text-yellow">🌐</span>
-            <span><strong>Languages:</strong> Portuguese (native), English (fluent), Spanish (intermediate)</span>
-          </li>
-          <li class="flex items-start gap-sm">
-            <span class="text-yellow">🎓</span>
-            <span><strong>Education:</strong> BSc Computer Science, University of Lisbon</span>
-          </li>
-        </ul>
+  <style>
+    .about {
+      max-width: 72ch;
+      margin-inline: auto;
+      padding-block: 2rem;
+    }
 
-        <div class="mt-lg pt-md border-t border-bg2">
-          <h3 class="text-lg mb-md">Connect With Me</h3>
-          <div class="flex gap-md">
-            <a href="https://github.com/dotmavriq" class="text-fg hover:text-yellow transition-colors" aria-label="GitHub Profile">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-              </svg>
-            </a>
-            <a href="https://linkedin.com/in/dotmavriq" class="text-fg hover:text-yellow transition-colors" aria-label="LinkedIn Profile">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                <rect x="2" y="9" width="4" height="12"></rect>
-                <circle cx="4" cy="4" r="2"></circle>
-              </svg>
-            </a>
-            <a href="mailto:jonatan@dotmavriq.life" class="text-fg hover:text-yellow transition-colors" aria-label="Email">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </aside>
-  </div>
+    /* Intro panel to match live look */
+    .intro {
+      background: var(--bg1, #282828);
+      border: 1px solid var(--bg2, #3c3836);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .intro h1 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(2rem, 4vw, 2.5rem);
+      line-height: 1.2;
+    }
+    .intro .lede {
+      color: var(--fg2, #bdae93);
+      margin: 0;
+    }
+
+    .content p {
+      margin: 1rem 0;
+    }
+    .content a {
+      color: var(--blue, #83a598);
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+    }
+    .content a:hover {
+      color: var(--yellow, #fabd2f);
+    }
+    .foot {
+      color: var(--fg3, #a89984);
+      margin-top: 2rem;
+    }
+    .foot a {
+      color: inherit;
+    }
+    .foot a:hover {
+      color: var(--fg, #ebdbb2);
+    }
+
+    /* Portrait floats right on wide screens, stacks on small */
+    .portrait {
+      float: right;
+      width: 220px;
+      margin: 0.25rem 0 1rem 1.25rem;
+    }
+    .portrait img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+    @media (max-width: 900px) {
+      .portrait {
+        float: none;
+        margin: 0 auto 1rem;
+        width: 220px;
+      }
+    }
+  </style>
 </Base>

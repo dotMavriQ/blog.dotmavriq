@@ -1,42 +1,50 @@
 ---
 const { label, value } = Astro.props; // value 0‑100
 ---
+
 <div class="skill-meter">
   <div class="skill-meter__header">
     <label class="skill-meter__label">{label}</label>
     <span class="skill-meter__value">{value}%</span>
   </div>
 
-  <div 
-    class="skill-meter__bar" 
-    role="progressbar" 
-    aria-valuenow={value} 
-    aria-valuemin="0" 
+  <div
+    class="skill-meter__bar"
+    role="progressbar"
+    aria-valuenow={value}
+    aria-valuemin="0"
     aria-valuemax="100"
   >
-    <div 
-      class="skill-meter__progress" 
-      data-value={value}
-    ></div>
+    <div class="skill-meter__progress" data-value={value}></div>
   </div>
 </div>
 
 <script>
   // Animate skill bars when they come into view
-  document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const skillBar = entry.target;
-          const value = skillBar.getAttribute('data-value');
-          skillBar.style.width = `${value}%`;
-          observer.unobserve(skillBar);
-        }
-      });
-    }, { threshold: 0.2 });
+  document.addEventListener("DOMContentLoaded", () => {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (reduceMotion) return; // Respect users who prefer reduced motion
 
-    document.querySelectorAll('.skill-bar').forEach(bar => {
-      observer.observe(bar);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const progressEl = entry.target as Element;
+            const value = progressEl.getAttribute("data-value");
+            if (value != null) {
+              progressEl.setAttribute("style", `width:${value}%`);
+            }
+            observer.unobserve(progressEl);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    document.querySelectorAll(".skill-meter__progress").forEach((el) => {
+      observer.observe(el);
     });
   });
 </script>

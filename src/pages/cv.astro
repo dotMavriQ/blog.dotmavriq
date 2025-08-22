@@ -1,30 +1,22 @@
 ---
 import Base from "../layouts/BaseLayout.astro";
-import SkillMeter from "../components/SkillMeter.astro";
 ---
+
 <Base title="CV – Jonatan">
   <header class="text-center py-lg mb-lg">
     <h1 class="text-3xl mb-md">Curriculum Vitae</h1>
-    <p class="text-lg max-w-[600px] mx-auto">Full-stack developer with a passion for creating intuitive, high-performance web applications.</p>
+    <p class="text-lg max-w-[600px] mx-auto">
+      Full-stack developer with a passion for creating intuitive,
+      high-performance web applications.
+    </p>
   </header>
 
   <section class="mb-xl bg-bg1 p-lg rounded-md">
     <h2 class="text-2xl mb-lg pb-sm border-b border-bg2">Technical Skills</h2>
-
-    <div class="grid md:grid-cols-2 gap-lg">
-      <div>
-        <SkillMeter label="JavaScript" value="90" />
-        <SkillMeter label="TypeScript" value="85" />
-        <SkillMeter label="React" value="88" />
-        <SkillMeter label="Vue" value="75" />
-      </div>
-      <div>
-        <SkillMeter label="Node.js" value="82" />
-        <SkillMeter label="PHP" value="78" />
-        <SkillMeter label="PostgreSQL" value="80" />
-        <SkillMeter label="AWS" value="65" />
-      </div>
-    </div>
+    <ul class="grid md:grid-cols-2 gap-lg list-disc pl-lg">
+      <li>JavaScript, TypeScript, React, Vue</li>
+      <li>Node.js, PHP, PostgreSQL, AWS</li>
+    </ul>
   </section>
 
   <section class="mb-xl">
@@ -39,11 +31,21 @@ import SkillMeter from "../components/SkillMeter.astro";
             <span class="font-bold text-yellow">TechCorp</span>
             <span class="text-blue">2020–Present</span>
           </div>
-          <p class="mb-md">Leading development on enterprise-scale React applications, mentoring junior developers, and implementing CI/CD pipelines.</p>
+          <p class="mb-md">
+            Leading development on enterprise-scale React applications,
+            mentoring junior developers, and implementing CI/CD pipelines.
+          </p>
           <ul class="list-disc pl-lg">
-            <li class="mb-xs">Reduced application load time by 40% through performance optimizations</li>
-            <li class="mb-xs">Implemented test-driven development practices across team</li>
-            <li class="mb-xs">Led migration from monolith to microservices architecture</li>
+            <li class="mb-xs">
+              Reduced application load time by 40% through performance
+              optimizations
+            </li>
+            <li class="mb-xs">
+              Implemented test-driven development practices across team
+            </li>
+            <li class="mb-xs">
+              Led migration from monolith to microservices architecture
+            </li>
           </ul>
         </div>
       </div>
@@ -56,11 +58,20 @@ import SkillMeter from "../components/SkillMeter.astro";
             <span class="font-bold text-yellow">StartupXYZ</span>
             <span class="text-blue">2017–2020</span>
           </div>
-          <p class="mb-md">Built and maintained Vue.js frontends with Node.js microservices backend.</p>
+          <p class="mb-md">
+            Built and maintained Vue.js frontends with Node.js microservices
+            backend.
+          </p>
           <ul class="list-disc pl-lg">
-            <li class="mb-xs">Developed RESTful APIs serving 1M+ requests daily</li>
-            <li class="mb-xs">Created responsive UI components used across multiple projects</li>
-            <li class="mb-xs">Optimized database queries reducing server load by 30%</li>
+            <li class="mb-xs">
+              Developed RESTful APIs serving 1M+ requests daily
+            </li>
+            <li class="mb-xs">
+              Created responsive UI components used across multiple projects
+            </li>
+            <li class="mb-xs">
+              Optimized database queries reducing server load by 30%
+            </li>
           </ul>
         </div>
       </div>
@@ -76,7 +87,10 @@ import SkillMeter from "../components/SkillMeter.astro";
         <span class="text-blue">2013–2017</span>
       </div>
       <p class="font-bold text-yellow mb-md">University of Lisbon</p>
-      <p>Specialized in web technologies and distributed systems. Graduated with honors.</p>
+      <p>
+        Specialized in web technologies and distributed systems. Graduated with
+        honors.
+      </p>
     </div>
   </section>
 
@@ -111,13 +125,23 @@ import SkillMeter from "../components/SkillMeter.astro";
   </section>
 
   <div class="text-center mb-xl">
-    <a 
-      download 
-      href="/Jonatan_CV.pdf" 
+    <a
+      download
+      href="/Jonatan_CV.pdf"
       class="btn bg-yellow text-bg0 hover:bg-blue px-lg py-md font-bold inline-flex items-center gap-sm"
     >
       Download Full CV
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
         <polyline points="7 10 12 15 17 10"></polyline>
         <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -133,7 +157,7 @@ import SkillMeter from "../components/SkillMeter.astro";
     }
 
     .timeline:before {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       top: 0;
