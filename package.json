@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
-    "deploy": "npm run build && node scripts/gh-pages-publish.js"
+  "preview": "astro preview",
+  "deploy": "npm run build && node scripts/gh-pages-publish.js",
+  "test:parity": "node scripts/parity-check.js"
   },
   "dependencies": {
     "astro": "^4.15.0",
@@ -15,7 +16,9 @@
     "@astrojs/rss": "^4.0.0",
     "@astrojs/tailwind": "^5.1.0",
     "date-fns": "^4.1.0",
-    "gray-matter": "^4.0.3"
+  "gray-matter": "^4.0.3",
+  "react": "^18.3.1",
+  "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "typescript": "^5.5.0"
