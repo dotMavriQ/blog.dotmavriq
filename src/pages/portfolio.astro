@@ -102,85 +102,76 @@ const orderedPortfolio = [
     }
     function startMatrix(){
       matrixActive=true;
-      const overlay=document.createElement('div'); overlay.id='matrix-overlay'; overlay.className='fixed inset-0 z-[999] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4';
-      overlay.innerHTML=`<canvas id="matrix-canvas" class="absolute inset-0 w-full h-full"></canvas><div class="absolute top-3 right-4 text-xs font-mono text-gruv-muted opacity-70">ESC to exit</div>`;
+      const overlay=document.createElement('div'); overlay.id='matrix-overlay'; overlay.className='fixed inset-0 z-[999] bg-black/90 backdrop-blur-sm p-0';
+      overlay.innerHTML=`<canvas id="matrix-canvas" class="absolute inset-0 w-full h-full"></canvas>`;
       document.body.appendChild(overlay);
-      const domains=decodeDomains(); const canvas=overlay.querySelector('#matrix-canvas'); const ctx=canvas.getContext('2d');
+  overlay.setAttribute('aria-hidden','true');
+      const domainList=decodeDomains(); const canvas=overlay.querySelector('#matrix-canvas'); const ctx=canvas.getContext('2d');
       function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; } resize(); window.addEventListener('resize',resize);
       const alphabet='abcdefghijklmnopqrstuvwxyz0123456789./:-_';
-      const lineHeight=20; const charW=12; // approximate monospace metrics
-      ctx.font='15px JetBrains Mono, monospace'; ctx.textBaseline='top';
-      const rows=domains.length;
-      // Build horizontal streams (rotated Matrix) each carrying one domain that stabilises in center band while warbling elsewhere
-      const streams=domains.map((d,i)=>({
-        domain:d.toLowerCase(),
-        y:0, x:0, speed:0, chars:[],
-      }));
+      const lineHeight=20; const charW=12; ctx.font='15px JetBrains Mono, monospace'; ctx.textBaseline='top';
+      const rows=Math.min(domainList.length, Math.floor(canvas.height/lineHeight)-2 || domainList.length);
+      // Prepare streams (row slots)
+      const streams=Array.from({length:rows},()=>({ domain:'', lastDomain:'', y:0, x:0, speed:0, chars:[] }));
       function placeStreams(){
         const totalHeight=rows*lineHeight; const startY=(canvas.height/2 - totalHeight/2);
         streams.forEach((s,i)=>{ s.y=startY + i*lineHeight; });
       }
-      function resetStream(s){
-        s.x = - (s.domain.length*charW) - Math.random()*canvas.width*0.3 - 50; // start offscreen
-        s.speed = 0.6 + Math.random()*1.4; // varied speeds
-        s.chars = Array.from({length:s.domain.length},()=>alphabet[Math.random()*alphabet.length|0]);
+      const activeDomains=new Set();
+      function assignNewDomain(stream){
+        let candidates=domainList.filter(d=>!activeDomains.has(d) && d!==stream.lastDomain);
+        if(!candidates.length) candidates=domainList.filter(d=>!activeDomains.has(d));
+        if(!candidates.length) candidates=domainList.filter(d=>d!==stream.lastDomain);
+        if(!candidates.length) candidates=domainList.slice();
+        const domain=candidates[Math.random()*candidates.length|0];
+        stream.domain=domain.toLowerCase();
+        stream.lastDomain=domain; activeDomains.add(domain);
+        stream.x = - (stream.domain.length*charW) - Math.random()*canvas.width*0.45 - 100;
+        stream.speed = 0.55 + Math.random()*1.55;
+        stream.chars = Array.from({length:stream.domain.length},()=>alphabet[Math.random()*alphabet.length|0]);
       }
-      streams.forEach(resetStream); placeStreams();
-      window.addEventListener('resize',()=>{ placeStreams(); });
+      streams.forEach(assignNewDomain); placeStreams();
+      window.addEventListener('resize',placeStreams);
       const centerStartRatio=0.28, centerEndRatio=0.72;
       function step(){
-        ctx.fillStyle='rgba(0,0,0,0.18)';
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        const centerStart=canvas.width*centerStartRatio; const centerEnd=canvas.width*centerEndRatio;
-        const now=Date.now();
+        ctx.fillStyle='rgba(0,0,0,0.18)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+        const centerStart=canvas.width*centerStartRatio, centerEnd=canvas.width*centerEndRatio; const now=Date.now();
         for(const s of streams){
           s.x += s.speed;
-          // Warble & reveal logic
-            for(let i=0;i<s.domain.length;i++){
-              const charX = s.x + i*charW;
-              const target = s.domain[i];
-              const inCenter = charX>centerStart && charX<centerEnd;
-              if(inCenter){
-                if(s.chars[i]!==target){
-                  // accelerate convergence in center
-                  if(Math.random()<0.35) s.chars[i]=target; else if(Math.random()<0.25) s.chars[i]=alphabet[Math.random()*alphabet.length|0];
-                } else {
-                  // occasional flicker even when matched
-                  if(Math.random()<0.012) s.chars[i]=alphabet[Math.random()*alphabet.length|0];
-                }
-              } else {
-                // Outside center: keep chaotic
-                if(Math.random()<0.06) s.chars[i]=alphabet[Math.random()*alphabet.length|0];
-              }
-            }
-          // Draw characters
-          for(let i=0;i<s.chars.length;i++){
-            const x = s.x + i*charW; if(x<-40 || x>canvas.width+40) continue;
-            const ch = s.chars[i];
-            const headX = s.x + (s.chars.length-1)*charW;
-            const inCenter = x>centerStart && x<centerEnd;
-            // Color scheme
-            if(Math.abs(x-headX)<charW*0.5){
-              ctx.fillStyle='#fabd2f'; // leading head
-            } else if(inCenter && ch===s.domain[i]){
-              ctx.fillStyle='#b8bb26'; // stable correct char in center
-            } else if(inCenter){
-              ctx.fillStyle='#83a598'; // transforming in center
+          for(let i=0;i<s.domain.length;i++){
+            const charX=s.x + i*charW; const target=s.domain[i]; const inCenter=charX>centerStart && charX<centerEnd;
+            if(inCenter){
+              if(s.chars[i]!==target){ if(Math.random()<0.40) s.chars[i]=target; else if(Math.random()<0.28) s.chars[i]=alphabet[Math.random()*alphabet.length|0]; }
+              else if(Math.random()<0.011) s.chars[i]=alphabet[Math.random()*alphabet.length|0];
             } else {
-              // trailing / preamble random shades flicker
-              const flicker=((now/80 + i + s.y)|0)%7===0;
-              ctx.fillStyle=flicker? '#928374' : '#665c54';
+              if(Math.random()<0.055) s.chars[i]=alphabet[Math.random()*alphabet.length|0];
             }
-            ctx.fillText(ch, x, s.y);
           }
-          // After passing screen, recycle
-          if(s.x > canvas.width + 80){ resetStream(s); }
+          // Draw
+          for(let i=0;i<s.chars.length;i++){
+            const x=s.x + i*charW; if(x<-50 || x>canvas.width+50) continue;
+            const ch=s.chars[i]; const headX=s.x + (s.chars.length-1)*charW; const inCenter=x>centerStart && x<centerEnd;
+            if(Math.abs(x-headX)<charW*0.6) ctx.fillStyle='#fabd2f';
+            else if(inCenter && ch===s.domain[i]) ctx.fillStyle='#b8bb26';
+            else if(inCenter) ctx.fillStyle='#83a598';
+            else { const flicker=((now/85 + i + s.y)|0)%7===0; ctx.fillStyle=flicker? '#928374':'#665c54'; }
+            ctx.fillText(ch,x,s.y);
+          }
+          if(s.x > canvas.width + 90){ activeDomains.delete(s.lastDomain); assignNewDomain(s); }
         }
         if(matrixActive) requestAnimationFrame(step);
       }
       requestAnimationFrame(step);
-      function cleanup(){ matrixActive=false; overlay.remove(); window.removeEventListener('resize',resize); }
-      overlay.addEventListener('click',cleanup); window.addEventListener('keydown',e=>{ if(e.key==='Escape') cleanup(); });
+  // Pointer-displacement based exit (no explicit key / click needed). Fade-out when threshold exceeded.
+  const EXIT_DIST=220; // px total displacement from initial position
+  let originX=null, originY=null, closing=false;
+  function displacementEnough(x,y){ if(originX===null||originY===null){ originX=x; originY=y; return false; } const dx=x-originX, dy=y-originY; return Math.hypot(dx,dy) >= EXIT_DIST; }
+  function onMove(e){ if(!matrixActive||closing) return; if(displacementEnough(e.clientX,e.clientY)){ closing=true; fadeAndCleanup(); } }
+  window.addEventListener('pointermove', onMove, { passive:true });
+  window.addEventListener('mousemove', onMove, { passive:true });
+  function fadeAndCleanup(){ overlay.classList.add('matrix-out'); setTimeout(()=>cleanup(true),380); }
+  function cleanup(resetHover){ matrixActive=false; window.removeEventListener('resize',placeStreams); window.removeEventListener('pointermove', onMove); window.removeEventListener('mousemove', onMove); if(overlay.isConnected) overlay.remove(); if(resetHover) hoverAccum=0; }
+  overlay.addEventListener('click',()=>{ if(!closing){ closing=true; fadeAndCleanup(); }});
     }
   }
   // (debug) matrix script loaded
@@ -253,5 +244,7 @@ const orderedPortfolio = [
     #portfolio-secret:hover, #portfolio-secret:focus-visible { animation: none; background-size: 100% 100%; }
   }
   #matrix-overlay{ animation: fadeInMatrix .6s ease; }
+  #matrix-overlay.matrix-out{ animation: fadeOutMatrix .38s ease forwards; }
   @keyframes fadeInMatrix { from { opacity:0; } to { opacity:1; } }
+  @keyframes fadeOutMatrix { from { opacity:1; } to { opacity:0; } }
 </style>
