@@ -1,84 +1,25 @@
+---
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
-<BaseLayout title="About · dotMavriQ" description="About dotMavriQ – developer focused on resilient systems, DX, and pragmatic engineering.">
-  <article class="relative z-30 max-w-3xl mx-auto px-6 md:px-8 py-10 md:py-14 prose prose-invert prose-pre:bg-gruv-surface prose-code:text-gruv-yellow">
-    <header class="mb-10">
-      <h1 class="text-4xl font-extrabold tracking-tight text-gruv-yellow mb-3">About</h1>
-      <p class="text-gruv-fg/80 leading-relaxed text-lg max-w-prose">I'm <strong class="text-gruv-yellow/90">Jonatan Jansson</strong> (<code class="!bg-transparent !px-0 !py-0 text-gruv-green">dotMavriQ</code>) – a builder of resilient systems, performance‑minded full‑stack developer, and someone who cares a lot about ergonomics for the humans operating and extending software.</p>
-    </header>
-
-    <section class="space-y-4">
-      <h2 class="text-2xl font-bold text-gruv-blue">What I Do</h2>
-      <p>I design, implement, and maintain software with an emphasis on <em class="text-gruv-yellow/90">clarity, observability, and long‑term changeability</em>. I enjoy turning ambiguous problem spaces into crisp, minimal solutions—and then hardening them with good tooling, docs, and guardrails.</p>
-      <p>My work spans product engineering, internal tooling, platform & infra glue, and developer experience (DX) improvements. I iterate in public when useful and archive experiments for future me (and you).</p>
-    </section>
-
-    <section class="mt-10 grid gap-8 md:grid-cols-2">
-      <div class="space-y-4">
-        <h2 class="text-xl font-semibold text-gruv-green">Focus Areas</h2>
-        <ul class="list-disc pl-5 space-y-1 marker:text-gruv-green/80 text-sm leading-relaxed">
-          <li>Resilient web backends & APIs (idempotency, graceful failure)</li>
-          <li>Type‑safe full‑stack flows (TS + schema validation)</li>
-          <li>Build & release pipelines that are boring (in a good way)</li>
-          <li>Runtime & DX instrumentation (logs, traces, metrics, lint)</li>
-          <li>Incremental refactors over “big bangs”</li>
-        </ul>
-      </div>
-      <div class="space-y-4">
-        <h2 class="text-xl font-semibold text-gruv-orange">Values</h2>
-        <ul class="list-disc pl-5 space-y-1 marker:text-gruv-orange/80 text-sm leading-relaxed">
-          <li>Clarity beats cleverness</li>
-          <li>Latency & feedback loops matter</li>
-          <li>Interfaces are contracts—treat them with care</li>
-          <li>Docs & tooling are first‑order features</li>
-          <li>Auditability & observability aren’t “extras”</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="mt-12">
-      <h2 class="text-2xl font-bold text-gruv-purple mb-4">Selected Stack & Tools</h2>
-      <div class="flex flex-wrap gap-2 text-[13px] font-mono">
-        <span class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface">Astro</span>
-        <span class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface">TypeScript</span>
-        <span class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface">React (where it earns its keep)</span>
-        <span class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface">Tailwind</span>
-        <span class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface">Node / Bun</span>
-        <span class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface">Linux</span>
-        <span class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface">GitHub Actions</span>
-        <span class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface">Containers</span>
-        <span class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface">PostgreSQL</span>
-        <span class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface">Redis</span>
-        <span class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface">Edge runtimes</span>
-      </div>
-      <p class="mt-5 text-sm text-gruv-muted leading-relaxed">Tools evolve; habits persist. I bias toward strong typing, fast feedback, explicit boundaries, and progressive enhancement.</p>
-    </section>
-
-    <section class="mt-12">
-      <h2 class="text-2xl font-bold text-gruv-red mb-4">Currently</h2>
-      <ul class="list-disc pl-5 space-y-2 marker:text-gruv-red/80 text-sm leading-relaxed">
-        <li>Iterating on this site’s build pipeline & content system.</li>
-        <li>Exploring ergonomic content workflows with Astro + MDX.</li>
-        <li>Refining a small personal toolkit for repeatable infra scaffolds.</li>
-      </ul>
-    </section>
-
-    <section class="mt-12">
-      <h2 class="text-2xl font-bold text-gruv-yellow mb-4">Elsewhere</h2>
-      <div class="flex flex-wrap gap-3 text-sm">
-        <a href="https://github.com/dotMavriQ" class="px-3 py-1.5 rounded bg-gruv-surface2 hover:bg-gruv-surface border border-gruv-surface text-gruv-blue transition">GitHub</a>
-        <a href="https://social.dotmavriq.life/users/dotmavriq" class="px-3 py-1.5 rounded bg-gruv-surface2 hover:bg-gruv-surface border border-gruv-surface text-gruv-purple transition">Fediverse</a>
-        <a href="https://matrix.to/#/@dotmavriq:chat.dotmavriq.life" class="px-3 py-1.5 rounded bg-gruv-surface2 hover:bg-gruv-surface border border-gruv-surface text-gruv-green transition">Matrix</a>
-        <a href="https://www.youtube.com/@dotmavriq/videos" class="px-3 py-1.5 rounded bg-gruv-surface2 hover:bg-gruv-surface border border-gruv-surface text-gruv-red transition">YouTube</a>
-        <a href="/rss.xml" class="px-3 py-1.5 rounded bg-gruv-surface2 hover:bg-gruv-surface border border-gruv-surface text-gruv-orange transition">RSS</a>
-      </div>
-    </section>
-
-    <section class="mt-14 border-t border-gruv-surface2 pt-10">
-      <h2 class="text-2xl font-bold text-gruv-green mb-4">Contact</h2>
-      <p class="leading-relaxed">Need a second pair of eyes on architecture choices, DX improvements, or build/deploy friction? <a href="/contact" class="text-gruv-yellow hover:underline">Reach out</a> or skim the <a href="/portfolio" class="text-gruv-blue hover:underline">portfolio</a>.</p>
-    </section>
-
-    <footer class="mt-16 text-xs text-gruv-muted font-mono">Last updated {new Date().toISOString().split('T')[0]}</footer>
+<BaseLayout title="About · dotMavriQ" description="About dotMavriQ – background, early tech journey, professional focus and interests.">
+  <article class="relative z-30 max-w-2xl mx-auto px-6 md:px-8 py-12 prose prose-invert prose-pre:bg-gruv-surface prose-code:text-gruv-yellow">
+    <h1 class="text-4xl font-extrabold tracking-tight text-gruv-yellow mb-6">About Me</h1>
+    <p>Hi, my name is Jonatan — though online I usually go by <strong class="text-gruv-yellow/90">dotMavriQ</strong>. My journey into tech started in the mid‑1990s when my father brought home a PC running Windows 95. I spent those early days exploring games, tinkering with software, and getting captivated by the early web.</p>
+    <p>The real spark came when I discovered <em>Game Maker</em> on a magazine CD. That pushed me into making small interactive things and eventually into web development: first static XHTML pages, then more dynamic stuff with CSS and PHP. I cut my teeth on phpBB and adopted WordPress just before version 4.</p>
+    <p>In college I built sites for local businesses and even received a silver service award for a web forum I coded from scratch. A formative traineeship at Nordic Goods exposed me to Ubuntu server setup, Magento deployments, and SEO‑aware site building. Linux has been a constant companion since—whether tuning servers or crafting developer tooling.</p>
+    <p>Later at Ember and Duva I shifted from low‑code WordPress solutions to more full‑stack engineering: containers, Docker, early Kubernetes exposure, modern frontend stacks (Tailwind, React, TypeScript) and iterative delivery. I also served as President of Makerspace Lidköping for two years—helping the national org with web & tech initiatives and widening my perspective on community infrastructure.</p>
+    <p>Subsequent roles (including IPTOR and Block Labs) refined my sense for pragmatic architecture, rapid application development, and the balance between velocity and maintainability. What drives me today is building systems that are understandable, observable, and evolve without fear.</p>
+    <p>Outside of code: bass guitar, cooking, philosophy, trekking, reading, and time with my partner all keep me balanced.</p>
+    <h2 class="mt-12 text-2xl font-bold text-gruv-blue">Now</h2>
+    <p>I'm iterating on this site, streamlining personal tooling, and experimenting with lightweight content + publishing flows using Astro.</p>
+    <h2 class="mt-10 text-2xl font-bold text-gruv-green">Elsewhere</h2>
+    <p class="!mt-2 flex flex-wrap gap-2 text-[13px] font-mono">
+      <a href="https://github.com/dotMavriQ" class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface hover:bg-gruv-surface text-gruv-blue transition">GitHub</a>
+      <a href="https://social.dotmavriq.life/users/dotmavriq" class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface hover:bg-gruv-surface text-gruv-purple transition">Fediverse</a>
+      <a href="https://matrix.to/#/@dotmavriq:chat.dotmavriq.life" class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface hover:bg-gruv-surface text-gruv-green transition">Matrix</a>
+      <a href="https://www.youtube.com/@dotmavriq/videos" class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface hover:bg-gruv-surface text-gruv-red transition">YouTube</a>
+      <a href="/rss.xml" class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface hover:bg-gruv-surface text-gruv-orange transition">RSS</a>
+    </p>
+    <p class="mt-10 text-sm text-gruv-muted font-mono">Last updated {new Date().toISOString().split('T')[0]}</p>
   </article>
 </BaseLayout>
