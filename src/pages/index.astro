@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactIcons from '../components/ContactIcons.astro';
 ---
 <BaseLayout title="blog.dotMavriQ" description="Personal site of dotMavriQ">
   <div class="flex flex-col items-center justify-center min-h-[calc(100vh-5.5rem)] text-center select-none relative pb-4">
@@ -7,7 +8,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <img src="/solidsnakegbc.gif" alt="Solid Snake running" class="mx-auto w-[210px] sm:w-[250px] md:w-[280px] aspect-[4/3] object-contain rounded filter invert contrast-105" decoding="async" />
       <figcaption class="sr-only">Solid Snake pixel animation</figcaption>
     </figure>
-    <div class="mt-8 flex flex-col items-center gap-5">
+    <ContactIcons />
+    <div class="mt-6 flex flex-col items-center gap-5">
       <div class="flex flex-wrap justify-center gap-5">
         <a href="/portfolio" class="btn-mat mat-yellow">View Portfolio</a>
         <a href="/blog" class="btn-mat mat-blue accent-raise">Read Blog</a>
@@ -20,3 +22,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </div>
 </BaseLayout>
+<style>
+  .btn-mat { @apply relative inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium text-sm tracking-tight bg-gruv-surface/60 text-gruv-fg border border-gruv-surface2 shadow-sm hover:shadow-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40; }
+  .btn-mat:before { content:""; @apply absolute inset-0 rounded-lg opacity-0 transition-opacity; background:linear-gradient(145deg,rgba(255,255,255,0.07),rgba(255,255,255,0)); }
+  .btn-mat:hover:before,.btn-mat:focus:before { @apply opacity-100; }
+  .btn-mat:hover,.btn-mat:focus { @apply translate-y-[-1px]; }
+  .mat-yellow:hover,.mat-yellow:focus { @apply text-gruv-bg bg-gruv-yellow; }
+  .mat-blue:hover,.mat-blue:focus { @apply text-gruv-bg bg-gruv-blue; }
+  .mat-orange:hover,.mat-orange:focus { @apply text-gruv-bg bg-gruv-orange; }
+  .mat-green:hover,.mat-green:focus { @apply text-gruv-bg bg-gruv-green; }
+  .mat-red:hover,.mat-red:focus { @apply text-gruv-bg bg-gruv-red; }
+  .accent-raise { box-shadow:0 0 0 0 rgba(131,165,152,0.4); }
+  .accent-raise:hover { box-shadow:0 4px 18px -2px rgba(131,165,152,0.35),0 0 0 1px rgba(131,165,152,0.25); }
+  @media (max-width:480px){ .btn-mat{ @apply px-4 py-2 text-[13px]; } }
+</style>
