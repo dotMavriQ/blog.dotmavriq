@@ -1,25 +1,30 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
-<BaseLayout title="About · dotMavriQ" description="About dotMavriQ – background, early tech journey, professional focus and interests.">
-  <article class="relative z-30 max-w-2xl mx-auto px-6 md:px-8 py-12 prose prose-invert prose-pre:bg-gruv-surface prose-code:text-gruv-yellow">
-    <h1 class="text-4xl font-extrabold tracking-tight text-gruv-yellow mb-6">About Me</h1>
-    <p>Hi, my name is Jonatan — though online I usually go by <strong class="text-gruv-yellow/90">dotMavriQ</strong>. My journey into tech started in the mid‑1990s when my father brought home a PC running Windows 95. I spent those early days exploring games, tinkering with software, and getting captivated by the early web.</p>
-    <p>The real spark came when I discovered <em>Game Maker</em> on a magazine CD. That pushed me into making small interactive things and eventually into web development: first static XHTML pages, then more dynamic stuff with CSS and PHP. I cut my teeth on phpBB and adopted WordPress just before version 4.</p>
-    <p>In college I built sites for local businesses and even received a silver service award for a web forum I coded from scratch. A formative traineeship at Nordic Goods exposed me to Ubuntu server setup, Magento deployments, and SEO‑aware site building. Linux has been a constant companion since—whether tuning servers or crafting developer tooling.</p>
-    <p>Later at Ember and Duva I shifted from low‑code WordPress solutions to more full‑stack engineering: containers, Docker, early Kubernetes exposure, modern frontend stacks (Tailwind, React, TypeScript) and iterative delivery. I also served as President of Makerspace Lidköping for two years—helping the national org with web & tech initiatives and widening my perspective on community infrastructure.</p>
-    <p>Subsequent roles (including IPTOR and Block Labs) refined my sense for pragmatic architecture, rapid application development, and the balance between velocity and maintainability. What drives me today is building systems that are understandable, observable, and evolve without fear.</p>
-    <p>Outside of code: bass guitar, cooking, philosophy, trekking, reading, and time with my partner all keep me balanced.</p>
-    <h2 class="mt-12 text-2xl font-bold text-gruv-blue">Now</h2>
-    <p>I'm iterating on this site, streamlining personal tooling, and experimenting with lightweight content + publishing flows using Astro.</p>
-    <h2 class="mt-10 text-2xl font-bold text-gruv-green">Elsewhere</h2>
-    <p class="!mt-2 flex flex-wrap gap-2 text-[13px] font-mono">
-      <a href="https://github.com/dotMavriQ" class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface hover:bg-gruv-surface text-gruv-blue transition">GitHub</a>
-      <a href="https://social.dotmavriq.life/users/dotmavriq" class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface hover:bg-gruv-surface text-gruv-purple transition">Fediverse</a>
-      <a href="https://matrix.to/#/@dotmavriq:chat.dotmavriq.life" class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface hover:bg-gruv-surface text-gruv-green transition">Matrix</a>
-      <a href="https://www.youtube.com/@dotmavriq/videos" class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface hover:bg-gruv-surface text-gruv-red transition">YouTube</a>
-      <a href="/rss.xml" class="px-2 py-1 rounded bg-gruv-surface2 border border-gruv-surface hover:bg-gruv-surface text-gruv-orange transition">RSS</a>
-    </p>
-    <p class="mt-10 text-sm text-gruv-muted font-mono">Last updated {new Date().toISOString().split('T')[0]}</p>
+<BaseLayout title="About · dotMavriQ" description="About dotMavriQ">
+  <article class="relative z-30 max-w-3xl mx-auto px-5 md:px-8 py-10 md:py-14">
+    <div class="rounded-lg bg-gruv-fg text-gruv-bg/95 shadow-md shadow-black/30 border border-gruv-surface overflow-hidden p-6 md:p-8">
+      <div class="space-y-6">
+        <p class="text-lg leading-relaxed">Hi, my name is Jonatan—though many online know me as dotMavriQ. My journey into tech began in the mid-90s with Windows 95, but it was discovering Game Maker on a CD from a Swedish PC magazine that truly sparked my love for coding and digital creation. That passion grew into web development, starting with static XHTML sites and expanding into more dynamic builds with CSS and PHP.</p>
+        <p class="text-lg leading-relaxed">In college, I built websites for local businesses, earned a Silver Medal at the 
+          <a href="https://www.mynewsdesk.com/se/ung_foeretagsamhet_skaraborg/pressreleases/vaaga-vara-egen-skaraborg-resultat-606181" target="_blank" rel="noopener noreferrer" class="underline text-[#076678] hover:text-[#458588] focus:outline-none focus:ring-2 focus:ring-[#458588] rounded-sm" aria-label="Vara UF-mässa (opens in a new tab)">Vara UF-mässa</a>, 
+          and completed a formative traineeship at 
+          <a href="https://www.snus24.com/about-us" target="_blank" rel="noopener noreferrer" class="underline text-[#076678] hover:text-[#458588] focus:outline-none focus:ring-2 focus:ring-[#458588] rounded-sm" aria-label="Nordic Goods (opens in a new tab)">Nordic Goods</a>, working hands-on with Linux servers, Magento, and SEO.</p>
+        <p class="text-lg leading-relaxed">My career then expanded at 
+          <a href="https://ember.se/" target="_blank" rel="noopener noreferrer" class="underline text-[#076678] hover:text-[#458588] focus:outline-none focus:ring-2 focus:ring-[#458588] rounded-sm" aria-label="Ember (opens in a new tab)">Ember</a> 
+          and 
+          <a href="https://duva.se/" target="_blank" rel="noopener noreferrer" class="underline text-[#076678] hover:text-[#458588] focus:outline-none focus:ring-2 focus:ring-[#458588] rounded-sm" aria-label="Duva (opens in a new tab)">Duva</a>, where I moved from WordPress to full-stack development—mastering Docker, Kubernetes, React, TypeScript, and Tailwind. I also served as President of Makerspace Lidköping, contributing nationally with web and tech solutions. Later, at 
+          <a href="https://iptor.com/" target="_blank" rel="noopener noreferrer" class="underline text-[#076678] hover:text-[#458588] focus:outline-none focus:ring-2 focus:ring-[#458588] rounded-sm" aria-label="IPTOR (opens in a new tab)">IPTOR</a> 
+          and 
+          <a href="https://www.blocklabs.io/" target="_blank" rel="noopener noreferrer" class="underline text-[#076678] hover:text-[#458588] focus:outline-none focus:ring-2 focus:ring-[#458588] rounded-sm" aria-label="Block Labs (opens in a new tab)">Block Labs</a>, I sharpened my skills in marketing-focused development and rapid application development.</p>
+        <p class="text-lg leading-relaxed">Today, I’m the Senior Growth Developer at 
+          <a href="https://nordhealth.com" target="_blank" rel="noopener noreferrer" class="underline text-[#076678] hover:text-[#458588] focus:outline-none focus:ring-2 focus:ring-[#458588] rounded-sm" aria-label="Nordhealth (opens in a new tab)">Nordhealth</a>, where I extend the Marketing Team by maintaining and improving digital properties, designing robust deployments, and implementing new features for an emerging AI-driven healthcare leader.</p>
+        <p class="text-lg leading-relaxed">What drives me is a relentless curiosity and a commitment to delivering user-centered solutions that work. My diverse experience, combined with a genuine passion for technology, makes me a reliable problem-solver—someone who brings both technical expertise and a thoughtful, human approach to every project.</p>
+        <div class="flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-6 pt-2">
+          <img src="/sepiaface.png" alt="Sepia-toned portrait of Jonatan" class="w-32 sm:w-36 md:w-40 h-auto opacity-70 hover:opacity-85 transition-opacity duration-200 rounded-md select-none pointer-events-none mix-blend-multiply" loading="lazy" decoding="async" />
+          <p class="text-lg leading-relaxed flex-1 self-end">Outside of work, I enjoy playing bass guitar, cooking, reading, trekking, and spending quality time with my partner.</p>
+        </div>
+      </div>
+    </div>
   </article>
 </BaseLayout>
