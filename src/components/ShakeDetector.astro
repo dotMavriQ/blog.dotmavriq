@@ -1,0 +1,26 @@
+---
+// Simple device shake detector (fires custom event 'dotmavriq:shake')
+const threshold = 18; // tuned for typical phone movement
+---
+<script>
+  if (typeof window !== 'undefined') {
+    let lastTime = 0; let lastX=0,lastY=0,lastZ=0;
+    window.addEventListener('devicemotion', (e)=>{
+      const acc = e.accelerationIncludingGravity; if(!acc) return;
+      const curTime = Date.now(); if(curTime - lastTime < 250) return; // sample window
+      const { x=0, y=0, z=0 } = acc; const speed = Math.abs(x+y+z - lastX - lastY - lastZ)/(curTime-lastTime)*10000;
+      if (speed > threshold){ window.dispatchEvent(new CustomEvent('dotmavriq:shake')); }
+      lastTime = curTime; lastX=x; lastY=y; lastZ=z;
+    }, { passive:true });
+    // Example reaction: flash class
+    window.addEventListener('dotmavriq:shake', ()=>{
+      document.documentElement.classList.add('shake-flash');
+      setTimeout(()=>document.documentElement.classList.remove('shake-flash'), 700);
+    });
+  }
+</script>
+<style>
+  .shake-flash { animation:flash-bg 0.7s ease; }
+  @keyframes flash-bg { 0%{ filter:brightness(1);} 40%{ filter:brightness(1.6);} 100%{ filter:brightness(1);} }
+  @media (prefers-reduced-motion: reduce){ .shake-flash{ animation:none; } }
+</style>

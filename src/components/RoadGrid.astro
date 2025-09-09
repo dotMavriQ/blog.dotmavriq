@@ -1,0 +1,14 @@
+---
+// Stylized retro "road" / grid animation using pure CSS + minimal JS toggle
+---
+<div class="road-grid" aria-hidden="true"></div>
+<style>
+  .road-grid { position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden; mix-blend-mode:overlay; }
+  .road-grid::before, .road-grid::after { content:""; position:absolute; left:50%; top:50%; width:200vmax; height:200vmax; transform:translate(-50%,-45%) rotateX(70deg); background:
+      repeating-linear-gradient(#665c54 0 2px, transparent 2px 40px),
+      repeating-linear-gradient(90deg,#665c54 0 2px, transparent 2px 40px);
+    background-size:100% 100%,100% 100%; animation:grid-move 14s linear infinite; opacity:0.14; }
+  .road-grid::after { animation-direction:reverse; opacity:0.08; }
+  @keyframes grid-move { from{ transform:translate(-50%,-45%) rotateX(70deg) translateY(0);} to{ transform:translate(-50%,-45%) rotateX(70deg) translateY(200px);} }
+  @media (prefers-reduced-motion: reduce){ .road-grid{ display:none; } }
+</style>
