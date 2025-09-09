@@ -49,20 +49,15 @@ const { title = 'blog.dotMavriQ', description = 'Personal blog of Jonatan Jansso
       </>
     )}
     <ShakeDetector />
-    <header class="relative z-40 bg-[#121314] border-b border-gruv-surface2/70 shadow-lg shadow-black/30">
-      <nav aria-label="Primary" class="max-w-6xl mx-auto px-5 h-16 flex items-center gap-4 text-[15px] tracking-tight">
-        <a href="/" class="text-[21px] font-extrabold font-heading text-gruv-yellow mr-2 sm:mr-6 focus:outline-none focus:ring-2 focus:ring-gruv-yellow/60 rounded transition-colors">blog.dotMavriQ</a>
-        <div class="flex flex-wrap items-center gap-2">
+    <header class="relative z-40 bg-[#121314]/95 backdrop-blur-sm border-b border-gruv-surface2/70 shadow-lg shadow-black/30">
+      <nav aria-label="Primary" class="max-w-6xl mx-auto px-5 lg:px-6 py-4 flex items-center justify-between gap-5 text-[15px] tracking-tight">
+        <a href="/" class="text-[22px] font-extrabold font-heading text-gruv-yellow focus:outline-none focus:ring-2 focus:ring-gruv-yellow/60 rounded transition-colors">blog.dotMavriQ</a>
+        <div class="flex flex-wrap items-center gap-3 ml-auto">
           <a class="nav-chip nav-orange" href="/about">About</a>
           <a class="nav-chip nav-green" href="/cv">CV</a>
           <a class="nav-chip nav-yellow" href="/portfolio">Portfolio</a>
           <a class="nav-chip nav-blue" href="/blog">Blog</a>
           <a class="nav-chip nav-red" href="/contact">Contact</a>
-        </div>
-        <div class="ml-auto hidden md:flex items-center gap-4 text-xs font-mono text-gruv-muted">
-          <span class="uppercase tracking-wider">v1.0</span>
-          <span class="w-px h-4 bg-gruv-surface2"></span>
-          <a href="/rss.xml" class="hover:text-gruv-yellow">RSS</a>
         </div>
       </nav>
     </header>
