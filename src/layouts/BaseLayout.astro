@@ -1,0 +1,42 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = 'blog.dotMavriQ', description = 'Personal blog of Jonatan Jansson (dotMavriQ)' } = Astro.props as Props;
+---
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" />
+    <meta name="theme-color" content="#1d2021" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-gruv-bg text-gruv-fg font-sans antialiased min-h-screen flex flex-col">
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-gruv-surface/90 border-b border-gruv-surface2 shadow">
+      <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
+        <h1 class="text-2xl font-bold text-gruv-yellow"><a href="/">blog.dotMavriQ</a></h1>
+        <nav aria-label="Main" class="hidden md:block">
+          <ul class="flex gap-6 font-semibold">
+            <li><a class="hover:underline text-gruv-blue" href="/about">About</a></li>
+            <li><a class="hover:underline text-gruv-orange" href="/cv">CV</a></li>
+            <li><a class="hover:underline text-gruv-green" href="/portfolio">Portfolio</a></li>
+            <li><a class="hover:underline text-gruv-yellow" href="/blog">Blog</a></li>
+            <li><a class="hover:underline text-gruv-red" href="/contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full">
+      <slot />
+    </main>
+    <footer class="p-6 text-center text-sm text-gruv-muted border-t border-gruv-surface2 bg-gruv-surface/90">
+      <p>🄯 {new Date().getFullYear()} dotMavriQ · <a class="hover:underline text-gruv-purple" href="https://archive.org/details/flash_allyourbase" target="_blank" rel="noopener noreferrer">All base are belong to us.</a></p>
+    </footer>
+  </body>
+</html>

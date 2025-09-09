@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { MarkdownInstance } from 'astro';
+
+const posts = await getCollection('blog');
+const { slug } = Astro.params;
+const id = Array.isArray(slug) ? slug[0] : slug;
+const post: MarkdownInstance<any> | undefined = posts.find(p => p.slug === id);
+if (!post) {
+  return Astro.redirect('/blog');
+}
+---
+<BaseLayout title={post.data.title} description={post.data.excerpt}>
+  <article class="prose prose-invert max-w-none">
+    <h1>{post.data.title}</h1>
+    <time class="text-sm text-gruv-muted" datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toDateString()}</time>
+    {post.data.tags.length > 0 && (
+      <ul class="flex gap-2 mt-2 text-xs">
+        {post.data.tags.map(t => <li class="px-2 py-1 bg-gruv-surface text-gruv-fg rounded" >{t}</li>)}
+      </ul>
+    )}
+    <div class="mt-6">
+      {post?.compiledContent()}
+    </div>
+  </article>
+</BaseLayout>

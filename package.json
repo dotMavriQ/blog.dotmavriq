@@ -1,18 +1,23 @@
 {
-  "name": "dotblog",
-  "type": "module",
+  "name": "blog.dotmavriq",
   "version": "0.0.1",
+  "private": true,
+  "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "deploy": "npm run build && node scripts/gh-pages-publish.js"
   },
   "dependencies": {
-    "@astrojs/react": "^4.3.0",
-    "astro": "^5.9.2",
-    "astro-icon": "^1.1.5",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "astro": "^4.15.0",
+    "@astrojs/mdx": "^3.1.0",
+    "@astrojs/rss": "^4.0.0",
+    "@astrojs/tailwind": "^5.1.0",
+    "date-fns": "^4.1.0",
+    "gray-matter": "^4.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
   }
 }
