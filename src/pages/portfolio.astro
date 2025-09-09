@@ -1,8 +1,257 @@
 ---
-import MainLayout from "../layouts/MainLayout.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { portfolio } from "../content/portfolio";
+
+const allTags = Array.from(new Set(portfolio.flatMap(p => p.tags))).sort();
+// Keep featured items first, then list remaining items alphabetically by title
+const orderedPortfolio = [
+  ...portfolio.filter(p => p.featured),
+  ...portfolio.filter(p => !p.featured).sort((a,b)=>a.title.localeCompare(b.title,'en',{sensitivity:'base'}))
+];
 ---
 
-<MainLayout>
-  <h1>Portfolio</h1>
-  <p>This is the Portfolio page for dotBlog.</p>
-</MainLayout>
+<BaseLayout title="Portfolio · dotMavriQ" description="Selected projects & plugins by dotMavriQ">
+  <article class="relative z-30 max-w-6xl mx-auto pr-5 md:pr-8 pl-5 md:pl-8 lg:pl-[92px] py-10 md:py-14">
+    <header class="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div>
+  <h1 id="portfolio-secret" class="text-3xl md:text-4xl font-extrabold tracking-tight select-none w-fit inline-block">Portfolio</h1>
+        <p class="mt-2 text-[15px] leading-relaxed max-w-2xl">A curated set of plugins, utilities and integrations. Built with an emphasis on DX, performance and clean, maintainable architectures. Filter by stack to explore.</p>
+      </div>
+      <div class="flex flex-wrap gap-2 text-xs md:text-[11px] font-mono" id="tag-filter" data-js="tag-filter">
+        {allTags.map(tag => (
+          <button
+            type="button"
+            class="px-3 py-1 rounded-md border border-[#bdae93]/25 bg-[#3c3836]/70 text-[#ebdbb2] shadow-[0_0_0_1px_rgba(0,0,0,0.35)] backdrop-blur-[2px] hover:bg-[#504945]/80 hover:border-[#bdae93]/50 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.55)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50 active:scale-[0.97] data-[active=true]:bg-[#504945] data-[active=true]:border-[#bdae93]/70 data-[active=true]:text-[#fbf1c7] data-[active=true]:shadow-inner"
+            data-tag={tag}
+            data-active="false"
+            aria-pressed="false"
+          >{tag}</button>
+        ))}
+      </div>
+    </header>
+
+  <section class="grid gap-6 md:gap-8 sm:grid-cols-2 xl:grid-cols-3 portfolio-grid" data-js="portfolio-grid">
+  {orderedPortfolio.map(item => (
+  <div class={`group relative rounded-xl overflow-hidden border border-gruv-surface/70 bg-[#1d2021] shadow-md shadow-black/40 hover:shadow-lg hover:shadow-black/60 transition-all duration-300 flex flex-col ${item.featured ? 'ring-2 ring-gruv-yellow/40' : ''}`} data-tags={item.tags.join(',')}>
+          <div class="relative aspect-video overflow-hidden bg-gruv-bg/40">
+            <img src={typeof item.image === 'string' ? item.image : item.image.src} alt={item.title} loading="lazy" decoding="async" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.04] group-hover:rotate-[0.6deg]" />
+            {item.featured && <span class="absolute top-2 left-2 text-[10px] font-mono tracking-wide bg-gruv-yellow/90 text-[#1d2021] px-2 py-0.5 rounded shadow shadow-black/50">FEATURED</span>}
+            <div class="absolute inset-0 bg-gradient-to-t from-[#1d2021] via-transparent to-transparent opacity-70 pointer-events-none"></div>
+          </div>
+          <div class="flex-1 p-5 flex flex-col gap-3">
+            <h2 class="text-lg font-semibold tracking-tight flex items-start gap-2 text-gruv-fg group-hover:text-gruv-yellow transition-colors">{item.title}</h2>
+            <p class="text-sm leading-relaxed text-gruv-fg/90 flex-1 line-clamp-4">{item.description}</p>
+            <div class="flex flex-wrap gap-1.5 mt-1">
+              {item.tags.map(tag => (
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#504945]/80 border border-[#bdae93]/30 text-[#ebdbb2] shadow-[0_0_0_1px_rgba(0,0,0,0.25)] tracking-wide backdrop-blur-[2px]">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+          <!-- badges -->
+          <div class="absolute bottom-2 right-2 flex gap-2 items-end">
+            {item.links.map(link => (
+              <a href={link.url} target="_blank" rel="noopener noreferrer" class="relative inline-flex items-center justify-center w-9 h-9 rounded-full bg-[#262b2d] text-gruv-fg border border-[#343b3e] shadow shadow-black/50 hover:bg-gruv-yellow hover:text-[#1d2021] hover:scale-105 hover:-translate-y-0.5 active:scale-95 transition-all" aria-label={`Open ${item.title} ${link.type}`} title={link.type}>
+                {link.type === 'github' && <img src="/icons/github.svg" alt="GitHub" class="w-5 h-5 opacity-90" />}
+                {link.type === 'live' && <img src="/site_icons/globe.svg" alt="Live" class="w-5 h-5 opacity-90" />}
+                {link.type === 'chrome' && <img src="/icons/chrome.svg" alt="Chrome Web Store" class="w-5 h-5" />}
+                {link.type === 'wordpress' && <img src="/icons/wordpress.svg" alt="WordPress" class="w-5 h-5 opacity-90" />}
+                {link.type === 'npm' && <span class="text-[11px] font-bold">npm</span>}
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+  </article>
+</BaseLayout>
+
+<script>
+  // Secret: clicking the Portfolio header opens a hidden Drive folder in a new tab
+  const secret = document.getElementById('portfolio-secret');
+  if (secret) {
+    secret.addEventListener('click', (e) => {
+      // Prevent accidental text selection from blocking the click
+      e.preventDefault();
+      window.open('https://drive.google.com/drive/folders/1s37HrUf1M99u26wLE_Yh9_TWRQfyCeO9?usp=sharing','_blank','noopener,noreferrer');
+    }, { once: false });
+    // Matrix hover trigger (6s cumulative dwell with 300ms grace)
+    let matrixTimer=null; let matrixActive=false; let hoverAccum=0; let hoverStart=0; let graceTimer=null;
+    const HOVER_THRESHOLD=6000; const GRACE=300;
+    function arm(){
+      if(matrixActive) return;
+      hoverStart=performance.now();
+      matrixTimer=setTimeout(()=>{ startMatrix(); }, HOVER_THRESHOLD-hoverAccum);
+    }
+    function disarm(){
+      if(matrixTimer){ clearTimeout(matrixTimer); matrixTimer=null; }
+      const delta=performance.now()-hoverStart; hoverAccum+=delta;
+      if(hoverAccum>=HOVER_THRESHOLD){ startMatrix(); return; }
+      graceTimer=setTimeout(()=>{ hoverAccum=0; }, GRACE); // reset if user leaves too long
+    }
+    secret.addEventListener('pointerenter', ()=>{ if(graceTimer){ clearTimeout(graceTimer); graceTimer=null; } arm(); });
+    secret.addEventListener('pointerleave', disarm);
+    // XOR decoded domains (encoded blob + segmented key)
+    const HEX_BLOB="365619170e0c1d07020f180e1c1c195c1e41504f58500f0b105c06180901535d401f5d5d10194f071c0d0f55465b1309504d4b1d12474300010c181e0f140e061058190743454c0f5c454107595a130c5e4b5016170e02001b1a52415510194f10131b170e13191f18190e190712551e41504f585010131317191a0e1305011b0f57441c4608565e5a0b061e19050813131a400f57121e1708191d1b1315175b0519504d4b0a0944511c4608565e5a190a1010045201044b425e0343575e181a16560f0250595431110a06000f475c461b1e1150545e021910045201044b425e6577411b1e1150545e121a1c065201044b425e5e59565e02041b161b490110545050290c020f5b5e5557020615560f02505954291e13000d195a515f5b4307175a504526071712170c06400f57121e170e1c170a0e1e111a1a130012471d19101c10560c06111d121317071a15160a061e155c571c4608565e5a081507161d0800141a1a52415510194f15111918021f101215134f1a0b5e1e125f5a031b191d104901105450500f19050f45555650035a011d5e4b50474251010b1c401f5d5d10194f16171912141b1b1509024f1a0b5e1e1253461e111f1a100e1c5b15131f4e1a185e1e125e5c091f1d081509150610131e0a0c1a0f5a45411b1e1150545e051b19030c020600080857421c4608565e5a091113191f18190e190712551e515a00565e5a1d05011a1a191c15470d135f121e170c16011710021c01110e1d1419401f5d5d10194f19130a15021a000552110e044c50105c5f434307175a5045041c171f1d0f471d19101c105c030706170e02131213121118471d19101c104105111e1112031301175201044b425e405f4046190613161804171b0219004f1a0b5e1e12415c0015020a1349141c545050071b011246514245010d5c1b130a50595411130a0c1c0f42515150011d161313171b1b115201044b425e5f5159501f0702191f025c06135e5e431f0f0e4151414304181e191249011054505006061a195c555a401e5a011d5e4b50181f10180e0e070e5356541b1e1150545e131a00185201044b425e455941571400131617020006580f1743454c1e40455756061a170a51140b0602191f4f0a0111101c10510416131b520317575a5e160e1b0019401e56504f58501e150a1d0d5b0f1d071d191d40551c56021950545e0001125b1b170f000752515f5f174156150d0f4a17070652110e044c50105747464013001709175c161911504d4b0909411d5e540f5a111711455e571f0c060e1b401f5d5d10194f1a17001500135b15131f43454c0f5d40405440070b0b08021f5b15131f43454c085b5d50501f00171b52041d18545050160c1c174144534119591c000849111a1b5e5e430a01155c405d5e08065c1b130a5059541e17121d191d5e5c574143171d155e4b50051e0501080a0f525c5f10194f0401011705130613521c0e4b425e465540541d11070c1e081d1e1f12154f0d055e1e12565c0c061b0d1149141c54505004081d0542425356191d111d520917015421";
+    const KEY_SEGMENTS=['mtrx','|gr','uv|','rain','|2025'];
+    const XOR_KEY=KEY_SEGMENTS.join('');
+    function decodeDomains(){
+      const bytes=[]; for(let i=0;i<HEX_BLOB.length;i+=2){ bytes.push(parseInt(HEX_BLOB.slice(i,i+2),16)); }
+      const chars=bytes.map((b,i)=>String.fromCharCode(b ^ XOR_KEY.charCodeAt(i % XOR_KEY.length))); try{return JSON.parse(chars.join(''));}catch{return[];}
+    }
+    function startMatrix(){
+      matrixActive=true;
+      const overlay=document.createElement('div'); overlay.id='matrix-overlay'; overlay.className='fixed inset-0 z-[999] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4';
+      overlay.innerHTML=`<canvas id="matrix-canvas" class="absolute inset-0 w-full h-full"></canvas><div class="absolute top-3 right-4 text-xs font-mono text-gruv-muted opacity-70">ESC to exit</div>`;
+      document.body.appendChild(overlay);
+      const domains=decodeDomains(); const canvas=overlay.querySelector('#matrix-canvas'); const ctx=canvas.getContext('2d');
+      function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; } resize(); window.addEventListener('resize',resize);
+      const alphabet='abcdefghijklmnopqrstuvwxyz0123456789./:-_';
+      const lineHeight=20; const charW=12; // approximate monospace metrics
+      ctx.font='15px JetBrains Mono, monospace'; ctx.textBaseline='top';
+      const rows=domains.length;
+      // Build horizontal streams (rotated Matrix) each carrying one domain that stabilises in center band while warbling elsewhere
+      const streams=domains.map((d,i)=>({
+        domain:d.toLowerCase(),
+        y:0, x:0, speed:0, chars:[],
+      }));
+      function placeStreams(){
+        const totalHeight=rows*lineHeight; const startY=(canvas.height/2 - totalHeight/2);
+        streams.forEach((s,i)=>{ s.y=startY + i*lineHeight; });
+      }
+      function resetStream(s){
+        s.x = - (s.domain.length*charW) - Math.random()*canvas.width*0.3 - 50; // start offscreen
+        s.speed = 0.6 + Math.random()*1.4; // varied speeds
+        s.chars = Array.from({length:s.domain.length},()=>alphabet[Math.random()*alphabet.length|0]);
+      }
+      streams.forEach(resetStream); placeStreams();
+      window.addEventListener('resize',()=>{ placeStreams(); });
+      const centerStartRatio=0.28, centerEndRatio=0.72;
+      function step(){
+        ctx.fillStyle='rgba(0,0,0,0.18)';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        const centerStart=canvas.width*centerStartRatio; const centerEnd=canvas.width*centerEndRatio;
+        const now=Date.now();
+        for(const s of streams){
+          s.x += s.speed;
+          // Warble & reveal logic
+            for(let i=0;i<s.domain.length;i++){
+              const charX = s.x + i*charW;
+              const target = s.domain[i];
+              const inCenter = charX>centerStart && charX<centerEnd;
+              if(inCenter){
+                if(s.chars[i]!==target){
+                  // accelerate convergence in center
+                  if(Math.random()<0.35) s.chars[i]=target; else if(Math.random()<0.25) s.chars[i]=alphabet[Math.random()*alphabet.length|0];
+                } else {
+                  // occasional flicker even when matched
+                  if(Math.random()<0.012) s.chars[i]=alphabet[Math.random()*alphabet.length|0];
+                }
+              } else {
+                // Outside center: keep chaotic
+                if(Math.random()<0.06) s.chars[i]=alphabet[Math.random()*alphabet.length|0];
+              }
+            }
+          // Draw characters
+          for(let i=0;i<s.chars.length;i++){
+            const x = s.x + i*charW; if(x<-40 || x>canvas.width+40) continue;
+            const ch = s.chars[i];
+            const headX = s.x + (s.chars.length-1)*charW;
+            const inCenter = x>centerStart && x<centerEnd;
+            // Color scheme
+            if(Math.abs(x-headX)<charW*0.5){
+              ctx.fillStyle='#fabd2f'; // leading head
+            } else if(inCenter && ch===s.domain[i]){
+              ctx.fillStyle='#b8bb26'; // stable correct char in center
+            } else if(inCenter){
+              ctx.fillStyle='#83a598'; // transforming in center
+            } else {
+              // trailing / preamble random shades flicker
+              const flicker=((now/80 + i + s.y)|0)%7===0;
+              ctx.fillStyle=flicker? '#928374' : '#665c54';
+            }
+            ctx.fillText(ch, x, s.y);
+          }
+          // After passing screen, recycle
+          if(s.x > canvas.width + 80){ resetStream(s); }
+        }
+        if(matrixActive) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+      function cleanup(){ matrixActive=false; overlay.remove(); window.removeEventListener('resize',resize); }
+      overlay.addEventListener('click',cleanup); window.addEventListener('keydown',e=>{ if(e.key==='Escape') cleanup(); });
+    }
+  }
+  // (debug) matrix script loaded
+  console.debug('[portfolio] matrix easter egg script active');
+  const buttons = document.querySelectorAll('[data-js="tag-filter"] button');
+  const cards = document.querySelectorAll('[data-js="portfolio-grid"] > div');
+  const active = new Set();
+
+  function updateCards() {
+    if (!active.size) {
+      cards.forEach(c => c.classList.remove('opacity-30','scale-[0.97]','pointer-events-none','blur-[1px]'));
+      return;
+    }
+    cards.forEach(c => {
+      const tags = c.getAttribute('data-tags')?.split(',') || [];
+      const match = [...active].every(a => tags.includes(a));
+      c.classList.toggle('opacity-30', !match);
+      c.classList.toggle('scale-[0.97]', !match);
+      c.classList.toggle('pointer-events-none', !match);
+      c.classList.toggle('blur-[1px]', !match);
+    });
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tag = btn.getAttribute('data-tag');
+      if (!tag) return;
+      if (active.has(tag)) {
+        active.delete(tag);
+        btn.dataset.active = 'false';
+        btn.setAttribute('aria-pressed','false');
+      } else {
+        active.add(tag);
+        btn.dataset.active = 'true';
+        btn.setAttribute('aria-pressed','true');
+      }
+      updateCards();
+    });
+  });
+
+</script>
+
+<style>
+  /* Easter egg rainbow animation for Portfolio header */
+  #portfolio-secret { cursor: pointer; position: relative; }
+  #portfolio-secret:focus { outline: none; }
+  #portfolio-secret:hover, #portfolio-secret:focus-visible {
+    background: linear-gradient(90deg,
+      #fbf1c7 0%,
+      #fabd2f 12%,
+      #fe8019 24%,
+      #d3869b 36%,
+      #b16286 48%,
+      #83a598 60%,
+      #8ec07c 72%,
+      #b8bb26 84%,
+      #fbf1c7 100%
+    );
+    background-size: 400% 100%;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: gruv-rainbow 3.5s linear infinite;
+    text-shadow: 0 0 8px rgba(250,189,47,0.15);
+  }
+  @keyframes gruv-rainbow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #portfolio-secret:hover, #portfolio-secret:focus-visible { animation: none; background-size: 100% 100%; }
+  }
+  #matrix-overlay{ animation: fadeInMatrix .6s ease; }
+  @keyframes fadeInMatrix { from { opacity:0; } to { opacity:1; } }
+</style>

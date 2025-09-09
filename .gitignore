@@ -10,3 +10,6 @@ dist
 !.env.example
 /.idea/
 /.vscode/
+# Secret matrix generation artifacts (kept local, not committed)
+scripts/gen-matrix-blob.js
+scripts/matrix_blob.txt
