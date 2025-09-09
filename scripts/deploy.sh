@@ -50,7 +50,13 @@ rm -rf "$TMP_WORKTREE"
 git worktree add "$TMP_WORKTREE" "$GH_BRANCH"
 
 echo "Syncing files to worktree"
-rsync -a --delete "$OUT_DIR"/ "$TMP_WORKTREE"/
+if command -v rsync >/dev/null 2>&1; then
+  rsync -a --delete "$OUT_DIR"/ "$TMP_WORKTREE"/
+else
+  echo "rsync not found; using fallback sync (delete + copy)." >&2
+  find "$TMP_WORKTREE" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+  cp -R "$OUT_DIR"/* "$TMP_WORKTREE"/
+fi
 
 cd "$TMP_WORKTREE"
 touch .nojekyll
