@@ -1,19 +1,23 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
 
+// Only generate pages for real posts (exclude placeholder or draft markers)
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  return posts.map(p => ({ params: { slug: p.slug } }));
+  return posts
+    .filter(p => p.slug !== 'placeholder' && !(p.data as any).draft)
+    .map(p => ({ params: { slug: p.slug } }));
 }
 
 const { slug } = Astro.params;
 const posts = await getCollection('blog');
-const post = posts.find(p => p.slug === slug) as CollectionEntry<'blog'> | undefined;
+const post = posts.find(p => p.slug === slug);
 if (!post) return Astro.redirect('/blog');
+// Astro content entry render helper returns Content component
+const { Content } = await post.render();
 ---
-<BaseLayout title={post.data.title} description={post.data.excerpt}>
+<BaseLayout title={post.data.title} description={post.data.excerpt || ''}>
   <article class="prose prose-invert max-w-none">
     <h1>{post.data.title}</h1>
     <time class="text-sm text-gruv-muted" datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toDateString()}</time>
@@ -23,7 +27,7 @@ if (!post) return Astro.redirect('/blog');
       </ul>
     )}
     <div class="mt-6">
-      {post?.compiledContent()}
+      <Content />
     </div>
   </article>
 </BaseLayout>

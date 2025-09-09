@@ -1,22 +1,18 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
-const posts = (await getCollection('blog')).sort((a,b)=> b.data.pubDate.getTime()-a.data.pubDate.getTime());
+// Coming soon placeholder – real posts & listing logic re-enabled later.
+const posts: any[] = [];
 ---
-<BaseLayout title="Blog" description="All posts">
-  <h1 class="text-3xl font-bold mb-8 text-gruv-yellow">All Posts</h1>
-  <div class="space-y-8">
-    {posts.map(p => (
-      <article class="bg-gruv-surface2 p-6 rounded border border-gruv-surface hover:border-gruv-yellow transition">
-        <h2 class="text-2xl font-semibold mb-2 text-gruv-yellow"><a href={`/blog/${p.slug}/`}>{p.data.title}</a></h2>
-        <time class="block text-sm text-gruv-muted mb-3" datetime={p.data.pubDate.toISOString()}>{p.data.pubDate.toDateString()}</time>
-        {p.data.excerpt && <p class="text-gruv-fg/90 leading-relaxed mb-3">{p.data.excerpt}</p>}
-        {p.data.tags.length > 0 && (
-          <ul class="flex gap-2 flex-wrap text-xs">
-            {p.data.tags.map(tag => <li class="px-2 py-1 bg-gruv-surface text-gruv-fg rounded" >{tag}</li>)}
-          </ul>
-        )}
-      </article>
-    ))}
-  </div>
+<BaseLayout title="Blog · Coming Soon" description="Articles & notes coming soon">
+  <section class="relative z-30 max-w-3xl mx-auto px-6 md:px-10 py-14 md:py-20 text-center select-none">
+    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-gruv-fg mb-6">Blog</h1>
+    <div class="inline-flex items-center gap-3 px-5 py-3 rounded-xl border border-[#504945] bg-[#1d2021]/85 shadow shadow-black/40 backdrop-blur-sm">
+      <span class="relative flex h-3 w-3">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-gruv-yellow opacity-60"></span>
+        <span class="relative inline-flex rounded-full h-3 w-3 bg-gruv-yellow"></span>
+      </span>
+      <p class="font-mono text-sm tracking-wide text-[#ebdbb2]/90">Content pipeline <span class="text-gruv-yellow">warming up</span>.</p>
+    </div>
+    <p class="mt-8 text-[15px] leading-relaxed text-gruv-fg/85 max-w-xl mx-auto">Drafts on architecture patterns, debugging war stories, performance profiling and ecosystem design will appear here soon. RSS stays up – first drop will populate it automatically.</p>
+  </section>
 </BaseLayout>

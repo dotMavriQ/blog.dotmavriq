@@ -2,7 +2,8 @@ import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 
 export async function GET() {
-  const posts = await getCollection('blog');
+  let posts: any[] = [];
+  try { posts = await getCollection('blog'); } catch { posts = []; }
   return rss({
     title: 'dotMavriQ Blog',
     description: 'Recent posts',
