@@ -1,8 +1,223 @@
 ---
-import MainLayout from "../layouts/MainLayout.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
+<BaseLayout title="CV · dotMavriQ" description="Curriculum Vitae of Jonatan Jansson (dotMavriQ)">
+  <article class="relative z-30 max-w-5xl mx-auto px-5 md:px-8 py-10 md:py-14">
+    <div class="rounded-lg bg-gruv-fg text-gruv-bg/95 shadow-md shadow-black/30 border border-gruv-surface overflow-hidden p-6 md:p-10 relative">
+      <header class="mb-10 flex flex-col gap-6 md:gap-4 md:flex-row md:items-end">
+        <div class="flex-1 space-y-3">
+          <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">My CV</h1>
+          <div class="text-sm md:text-[15px] leading-relaxed font-medium space-y-1">
+            <p>Calçada de São Vicente</p>
+            <p>Alcabideche, Lisboa, Portugal</p>
+            <p><a href="mailto:social@dotmavriq.life" class="underline decoration-dashed decoration-gruv-bg/40 underline-offset-2 text-[#076678] hover:text-[#458588] focus:outline-none focus:ring-2 focus:ring-[#458588] rounded-sm">social@dotmavriq.life</a></p>
+          </div>
+        </div>
+        <div class="flex flex-col items-start md:items-end gap-2 text-sm md:text-xs font-mono">
+          <a href="/jonatanjanssonCV2025.pdf" class="group absolute top-4 right-4 md:top-5 md:right-5 inline-flex items-center gap-2 px-4 py-2 rounded-md bg-gruv-bg/10 backdrop-blur-sm border border-gruv-bg/30 hover:bg-gruv-bg/20 hover:border-gruv-bg/40 text-gruv-bg font-medium tracking-tight shadow shadow-black/20 transition-colors focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40">
+            <span>Download PDF</span>
+          </a>
+          <span class="text-gruv-bg/60 md:mt-16">Updated 2025</span>
+        </div>
+      </header>
 
-<MainLayout>
-  <h1>CV</h1>
-  <p>This is the CV page for dotBlog.</p>
-</MainLayout>
+      <!-- SUMMARY / SKILLS INTRO -->
+      <section id="skills" class="space-y-6 mb-12">
+        <h2 class="text-2xl font-bold tracking-tight">Skills</h2>
+        <div class="space-y-4 text-[15px] leading-relaxed">
+          <p>Skilled professional with extensive experience in web development, technical support, and system configuration. Strong communication and customer collaboration skills; adept at integrating feedback and ensuring reliable, maintainable solutions.</p>
+          <p>Hands-on across front-end and back-end (JavaScript, PHP, Python) with specialization in WordPress & WooCommerce ecosystems and adjacent CMS platforms (Joomla, Magento). Experienced in performance tuning, marketing‑focused development, copywriting, content management, and iterative optimization of digital properties.</p>
+          <div>
+            <h3 class="text-lg font-semibold mb-2">Key Skills</h3>
+            <ul class="grid gap-1 sm:grid-cols-2 md:grid-cols-3 text-sm md:text-[13px] font-mono">
+              <li>JavaScript / TypeScript (ESNext)</li>
+              <li>React & Modern Frontend</li>
+              <li>WordPress (Plugins / Themes / Woo)</li>
+              <li>Headless & API Integration</li>
+              <li>Performance (Core Web Vitals)</li>
+              <li>Accessibility (WCAG 2.2)</li>
+              <li>Technical SEO / Structured Data</li>
+              <li>Growth Engineering / A/B Testing</li>
+              <li>Marketing Automation (HubSpot)</li>
+              <li>Analytics & Tag Management (GA4)</li>
+              <li>AI Integration (OpenAI APIs)</li>
+              <li>PHP / Python / Shell Scripting</li>
+              <li>Docker / GitHub Actions / CDN</li>
+              <li>Security (OWASP basics)</li>
+              <li>Testing (Playwright / Selenium)</li>
+              <li>Observability & Monitoring</li>
+              <li>CMS Workflow & Editorial Tooling</li>
+              <li>Data Integration & Automation</li>
+              <li>API Design & Consumption</li>
+              <li>Documentation & Enablement</li>
+              <li>Stakeholder Alignment</li>
+              <li>Localization / i18n</li>
+              <li>Version Control & Code Review</li>
+              <li>Linux Systems & Server Hardening</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPERIENCE (timeline styled) -->
+      <section id="experience" class="mb-14">
+        <h2 class="text-2xl font-bold tracking-tight mb-8">Experience</h2>
+        <div class="relative pl-8 md:pl-10">
+          <!-- vertical line -->
+          <div class="absolute left-2.5 md:left-3 top-0 bottom-0 w-px bg-gruv-bg/30"></div>
+          <div class="space-y-12">
+            <div class="relative">
+              <span class="absolute -left-6 md:-left-7 top-2 w-3 h-3 rounded-full bg-gruv-bg ring-2 ring-gruv-fg shadow shadow-black/30"></span>
+              <h3 class="text-xl font-semibold">Nordhealth — Senior Growth Developer</h3>
+              <p class="text-sm font-mono text-gruv-bg/70">2025 – Present</p>
+              <ul class="mt-3 space-y-1 text-[15px] leading-snug list-disc list-inside">
+                <li>Lead development & optimization of multi‑market WordPress product / marketing sites.</li>
+                <li>Improve conversions & performance (Core Web Vitals, A/B testing, caching, asset strategy).</li>
+                <li>Consolidate legacy properties into a unified platform & design system.</li>
+                <li>Integrate AI‑assisted workflows & content automation to accelerate funnel growth.</li>
+                <li>Implement security hardening, analytics / tag & CRM integrations, deploy pipelines.</li>
+                <li>Partner with marketing on rapid experiments & high‑impact feature launches.</li>
+              </ul>
+            </div>
+            <div class="relative">
+              <span class="absolute -left-6 md:-left-7 top-2 w-3 h-3 rounded-full bg-gruv-bg ring-2 ring-gruv-fg shadow shadow-black/30"></span>
+              <h3 class="text-xl font-semibold">Block Labs LTD, Lisbon — WordPress Developer</h3>
+              <p class="text-sm font-mono text-gruv-bg/70">2024 – 2025</p>
+              <ul class="mt-3 space-y-1 text-[15px] leading-snug list-disc list-inside">
+                <li>Develop high‑performance WordPress sites (custom themes & plugins).</li>
+                <li>Design architecture & manage advanced CMS configurations.</li>
+                <li>Implement DB & server integrations for enterprise solutions.</li>
+                <li>Performance testing, troubleshooting & continuous optimization.</li>
+                <li>Collaborate cross‑functionally to meet business objectives.</li>
+                <li>Lead enterprise server migrations and platform hardening.</li>
+              </ul>
+            </div>
+            <div class="relative">
+              <span class="absolute -left-6 md:-left-7 top-2 w-3 h-3 rounded-full bg-gruv-bg ring-2 ring-gruv-fg shadow shadow-black/30"></span>
+              <h3 class="text-xl font-semibold">IPTOR, Lisbon — WordPress Developer</h3>
+              <p class="text-sm font-mono text-gruv-bg/70">2023 – 2024</p>
+              <ul class="mt-3 space-y-1 text-[15px] leading-snug list-disc list-inside">
+                <li>Built enterprise WordPress plugin integrating TeamTailor API.</li>
+                <li>Maintained GENII Group properties focusing on performance & UX.</li>
+                <li>Implemented technical solutions supporting inbound marketing.</li>
+                <li>Expanded HubSpot & adjacent MarTech integration expertise.</li>
+              </ul>
+            </div>
+            <div class="relative">
+              <span class="absolute -left-6 md:-left-7 top-2 w-3 h-3 rounded-full bg-gruv-bg ring-2 ring-gruv-fg shadow shadow-black/30"></span>
+              <h3 class="text-xl font-semibold">Duva, Lidköping — Web Developer / Software Tester / Support</h3>
+              <p class="text-sm font-mono text-gruv-bg/70">2018 – 2023</p>
+              <ul class="mt-3 space-y-1 text-[15px] leading-snug list-disc list-inside">
+                <li>Delivered front‑end builds for 50+ clients (WordPress, HTML, CSS, JS, PHP).</li>
+                <li>Consulted on performance, resilience & troubleshooting for enterprise sites.</li>
+                <li>Planned and refined solutions with international stakeholders.</li>
+                <li>Executed systematic software testing & debugging for stable releases.</li>
+              </ul>
+              <div class="mt-4 space-y-3">
+                <h4 class="font-semibold text-sm tracking-wide uppercase text-gruv-bg/70">Key Projects</h4>
+                <ul class="space-y-1 text-[14px] leading-snug list-disc list-inside">
+                  <li><strong>Monokel</strong> — Support, system administration, customer relations; managed integrations & client communication loops.</li>
+                  <li><strong>1Sekund</strong> — Marketing & system admin; platform visibility & content operations.</li>
+                  <li><strong>McKonsult</strong> — Developed Parts Europe integrations; authored site content & product copy.</li>
+                  <li><strong>Ulricehamns Municipality</strong> — Technical consultant & integration manager for health inquiry workflows.</li>
+                  <li><strong>24-sju.se</strong> — E‑commerce improvements & franchise support.</li>
+                  <li><strong>Academedia</strong> — WordPress dev (themes, plugins, DB), cross‑team integration & stability improvements.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADDITIONAL EXPERIENCE -->
+      <section id="additional-experience" class="space-y-8 mb-14">
+        <h2 class="text-2xl font-bold tracking-tight">Additional Experience</h2>
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-lg font-semibold">Lidköping Makerspace, Sweden — Founder</h3>
+            <p class="text-sm font-mono text-gruv-bg/70">2017 – 2019</p>
+            <ul class="mt-2 space-y-1 text-[15px] leading-snug list-disc list-inside">
+              <li>Founded and operated local makerspace; sourced equipment & negotiated spaces.</li>
+              <li>Built partnerships with governmental bodies, NGOs & think tanks.</li>
+              <li>Established NGO chapter with 20+ members; provided web support.</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold">Ember, Lidköping — Internship</h3>
+            <p class="text-sm font-mono text-gruv-bg/70">2017</p>
+            <ul class="mt-2 space-y-1 text-[15px] leading-snug list-disc list-inside">
+              <li>Handled inbound support & clerical processes.</li>
+              <li>Malware remediation & security hardening for local client systems.</li>
+            </ul>
+            <div class="mt-3 space-y-2">
+              <h4 class="font-semibold text-sm tracking-wide uppercase text-gruv-bg/70">Key Projects</h4>
+              <ul class="space-y-1 text-[14px] leading-snug list-disc list-inside">
+                <li><strong>Incup</strong> — Remote desktop administration for 50+ client environments ensuring availability, updates & incident response.</li>
+                <li><strong>Assemblin</strong> — Authored PowerShell automation scripts to audit commercial vehicle movement data and streamline reporting.</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold">Nordic Goods AB — Contractor / SysAdmin / Developer</h3>
+            <p class="text-sm font-mono text-gruv-bg/70">2016</p>
+            <ul class="mt-2 space-y-1 text-[15px] leading-snug list-disc list-inside">
+              <li>Launched e‑commerce sites & digital campaigns from scratch.</li>
+              <li>Full‑stack development, system administration & industry partnerships.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- EDUCATION -->
+      <section id="education" class="space-y-8 mb-14">
+        <h2 class="text-2xl font-bold tracking-tight">Education</h2>
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-lg font-semibold">Lexicon, Skövde — Certificate of Achievement</h3>
+            <p class="text-sm font-mono text-gruv-bg/70">Nov 2015 – Feb 2016</p>
+            <p class="mt-2 text-[15px] leading-relaxed">Web Application Development with C# (.NET / Visual Studio): ASP.NET debugging, database management, MVC site architecture, testing practices.</p>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold">De La Gardie, Lidköping — Technical Program (IT)</h3>
+            <p class="text-sm font-mono text-gruv-bg/70">2008 – 2011</p>
+            <p class="mt-2 text-[15px] leading-relaxed">Core IT fundamentals: programming, systems, database concepts & applied computing.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- AWARDS -->
+      <section id="awards" class="space-y-4 mb-14">
+        <h2 class="text-2xl font-bold tracking-tight">Awards</h2>
+        <div>
+            <h3 class="text-lg font-semibold">UF‑Mässan, Vara — Silver Medalist (2011)</h3>
+            <p class="mt-2 text-[15px] leading-relaxed">Silver Medal for Best Youth Start‑up: Muciety.com forum aggregator & social network for musicians.</p>
+        </div>
+      </section>
+
+      <!-- LANGUAGE -->
+      <section id="language" class="space-y-4 mb-14">
+        <h2 class="text-2xl font-bold tracking-tight">Language</h2>
+        <ul class="text-[15px] leading-snug space-y-1">
+          <li>🇸🇪 Swedish — Native</li>
+          <li>🇬🇧 English — Native</li>
+          <li>🇵🇹 Portuguese (PT-pt) — A2 Level</li>
+        </ul>
+      </section>
+
+      <!-- CERTIFICATIONS -->
+      <section id="certifications" class="space-y-4">
+        <h2 class="text-2xl font-bold tracking-tight">Additional Certifications</h2>
+        <ol class="text-[15px] leading-snug space-y-1 list-decimal list-inside">
+          <li>Full Stack Developer – LinkedIn Learning Path (2025)</li>
+          <li>Google Digital Garage – Fundamentals of Digital Marketing (2023)</li>
+          <li>HubSpot Academy – Inbound (2023)</li>
+          <li>NDG Linux Unhatched (2023)</li>
+          <li>Linux Foundation – LFS101 Foundations in Linux (2014)</li>
+          <li>Certificate of Achievement – .NET Systems Developer Course (2015)</li>
+          <li>Moz – Advanced SEO: Tactics and Strategy (2015)</li>
+          <li>WordPress: SEO – LinkedIn (2024)</li>
+        </ol>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
