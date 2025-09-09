@@ -84,17 +84,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+  <html lang="en" className="scroll-smooth">
       <Head>
         {/* Inject the JSON‑LD schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}
         />
+    <link rel="alternate" type="application/rss+xml" href="/rss.xml" title="dotMavriQ Blog RSS" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#282828" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="format-detection" content="telephone=no" />
       </Head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${firaCode.variable} flex flex-col h-screen antialiased bg-background text-foreground`}
+    className={`${geistSans.variable} ${geistMono.variable} ${firaCode.variable} flex flex-col min-h-screen antialiased bg-background text-foreground`}
       >
+    <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-[#fabd2f] text-[#282828] px-3 py-2 rounded-md z-50">Skip to content</a>
         {/* Global shake detection works on all pages */}
         <ClientShakeWrapper />
         
@@ -106,7 +112,7 @@ export default function RootLayout({
             <Navbar />
           </div>
         </header>
-        <main className="flex-grow p-4">{children}</main>
+  <main id="main-content" className="flex-grow p-4" role="main">{children}</main>
         <footer className="p-4 bg-[#282828] bg-opacity-90 backdrop-blur-md shadow-inner border-t border-[#665c53] text-center">
           <div className="max-w-6xl mx-auto">
             <p className="text-sm text-[#ebdbb2]">

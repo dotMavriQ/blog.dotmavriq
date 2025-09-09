@@ -2,6 +2,9 @@
 // Using a custom domain (CNAME) so no basePath is required. Static export is enabled.
 const nextConfig = {
   output: 'export',
+  reactStrictMode: true,
+  poweredByHeader: false,
+  compress: true,
   images: { unoptimized: true },
   webpack: (config, { isServer }) => {
     if (!isServer) {
