@@ -1,15 +1,17 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { MarkdownInstance } from 'astro';
+import type { CollectionEntry } from 'astro:content';
 
-const posts = await getCollection('blog');
-const { slug } = Astro.params;
-const id = Array.isArray(slug) ? slug[0] : slug;
-const post: MarkdownInstance<any> | undefined = posts.find(p => p.slug === id);
-if (!post) {
-  return Astro.redirect('/blog');
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(p => ({ params: { slug: p.slug } }));
 }
+
+const { slug } = Astro.params;
+const posts = await getCollection('blog');
+const post = posts.find(p => p.slug === slug) as CollectionEntry<'blog'> | undefined;
+if (!post) return Astro.redirect('/blog');
 ---
 <BaseLayout title={post.data.title} description={post.data.excerpt}>
   <article class="prose prose-invert max-w-none">
