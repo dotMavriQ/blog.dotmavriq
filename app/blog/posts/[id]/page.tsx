@@ -17,7 +17,7 @@ export async function generateMetadata({
       title: `${post.title} | dotMavriQ Blog`,
       description: post.excerpt,
     };
-  } catch (_error) {
+  } catch {
     return {
       title: "Blog Post Not Found | dotMavriQ",
       description: "The requested blog post could not be found.",
@@ -131,7 +131,7 @@ export default async function BlogPost(props: { params: { id: string } }) {
         </div>
       </div>
     );
-  } catch (_error) {
+  } catch {
     notFound();
   }
 }
