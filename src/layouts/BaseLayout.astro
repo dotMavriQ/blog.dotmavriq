@@ -42,8 +42,12 @@ const { title = 'blog.dotMavriQ', description = 'Personal blog of Jonatan Jansso
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-gruv-surface text-gruv-yellow px-3 py-2 rounded">Skip to content</a>
     <!-- Layered background effects (respect prefers-reduced-motion) -->
     <ParticleBackground />
-  <RoadGrid />
-  <RoadPerspective />
+    {isHome && (
+      <>
+        <RoadGrid />
+        <RoadPerspective />
+      </>
+    )}
     <ShakeDetector />
     <header class="relative z-40 bg-[#121314] border-b border-gruv-surface2/70 shadow-lg shadow-black/30">
       <nav aria-label="Primary" class="max-w-6xl mx-auto px-5 h-16 flex items-center gap-4 text-[15px] tracking-tight">
