@@ -4,7 +4,7 @@ interface Link { href: string; label: string; icon: string; }
 const links: Link[] = [
   { href: 'https://github.com/dotMavriQ', label: 'GitHub', icon: '/icons/github.svg' },
   { href: 'https://www.linkedin.com/in/janssonjonatan/', label: 'LinkedIn', icon: '/icons/linkedin.svg' },
-  { href: 'https://www.youtube.com/@dotMavriq/videos', label: 'YouTube', icon: '/icons/youtube.svg' },
+  { href: 'mailto:social@dotmavriq.life', label: 'Email', icon: '/site_icons/mail.svg' },
   { href: 'https://matrix.to/#/@dotmavriq:chat.dotmavriq.life', label: 'Matrix', icon: '/icons/matrix.svg' },
   { href: 'https://social.dotmavriq.life/users/dotmavriq', label: 'Fediverse', icon: '/icons/fediverse.svg' }
 ];
@@ -18,11 +18,6 @@ const links: Link[] = [
         </a>
       </li>
     ))}
-    <li>
-      <a href="/rss.xml" aria-label="RSS" title="RSS" class="group inline-flex items-center justify-center w-9 h-9 rounded-md bg-gruv-surface2/40 hover:bg-gruv-surface2 focus:bg-gruv-surface2 border border-gruv-surface transition">
-        <span class="text-xs font-medium text-gruv-yellow">RSS</span>
-      </a>
-    </li>
   </ul>
 </nav>
 <style>

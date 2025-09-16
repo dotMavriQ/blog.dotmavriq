@@ -9,6 +9,7 @@
       repeating-linear-gradient(90deg,#665c54 0 2px, transparent 2px 40px);
     background-size:100% 100%,100% 100%; animation:grid-move 14s linear infinite; opacity:0.14; }
   .road-grid::after { animation-direction:reverse; opacity:0.08; }
+  @media (max-width:820px){ .road-grid::before,.road-grid::after{ opacity:0.1; } }
   @keyframes grid-move { from{ transform:translate(-50%,-45%) rotateX(70deg) translateY(0);} to{ transform:translate(-50%,-45%) rotateX(70deg) translateY(200px);} }
   @media (prefers-reduced-motion: reduce){ .road-grid{ display:none; } }
 </style>

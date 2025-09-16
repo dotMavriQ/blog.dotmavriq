@@ -1,18 +1,207 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactIcons from "../components/ContactIcons.astro";
 import "../styles/global.css";
 ---
 
-<BaseLayout title="Contact · dotMavriQ" description="Contact channels coming soon">
-  <section class="relative z-30 max-w-3xl mx-auto px-6 md:px-10 py-16 md:py-24 text-center select-none">
-    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-gruv-fg mb-6">Contact</h1>
-    <div class="inline-flex items-center gap-3 px-5 py-3 rounded-xl border border-[#504945] bg-[#1d2021]/85 shadow shadow-black/40 backdrop-blur-sm">
-      <span class="relative flex h-3 w-3">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-gruv-yellow opacity-60"></span>
-        <span class="relative inline-flex rounded-full h-3 w-3 bg-gruv-yellow"></span>
-      </span>
-      <p class="font-mono text-sm tracking-wide text-[#ebdbb2]/90">Direct channels <span class="text-gruv-yellow">activating</span> soon.</p>
+<BaseLayout title="Contact · dotMavriQ" description="Ways to reach me, book time, or donate.">
+  <section class="relative z-30 mx-auto px-6 md:px-10 py-8 md:py-14 max-w-5xl select-none">
+
+    <!-- Main contact card with socials and frayed corner; click opens QR modal -->
+    <article
+      id="contact-card"
+      class="contact-card frayed group relative mx-auto max-w-3xl rounded-2xl border border-gruv-surface2/90 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.5)] backdrop-blur-sm p-0 bg-transparent cursor-default"
+      aria-controls="qr-modal"
+      aria-haspopup="dialog"
+    >
+      <button id="fold-trigger" class="fold-hit" type="button" aria-label="Open QR" title="Open QR" aria-expanded="false"></button>
+  <div class="surface rounded-2xl bg-gruv-surface/80 p-6 md:p-8">
+      <header class="mb-4 flex items-start justify-between gap-4">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-bold text-gruv-fg tracking-tight">Let’s connect</h2>
+          <p class="mt-1 text-[15px] leading-relaxed text-gruv-fg/85">
+            Prefer async? Ping me on any channel below. I read all DMs and reply when I can.
+          </p>
+        </div>
+      </header>
+      <div class="mt-2">
+        <ContactIcons />
+      </div>
+      <footer class="mt-5 text-xs text-gruv-fg/70">
+        Tip: Click anywhere on this card to open a QR-code to this site.
+      </footer>
+      </div>
+    </article>
+
+    <!-- Secondary actions: Donate + Book a meeting -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+      <!-- Donate card -->
+  <section class="rounded-xl border border-gruv-surface2 bg-gruv-surface/70 p-5 shadow-sm">
+        <header class="flex items-center gap-3">
+          <h3 class="text-xl font-semibold tracking-tight text-gruv-fg">Donate</h3>
+          <!-- 8-bit heart (SVG pixels) in gruvbox dark red; sized to match text-xl (1.25rem) -->
+          <svg viewBox="0 0 11 10" aria-hidden="true" class="h-[1.25rem] w-auto drop-shadow">
+            <g fill="#cc241d" shape-rendering="crispEdges">
+              <!-- Row 0: .11..11. -->
+              <rect x="1" y="0" width="1" height="1"/>
+              <rect x="2" y="0" width="1" height="1"/>
+              <rect x="5" y="0" width="1" height="1"/>
+              <rect x="6" y="0" width="1" height="1"/>
+              <!-- Row 1: 11111111 -->
+              <rect x="0" y="1" width="1" height="1"/>
+              <rect x="1" y="1" width="1" height="1"/>
+              <rect x="2" y="1" width="1" height="1"/>
+              <rect x="3" y="1" width="1" height="1"/>
+              <rect x="4" y="1" width="1" height="1"/>
+              <rect x="5" y="1" width="1" height="1"/>
+              <rect x="6" y="1" width="1" height="1"/>
+              <rect x="7" y="1" width="1" height="1"/>
+              <!-- Row 2: 11111111 -->
+              <rect x="0" y="2" width="1" height="1"/>
+              <rect x="1" y="2" width="1" height="1"/>
+              <rect x="2" y="2" width="1" height="1"/>
+              <rect x="3" y="2" width="1" height="1"/>
+              <rect x="4" y="2" width="1" height="1"/>
+              <rect x="5" y="2" width="1" height="1"/>
+              <rect x="6" y="2" width="1" height="1"/>
+              <rect x="7" y="2" width="1" height="1"/>
+              <!-- Row 3: .111111. -->
+              <rect x="1" y="3" width="1" height="1"/>
+              <rect x="2" y="3" width="1" height="1"/>
+              <rect x="3" y="3" width="1" height="1"/>
+              <rect x="4" y="3" width="1" height="1"/>
+              <rect x="5" y="3" width="1" height="1"/>
+              <rect x="6" y="3" width="1" height="1"/>
+              <!-- Row 4: ..1111.. -->
+              <rect x="2" y="4" width="1" height="1"/>
+              <rect x="3" y="4" width="1" height="1"/>
+              <rect x="4" y="4" width="1" height="1"/>
+              <rect x="5" y="4" width="1" height="1"/>
+              <!-- Row 5: ...11... -->
+              <rect x="3" y="5" width="1" height="1"/>
+              <rect x="4" y="5" width="1" height="1"/>
+            </g>
+          </svg>
+        </header>
+        <p class="mt-3 text-[14.5px] leading-relaxed text-gruv-fg/85">
+          If you want to support my Open Source projects or contributions to open collaboration, you can do so via
+          <a class="link" href="https://liberapay.com/dotmavriq" target="_blank" rel="noopener noreferrer">Liberapay</a>.
+        </p>
+        <div class="mt-3">
+          <a href="https://liberapay.com/dotmavriq" target="_blank" rel="noopener noreferrer" title="Support on Liberapay">
+            <img src="https://img.shields.io/liberapay/receives/dotMavriQ.svg?logo=liberapay" alt="Liberapay receives badge" class="inline-block align-middle" loading="lazy" referrerpolicy="no-referrer" />
+          </a>
+        </div>
+      </section>
+
+      <!-- Calendly card with popup trigger button -->
+      <section class="rounded-xl border border-gruv-surface2 bg-gruv-surface/70 p-5 shadow-sm">
+        <header>
+          <h3 class="text-xl font-semibold tracking-tight text-gruv-fg">Book a meeting</h3>
+        </header>
+        <p class="mt-3 text-[14.5px] leading-relaxed text-gruv-fg/85">
+          Pick a time that works for you. You’ll receive a calendar invite with a secure video link.
+        </p>
+        <div class="mt-4">
+          <a id="calendly-btn" href="https://calendly.com/dotmavriq" class="btn-cta">Open Calendly</a>
+        </div>
+      </section>
     </div>
-    <p class="mt-8 text-[15px] leading-relaxed text-gruv-fg/85 max-w-xl mx-auto">Matrix / Fediverse details will surface here. Until then, use the icons in the site footer or the hidden places you\'ve already found.</p>
+
+    <!-- Modal: QR code to site -->
+    <div id="qr-modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="qr-title" aria-modal="true">
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-panel" role="document">
+        <header class="flex items-start justify-between gap-4">
+          <div>
+            <h2 id="qr-title" class="text-lg font-semibold tracking-tight text-gruv-fg">Quick share</h2>
+            <p class="mt-1 text-[13px] text-gruv-fg/75">Scan to open this site on your phone.</p>
+          </div>
+          <button class="close-x" type="button" aria-label="Close" title="Close" data-close>×</button>
+        </header>
+        <div class="mt-4 flex items-center justify-center">
+          <img src="/site_icons/contact_qr.png" alt="QR code to blog.dotMavriQ" width="256" height="256" class="rounded-md border border-gruv-surface2 shadow-md" />
+        </div>
+        <p class="mt-4 text-center text-xs text-gruv-fg/70">Press Esc or click outside to close.</p>
+      </div>
+    </div>
   </section>
 </BaseLayout>
+
+<script is:inline>
+  // Lightweight modal toggling for the QR (triggered only by the folded corner)
+  const foldBtn = document.getElementById('fold-trigger');
+  const modal = document.getElementById('qr-modal');
+  const backdropSel = '[data-close]';
+  const trap = (e) => { if (e.key === 'Escape') closeModal(); };
+  function openModal(){
+    modal?.setAttribute('aria-hidden','false');
+    document.addEventListener('keydown', trap);
+    foldBtn?.setAttribute('aria-expanded','true');
+  }
+  function closeModal(){
+    modal?.setAttribute('aria-hidden','true');
+    document.removeEventListener('keydown', trap);
+    foldBtn?.setAttribute('aria-expanded','false');
+  }
+  foldBtn?.addEventListener('click', openModal);
+  foldBtn?.addEventListener('keypress', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(); }});
+  modal?.addEventListener('click', (e) => { const t = e.target; if (t instanceof HTMLElement && (t.matches(backdropSel) || t.closest(backdropSel))) closeModal(); });
+
+  // Calendly popup trigger
+  function openCalendly(e){
+    const url = 'https://calendly.com/dotmavriq';
+    if (window?.Calendly?.initPopupWidget) {
+      e?.preventDefault?.();
+      window.Calendly.initPopupWidget({ url });
+    } // else: allow default anchor navigation to open Calendly normally
+  }
+  document.getElementById('calendly-btn')?.addEventListener('click', openCalendly);
+</script>
+
+<style>
+  .link { @apply text-gruv-yellow hover:text-gruv-yellow/90 underline underline-offset-2 decoration-dotted; }
+  .btn-cta { @apply inline-flex items-center justify-center px-4 py-2 rounded-lg border border-gruv-surface2 bg-gruv-blue text-gruv-bg font-medium text-sm tracking-tight shadow hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40; }
+
+  /* Frayed top-right corner effect */
+  .frayed{ position:relative; overflow:hidden; }
+  .frayed:after{
+    content:"";
+  position:absolute; top:-1px; right:-1px; width:92px; height:92px; z-index:1;
+    background-image:url('/ui/fold-corner.svg');
+    background-size: 92px 92px; background-repeat:no-repeat; background-position: top right;
+    filter: drop-shadow(0 1px 0 rgba(0,0,0,0.28));
+    pointer-events:none;
+  }
+  /* triangular hit area over the fold */
+  .fold-hit{ position:absolute; top:0; right:0; width:96px; height:96px; background:transparent; cursor:pointer; z-index:2; }
+  .fold-hit{ -webkit-mask: conic-gradient(from 45deg at 100% 0, #fff 0 90deg, transparent 0 360deg); mask: conic-gradient(from 45deg at 100% 0, #fff 0 90deg, transparent 0 360deg); }
+  .fold-hit:focus{ outline:2px solid rgba(250,189,47,0.5); outline-offset:2px; border-radius:0.5rem; }
+  .frayed:before{
+    content:"";
+    position:absolute; inset:-1px; pointer-events:none;
+    box-shadow: inset 0 1px 0 rgba(235,219,178,0.06);
+  }
+
+  /* Cut out only the inner fill to reveal background under the fold */
+  .contact-card .surface{
+    -webkit-mask: conic-gradient(from 45deg at 100% 0, transparent 0 90deg, #000 0 360deg);
+            mask: conic-gradient(from 45deg at 100% 0, transparent 0 90deg, #000 0 360deg);
+  }
+
+  /* Modal styles */
+  #qr-modal[aria-hidden="true"] { display:none; }
+  #qr-modal{ position:fixed; inset:0; z-index:60; display:grid; place-items:center; }
+  #qr-modal .modal-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.55); backdrop-filter: blur(2px); }
+  #qr-modal .modal-panel{
+    position:relative; width:min(92vw, 520px);
+    @apply rounded-xl border border-gruv-surface2 bg-gruv-surface p-5 shadow-lg;
+  }
+  .close-x{ @apply inline-flex items-center justify-center w-8 h-8 rounded-md border border-gruv-surface2 bg-gruv-surface2/40 text-gruv-fg hover:bg-gruv-surface2; }
+
+  /* (no inline Calendly iframe styles needed for popup) */
+</style>
+
+<!-- Calendly popup script -->
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+

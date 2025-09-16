@@ -10,3 +10,6 @@
 .prose :where(code):not(:where([class~="not-prose"] *)) {
   @apply bg-gruv-surface text-gruv-yellow px-1 py-0.5 rounded font-mono text-sm;
 }
+
+/* cache-bust: v2025-09-10T23:40Z */
+.hash-bust-20250910 { display: inline-block; }

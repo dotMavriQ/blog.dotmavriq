@@ -9,6 +9,7 @@ import siteLogo from '../pages/portfolio/dotmavriqlogo.png';
 
 const pathname = Astro.url.pathname;
 const isHome = pathname === '/';
+const isContact = pathname.startsWith('/contact');
 const isActive = (p: string) => pathname === p || (p !== '/' && pathname.startsWith(p));
 
 export interface Props { title?: string; description?: string; }
@@ -40,8 +41,11 @@ const { title = 'blog.dotMavriQ', description = 'Personal blog of Jonatan Jansso
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- 2025 font pairing: Inter (UI/body) + JetBrains Mono (code/meta) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  {pathname.startsWith('/contact') && (
+    <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css" />
+  )}
   </head>
-  <body class:list={["bg-gruv-bg","text-gruv-fg","font-sans","antialiased","min-h-screen","flex","flex-col","relative","overflow-x-hidden", isHome && 'home-no-scroll']}>
+  <body class:list={["bg-gruv-bg","text-gruv-fg","font-sans","antialiased","min-h-screen","flex","flex-col","relative","overflow-x-hidden", (isHome || isContact) && 'home-no-scroll']}>
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-gruv-surface text-gruv-yellow px-3 py-2 rounded">Skip to content</a>
     <!-- Layered background effects (respect prefers-reduced-motion) -->
     <ParticleBackground />
@@ -53,27 +57,44 @@ const { title = 'blog.dotMavriQ', description = 'Personal blog of Jonatan Jansso
     )}
     <ShakeDetector />
     <header class="relative z-40 bg-[#121314]/95 backdrop-blur-sm border-b border-gruv-surface2/70 shadow-lg shadow-black/30">
-      <nav aria-label="Primary" class="max-w-6xl mx-auto px-5 lg:px-6 py-4 flex items-center justify-between gap-5 text-[15px] tracking-tight">
-        <a href="/" aria-label="Home" class="group flex items-center gap-3 text-[22px] font-extrabold font-heading text-gruv-yellow focus:outline-none focus:ring-2 focus:ring-gruv-yellow/60 rounded transition-colors">
+      <nav aria-label="Primary" class="max-w-6xl mx-auto px-5 lg:px-6 py-3 sm:py-4 flex items-center justify-between gap-3 text-[15px] tracking-tight">
+        <a href="/" aria-label="Home" class="group flex items-center gap-3 text-[20px] sm:text-[22px] font-extrabold font-heading text-gruv-yellow focus:outline-none focus:ring-2 focus:ring-gruv-yellow/60 rounded transition-colors">
           <img src={siteLogo.src} width={56} height={56} alt="dotMavriQ logo" class="rounded-sm transition-transform duration-300 group-hover:scale-105" loading="lazy" decoding="async" />
           <span class="leading-none">blog.dotMavriQ</span>
         </a>
-        <div class="flex flex-wrap items-center gap-3 ml-auto">
+        <!-- Desktop nav -->
+        <div class="hidden md:flex flex-wrap items-center gap-3 ml-auto">
           <a class:list={["nav-chip","nav-orange", isActive('/about') && 'is-active']} aria-current={isActive('/about') ? 'page' : undefined} href="/about">About</a>
           <a class:list={["nav-chip","nav-green", isActive('/cv') && 'is-active']} aria-current={isActive('/cv') ? 'page' : undefined} href="/cv">CV</a>
           <a class:list={["nav-chip","nav-yellow", isActive('/portfolio') && 'is-active']} aria-current={isActive('/portfolio') ? 'page' : undefined} href="/portfolio">Portfolio</a>
           <a class:list={["nav-chip","nav-blue", isActive('/blog') && 'is-active']} aria-current={isActive('/blog') ? 'page' : undefined} href="/blog">Blog</a>
           <a class:list={["nav-chip","nav-red", isActive('/contact') && 'is-active']} aria-current={isActive('/contact') ? 'page' : undefined} href="/contact">Contact</a>
         </div>
+        <!-- Mobile toggle -->
+  <button id="nav-toggle" class="burger md:hidden ml-auto inline-flex flex-col items-center justify-center w-10 h-10 rounded-md border border-gruv-surface2 bg-[#1c1d1e] text-gruv-fg hover:text-gruv-yellow focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40" aria-label="Toggle menu" aria-controls="mobile-menu" aria-expanded="false">
+          <span class="burger-line"></span>
+          <span class="burger-line"></span>
+          <span class="burger-line"></span>
+        </button>
       </nav>
+      <!-- Mobile menu panel -->
+      <div id="mobile-menu" class="md:hidden max-w-6xl mx-auto px-5 lg:px-6 pb-3 hidden" role="region" aria-label="Mobile">
+        <div class="flex flex-col gap-2">
+          <a class:list={["nav-chip","nav-orange","w-full", isActive('/about') && 'is-active']} aria-current={isActive('/about') ? 'page' : undefined} href="/about">About</a>
+          <a class:list={["nav-chip","nav-green","w-full", isActive('/cv') && 'is-active']} aria-current={isActive('/cv') ? 'page' : undefined} href="/cv">CV</a>
+          <a class:list={["nav-chip","nav-yellow","w-full", isActive('/portfolio') && 'is-active']} aria-current={isActive('/portfolio') ? 'page' : undefined} href="/portfolio">Portfolio</a>
+          <a class:list={["nav-chip","nav-blue","w-full", isActive('/blog') && 'is-active']} aria-current={isActive('/blog') ? 'page' : undefined} href="/blog">Blog</a>
+          <a class:list={["nav-chip","nav-red","w-full", isActive('/contact') && 'is-active']} aria-current={isActive('/contact') ? 'page' : undefined} href="/contact">Contact</a>
+        </div>
+      </div>
     </header>
     <main id="main" class="flex-1 w-full relative z-20">
       <slot />
     </main>
     <footer class:list={[
-      isHome ? 'absolute bottom-0 left-0 right-0' : 'relative',
+      (isHome || isContact) ? 'absolute bottom-0 left-0 right-0 overlay-footer' : 'relative',
       'z-50','bg-[#121314]/92','backdrop-blur-[2px]','border-t','border-gruv-surface2/70','shadow-inner','shadow-black/40',
-      isHome ? 'mt-0' : 'mt-10'
+      (isHome || isContact) ? 'mt-0' : 'mt-10'
     ]}>
       <div class:list={["px-6", isHome ? 'py-2' : 'py-5', "text-[11px]","md:text-xs","text-gruv-muted","font-mono","tracking-tight","w-full","max-w-6xl","mx-auto","flex","items-center","justify-center"]}>
         <span class="whitespace-nowrap">🄯 2025 dotMavriQ · All base are belong to us.</span>
@@ -103,4 +124,26 @@ const { title = 'blog.dotMavriQ', description = 'Personal blog of Jonatan Jansso
   /* Removed extended footer navigation styles */
   /* Home: hide scrollbar while footer overlays */
   body.home-no-scroll{ overflow-y:hidden; }
+  /* When mobile menu is open, prevent background scroll */
+  body.menu-open{ overflow:hidden; }
+  /* Overlay footer: respect safe-area so it's not too low on mobile */
+  .overlay-footer{ bottom: max(env(safe-area-inset-bottom), 0px); }
+  /* Burger button */
+  .burger{ position:relative; gap:4px; }
+  .burger-line{ display:block; width:22px; height:2px; background:currentColor; border-radius:2px; transition: transform .18s ease, opacity .18s ease, background-color .18s ease; }
+  .burger[aria-expanded="true"] .burger-line:nth-child(1){ transform: translateY(6px) rotate(45deg); }
+  .burger[aria-expanded="true"] .burger-line:nth-child(2){ opacity:0; }
+  .burger[aria-expanded="true"] .burger-line:nth-child(3){ transform: translateY(-6px) rotate(-45deg); }
+  .burger:hover .burger-line{ background-color: currentColor; }
 </style>
+
+<script is:inline>
+  const toggle = document.getElementById('nav-toggle');
+  const panel = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => {
+  const isHidden = panel?.classList.toggle('hidden');
+  const open = isHidden === false; // hidden removed => open
+  toggle?.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('menu-open', open);
+  });
+</script>
