@@ -45,7 +45,7 @@ const { title = 'blog.dotMavriQ', description = 'Personal blog of Jonatan Jansso
     <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css" />
   )}
   </head>
-  <body class:list={["bg-gruv-bg","text-gruv-fg","font-sans","antialiased","min-h-screen","flex","flex-col","relative","overflow-x-hidden", (isHome || isContact) && 'home-no-scroll']}>
+  <body class:list={["bg-gruv-bg","text-gruv-fg","font-sans","antialiased","min-h-screen","flex","flex-col","relative","overflow-x-hidden", isHome && 'home-no-scroll']}>
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-gruv-surface text-gruv-yellow px-3 py-2 rounded">Skip to content</a>
     <!-- Layered background effects (respect prefers-reduced-motion) -->
     <ParticleBackground />
@@ -88,16 +88,16 @@ const { title = 'blog.dotMavriQ', description = 'Personal blog of Jonatan Jansso
         </div>
       </div>
     </header>
-    <main id="main" class="flex-1 w-full relative z-20">
+  <main id="main" class:list={["flex-1","w-full","relative","z-20"]}>
       <slot />
     </main>
     <footer class:list={[
-      (isHome || isContact) ? 'absolute bottom-0 left-0 right-0 overlay-footer' : 'relative',
+      (isHome ? 'fixed bottom-0 left-0 right-0 overlay-footer' : 'relative'),
       'z-50','bg-[#121314]/92','backdrop-blur-[2px]','border-t','border-gruv-surface2/70','shadow-inner','shadow-black/40',
-      (isHome || isContact) ? 'mt-0' : 'mt-10'
+      (isHome ? 'mt-0' : 'mt-10')
     ]}>
-      <div class:list={["px-6", isHome ? 'py-2' : 'py-5', "text-[11px]","md:text-xs","text-gruv-muted","font-mono","tracking-tight","w-full","max-w-6xl","mx-auto","flex","items-center","justify-center"]}>
-        <span class="whitespace-nowrap">🄯 2025 dotMavriQ · All base are belong to us.</span>
+  <div class:list={["px-6", isHome ? 'py-3' : 'py-5', "text-[11px]","md:text-xs","text-gruv-muted","font-mono","tracking-tight","w-full","max-w-6xl","mx-auto","flex","items-center","justify-center"]}>
+        <span class="whitespace-nowrap">🄯 {new Date().getFullYear()} dotMavriQ · All base are belong to us.</span>
       </div>
     </footer>
   </body>
@@ -122,12 +122,13 @@ const { title = 'blog.dotMavriQ', description = 'Personal blog of Jonatan Jansso
   .nav-red:hover,.nav-red:focus { @apply text-gruv-bg bg-gruv-red; }
   @media (max-width:640px){ .nav-chip{ @apply px-2 py-1 text-[13px]; } }
   /* Removed extended footer navigation styles */
-  /* Home: hide scrollbar while footer overlays */
-  body.home-no-scroll{ overflow-y:hidden; }
+  /* Home: lock scroll so the fixed footer overlays without page scroll */
+  body.home-no-scroll{ overflow:hidden; }
   /* When mobile menu is open, prevent background scroll */
   body.menu-open{ overflow:hidden; }
   /* Overlay footer: respect safe-area so it's not too low on mobile */
   .overlay-footer{ bottom: max(env(safe-area-inset-bottom), 0px); }
+  /* Use flex column layout to push footer to the bottom without scroll on home */
   /* Burger button */
   .burger{ position:relative; gap:4px; }
   .burger-line{ display:block; width:22px; height:2px; background:currentColor; border-radius:2px; transition: transform .18s ease, opacity .18s ease, background-color .18s ease; }
