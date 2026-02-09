@@ -14,21 +14,27 @@ const isActive = (p: string) => pathname === p || (p !== '/' && pathname.startsW
 
 export interface Props { title?: string; description?: string; }
 const { title = 'blog.dotMavriQ', description = 'Personal blog of Jonatan Jansson (dotMavriQ)' } = Astro.props as Props;
+const canonicalURL = new URL(pathname, 'https://blog.dotmavriq.life').href;
 ---
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>{title}</title>
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
   <meta name="description" content={description} />
   <meta name="color-scheme" content="dark light" />
-  <link rel="canonical" href="https://blog.dotmavriq.life/" />
+  <link rel="canonical" href={canonicalURL} />
   <!-- Open Graph -->
   <meta property="og:site_name" content="blog.dotMavriQ" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://blog.dotmavriq.life/" />
+  <meta property="og:url" content={canonicalURL} />
   <meta property="og:image" content="/logo.png" />
   <!-- Twitter -->
   <meta name="twitter:card" content="summary" />
