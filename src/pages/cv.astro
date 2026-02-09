@@ -1,10 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
-<BaseLayout title="CV · dotMavriQ" description="Curriculum Vitae of Jonatan Jansson (dotMavriQ)">
-  <article class="relative z-30 max-w-5xl mx-auto px-5 md:px-8 py-10 md:py-14">
-    <div class="rounded-lg bg-gruv-fg text-gruv-bg/95 shadow-md shadow-black/30 border border-gruv-surface overflow-hidden p-6 md:p-10 relative">
-      <header class="mb-10 flex flex-col gap-6 md:gap-4 md:flex-row md:items-end">
+<BaseLayout title="CV · Jonatan Jansson" description="Curriculum Vitae of Jonatan Jansson (dotMavriQ)">
+  <article class="relative z-30 max-w-5xl mx-auto px-3 sm:px-5 md:px-8 py-10 md:py-14">
+    <div class="rounded-lg bg-gruv-fg text-gruv-bg/95 shadow-md shadow-black/30 border border-gruv-surface overflow-hidden p-4 sm:p-6 md:p-10 relative">
+      <header class="cv-header mb-10 flex flex-col gap-6 md:gap-4 md:flex-row md:items-end relative">
         <div class="flex-1 space-y-3">
           <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Jonatan Jansson</h1>
           <div class="text-sm md:text-[15px] leading-relaxed font-medium space-y-1">
@@ -23,49 +23,48 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </p>
           </div>
         </div>
-        <div class="flex flex-col items-start md:items-end gap-2 text-sm md:text-xs font-mono">
-          <div class="absolute top-4 right-4 md:top-5 md:right-5 flex flex-col items-end gap-1">
-            <a href="/site_icons/jonatanjanssonCVSep2025.pdf" download="JonatanJansson-CV-Sep-2025.pdf" class="group inline-flex items-center gap-2 px-4 py-2 rounded-md bg-gruv-bg/10 backdrop-blur-sm border border-gruv-bg/30 hover:bg-gruv-bg/20 hover:border-gruv-bg/40 text-gruv-bg font-medium tracking-tight shadow shadow-black/20 transition-colors focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40">
-              <span>Download PDF</span>
-            </a>
-            <span class="text-gruv-bg/60">Updated Sep 2025</span>
-          </div>
+        <div class="flex flex-col items-start md:items-end gap-1 text-sm md:text-xs font-mono md:absolute md:top-5 md:right-5">
+          <button id="print-cv" type="button" class="group inline-flex items-center gap-2 px-4 py-2 rounded-md bg-gruv-bg/10 backdrop-blur-sm border border-gruv-bg/30 hover:bg-gruv-bg/20 hover:border-gruv-bg/40 text-gruv-bg font-medium tracking-tight shadow shadow-black/20 transition-colors focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40 cursor-pointer">
+            <span>Download PDF</span>
+          </button>
+          <span class="text-gruv-bg/60">Updated Feb 2026</span>
         </div>
+        <img src="/site_icons/jonjancircleavatar.png" alt="Jonatan Jansson" width="96" height="96" class="cv-avatar hidden" />
       </header>
 
       <!-- SUMMARY / SKILLS INTRO -->
       <section id="skills" class="space-y-6 mb-12">
-        <h2 class="text-2xl font-bold tracking-tight">Skills</h2>
+        <h2 class="text-2xl font-bold tracking-tight">Summary</h2>
         <div class="space-y-4 text-[15px] leading-relaxed">
-          <p>Skilled professional with extensive experience in web development, technical support, and system configuration. Strong communication and customer collaboration skills; adept at integrating feedback and ensuring reliable, maintainable solutions.</p>
-          <p>Hands-on across front-end and back-end (JavaScript, PHP, Python) with specialization in WordPress & WooCommerce ecosystems and adjacent CMS platforms (Joomla, Magento). Experienced in performance tuning, marketing‑focused development, copywriting, content management, and iterative optimization of digital properties.</p>
+          <p>Senior full-stack developer and technical architect with a track record of owning projects end to end, from architecture through deployment. Deep expertise in WordPress ecosystems, modern static-site generators and CMS solutions, and AI-augmented development workflows. A natural problem solver who is equally comfortable shipping production code and enabling non-technical teams through clear documentation and hands-on training.</p>
+          <p>Full-stack across JavaScript/TypeScript, PHP, and Python with strong specialization in WordPress and Laravel, payment integrations, GDPR-compliant architectures, and CI/CD automation. Proven results in performance tuning, conversion tracking, tag management (GTM/GA4), structured data, growth engineering, AI tooling optimization, and delivering digital properties that move the needle on business outcomes. I like solving problems for a living, simply put.</p>
           <div>
             <h3 class="text-lg font-semibold mb-2">Key Skills</h3>
-            <ul class="grid gap-1 sm:grid-cols-2 md:grid-cols-3 text-sm md:text-[13px] font-mono">
-              <li>JavaScript / TypeScript (ESNext)</li>
-              <li>React & Modern Frontend</li>
-              <li>WordPress (Plugins / Themes / Woo)</li>
-              <li>Headless & API Integration</li>
-              <li>Performance (Core Web Vitals)</li>
-              <li>Accessibility (WCAG 2.2)</li>
-              <li>Technical SEO / Structured Data</li>
-              <li>Growth Engineering / A/B Testing</li>
-              <li>Marketing Automation (HubSpot)</li>
-              <li>Analytics & Tag Management (GA4)</li>
-              <li>AI Integration (OpenAI APIs)</li>
-              <li>PHP / Python / Shell Scripting</li>
-              <li>Docker / GitHub Actions / CDN</li>
-              <li>Security (OWASP basics)</li>
-              <li>Testing (Playwright / Selenium)</li>
-              <li>Observability & Monitoring</li>
-              <li>CMS Workflow & Editorial Tooling</li>
-              <li>Data Integration & Automation</li>
-              <li>API Design & Consumption</li>
-              <li>Documentation & Enablement</li>
-              <li>Stakeholder Alignment</li>
-              <li>Localization / i18n</li>
-              <li>Version Control & Code Review</li>
-              <li>Linux Systems & Server Hardening</li>
+            <ul class="flex flex-wrap gap-2 text-[11px] sm:text-xs md:text-[13px] font-mono">
+              <li class="cv-chip">AI Tooling & Workflow Optimization</li>
+              <li class="cv-chip">JavaScript / TypeScript (ESNext)</li>
+              <li class="cv-chip">React & Modern Frontend</li>
+              <li class="cv-chip">CI/CD (GitHub Actions / Docker)</li>
+              <li class="cv-chip">Performance (Core Web Vitals)</li>
+              <li class="cv-chip">Growth Engineering / A/B Testing</li>
+              <li class="cv-chip">GDPR & Privacy Compliance</li>
+              <li class="cv-chip">Analytics & Tag Management (GA4)</li>
+              <li class="cv-chip">PHP / Python / Shell Scripting</li>
+              <li class="cv-chip">WordPress (Plugins / Themes / Woo)</li>
+              <li class="cv-chip">Headless & API Integration</li>
+              <li class="cv-chip">Technical SEO / Structured Data</li>
+              <li class="cv-chip">Testing (Playwright / Selenium)</li>
+              <li class="cv-chip">API Design & Consumption</li>
+              <li class="cv-chip">Payments & Subscription Billing</li>
+              <li class="cv-chip">Astro / 11ty (Static Site Gen.)</li>
+              <li class="cv-chip">Accessibility (WCAG 2.2)</li>
+              <li class="cv-chip">Marketing Automation (HubSpot)</li>
+              <li class="cv-chip">Observability & Monitoring</li>
+              <li class="cv-chip">Technical Documentation & Enablement</li>
+              <li class="cv-chip">Security (OWASP) & Hardening</li>
+              <li class="cv-chip">Linux Systems & Server Hardening</li>
+              <li class="cv-chip">Version Control & Code Review</li>
+              <li class="cv-chip">Localization / i18n</li>
             </ul>
           </div>
         </div>
@@ -79,21 +78,23 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <div class="absolute left-2.5 md:left-3 top-0 bottom-0 w-px bg-gruv-bg/30"></div>
           <div class="space-y-12">
             <div class="relative">
-              <span class="absolute -left-6 md:-left-7 top-2 w-3 h-3 rounded-full bg-gruv-bg ring-2 ring-gruv-fg shadow shadow-black/30"></span>
+              <span class="absolute -left-[1.85rem] md:-left-[2.1rem] top-[0.55em] w-3 h-3 rounded-full bg-gruv-bg ring-2 ring-gruv-fg shadow shadow-black/30"></span>
               <h3 class="text-xl font-semibold">Nordhealth — Senior Growth Developer</h3>
               <p class="text-sm font-mono text-gruv-bg/70">2025 – Present</p>
               <ul class="mt-3 space-y-1 text-[15px] leading-snug list-disc list-inside">
-                <li>Lead development & optimization of multi‑market WordPress product / marketing sites.</li>
-                <li>Improve conversions & performance (Core Web Vitals, A/B testing, caching, asset strategy).</li>
-                <li>Consolidate legacy properties into a unified platform & design system.</li>
-                <li>Integrate AI‑assisted workflows & content automation to accelerate funnel growth.</li>
-                <li>Implement security hardening, analytics / tag & CRM integrations, deploy pipelines.</li>
-                <li>Partner with marketing on rapid experiments & high‑impact feature launches.</li>
+                <li>Own and develop multi-market WordPress and Eleventy marketing sites for several Nordhealth business units.</li>
+                <li>Build and maintain CI/CD pipelines (GitHub Actions) for automated testing and zero-downtime deploys.</li>
+                <li>Integrate AI tooling into dev and content workflows, making both engineering and marketing teams noticeably faster.</li>
+                <li>Keep all digital properties GDPR-compliant end to end.</li>
+                <li>Write technical documentation and run hands-on sessions so the BU Marketing team can self-serve on technical decisions.</li>
+                <li>Tune Core Web Vitals, run A/B tests, and optimize caching and asset delivery to improve conversions.</li>
+                <li>Migrate and consolidate legacy sites into a unified platform and design system.</li>
+                <li>Handle security hardening, analytics/tag management, and CRM integrations (HubSpot, GA4).</li>
               </ul>
             </div>
             <div class="relative">
-              <span class="absolute -left-6 md:-left-7 top-2 w-3 h-3 rounded-full bg-gruv-bg ring-2 ring-gruv-fg shadow shadow-black/30"></span>
-              <h3 class="text-xl font-semibold">Block Labs LTD, Lisbon — WordPress Developer</h3>
+              <span class="absolute -left-[1.85rem] md:-left-[2.1rem] top-[0.55em] w-3 h-3 rounded-full bg-gruv-bg ring-2 ring-gruv-fg shadow shadow-black/30"></span>
+              <h3 class="text-xl font-semibold">Block Labs LTD, Lisbon — WP Developer Team Lead</h3>
               <p class="text-sm font-mono text-gruv-bg/70">2024 – 2025</p>
               <ul class="mt-3 space-y-1 text-[15px] leading-snug list-disc list-inside">
                 <li>Develop high‑performance WordPress sites (custom themes & plugins).</li>
@@ -105,8 +106,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               </ul>
             </div>
             <div class="relative">
-              <span class="absolute -left-6 md:-left-7 top-2 w-3 h-3 rounded-full bg-gruv-bg ring-2 ring-gruv-fg shadow shadow-black/30"></span>
-              <h3 class="text-xl font-semibold">IPTOR, Lisbon — WordPress Developer</h3>
+              <span class="absolute -left-[1.85rem] md:-left-[2.1rem] top-[0.55em] w-3 h-3 rounded-full bg-gruv-bg ring-2 ring-gruv-fg shadow shadow-black/30"></span>
+              <h3 class="text-xl font-semibold">IPTOR, Lisbon — Senior WordPress Developer</h3>
               <p class="text-sm font-mono text-gruv-bg/70">2023 – 2024</p>
               <ul class="mt-3 space-y-1 text-[15px] leading-snug list-disc list-inside">
                 <li>Built enterprise WordPress plugin integrating TeamTailor API.</li>
@@ -116,7 +117,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               </ul>
             </div>
             <div class="relative">
-              <span class="absolute -left-6 md:-left-7 top-2 w-3 h-3 rounded-full bg-gruv-bg ring-2 ring-gruv-fg shadow shadow-black/30"></span>
+              <span class="absolute -left-[1.85rem] md:-left-[2.1rem] top-[0.55em] w-3 h-3 rounded-full bg-gruv-bg ring-2 ring-gruv-fg shadow shadow-black/30"></span>
               <h3 class="text-xl font-semibold">Duva, Lidköping — Web Developer / Software Tester / Support</h3>
               <p class="text-sm font-mono text-gruv-bg/70">2018 – 2023</p>
               <ul class="mt-3 space-y-1 text-[15px] leading-snug list-disc list-inside">
@@ -233,3 +234,75 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </div>
   </article>
 </BaseLayout>
+<style>
+  .cv-chip { @apply px-2.5 py-1 rounded-md border border-gruv-bg/20 bg-gruv-bg/10 text-gruv-bg/90 leading-tight whitespace-nowrap; }
+</style>
+<style is:global>
+  @media print {
+    body > *:not(main) { display: none !important; }
+    body > main > *:not(article) { display: none !important; }
+    #print-cv, #print-cv + span { display: none !important; }
+
+    html, body {
+      background: white !important;
+      color: #1d2021 !important;
+      min-height: auto !important;
+      overflow: visible !important;
+    }
+    body { display: block !important; }
+    main { display: block !important; }
+
+    article { padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
+    article > div {
+      background: white !important;
+      color: #1d2021 !important;
+      border: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      padding: 0.5cm !important;
+    }
+
+    a { color: #076678 !important; text-decoration: underline !important; }
+
+    .cv-chip {
+      border: none !important;
+      background: none !important;
+      color: #1d2021 !important;
+      padding: 0 !important;
+      font-size: 11px !important;
+    }
+    .cv-chip::after { content: " · "; }
+    .cv-chip:last-child::after { content: ""; }
+
+    /* Hide timeline dots and vertical line */
+    [class*="rounded-full"][class*="bg-gruv-bg"] { display: none !important; }
+    [class*="w-px"][class*="bg-gruv-bg"] { display: none !important; }
+
+    /* Remove timeline left padding since dots/line are gone */
+    #experience .relative { padding-left: 0 !important; }
+    #experience [class*="pl-8"] { padding-left: 0 !important; }
+
+    .cv-header { position: relative !important; }
+    .cv-avatar {
+      display: block !important;
+      position: absolute !important;
+      top: 0 !important;
+      right: 0 !important;
+      width: 80px !important;
+      height: 80px !important;
+      border-radius: 50% !important;
+      object-fit: cover !important;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    h2, h3, h4 { break-after: avoid; }
+    .relative { break-inside: avoid; }
+
+    @page { margin: 1cm; size: A4; }
+  }
+</style>
+
+<script is:inline>
+  document.getElementById('print-cv')?.addEventListener('click', () => window.print());
+</script>
