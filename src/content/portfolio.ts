@@ -4,7 +4,7 @@ export interface PortfolioItem {
   description: string;
   image: string | ImageMetadata; // can be imported asset or remote path
   tags: string[];
-  links: { type: 'github' | 'live' | 'chrome' | 'wordpress' | 'npm'; url: string }[];
+  links: { type: 'github' | 'live' | 'chrome' | 'firefox' | 'wordpress' | 'npm'; url: string }[];
   featured?: boolean;
   year?: number;
 }
@@ -15,6 +15,9 @@ import linianLogo from '../pages/portfolio/linianlogo.png';
 import slactacLogo from '../pages/portfolio/slactaclogo.png';
 import blogLogo from '../pages/portfolio/dotmavriqlogo.png';
 import teamtailorLogo from '../pages/portfolio/teamtailorwplogo.png';
+import bufloLogo from '../pages/portfolio/buflo.png';
+import lineawebLogo from '../pages/portfolio/lineaweb.png';
+import lineatuiLogo from '../pages/portfolio/lineatui.png';
 export const portfolio: PortfolioItem[] = [
   {
     slug: 'habsiad',
@@ -43,7 +46,8 @@ export const portfolio: PortfolioItem[] = [
     tags: ['JavaScript','Chrome Extension'],
     links: [
       { type: 'github', url: 'https://github.com/dotMavriQ/Slactac' },
-  { type: 'chrome', url: 'https://chromewebstore.google.com/detail/slactac/gnjiocbockjlkpnlonimgihcbhpdephe' }
+      { type: 'chrome', url: 'https://chromewebstore.google.com/detail/slactac/gnjiocbockjlkpnlonimgihcbhpdephe' },
+      { type: 'firefox', url: 'https://addons.mozilla.org/en-US/firefox/addon/slactac/' }
     ],
     year: 2024
   },
@@ -73,5 +77,35 @@ export const portfolio: PortfolioItem[] = [
     tags: ['PHP','WordPress','API'],
     links: [ { type: 'github', url: 'https://github.com/dotMavriQ/TeamTailor-Integrator-For-WordPress' } ],
     year: 2024
+  },
+  {
+    slug: 'linea-web',
+    title: 'Linea Web',
+    description: 'AI-powered Linear issue resolution that runs entirely in the browser. Connects Linear issues with Gemini AI, no backend required.',
+    image: lineawebLogo,
+    tags: ['TypeScript', 'AI', 'Linear', 'Gemini'],
+    links: [
+      { type: 'github', url: 'https://github.com/dotMavriQ/linea-web' },
+      { type: 'live', url: 'https://dotmavriq.github.io/linea-web/' }
+    ],
+    year: 2025
+  },
+  {
+    slug: 'linea-tui',
+    title: 'Linea TUI',
+    description: 'CLI tool connecting Linear issues with Gemini AI. TUI for triaging, resolving and managing issues from the terminal.',
+    image: lineatuiLogo,
+    tags: ['Lua', 'AI', 'Linear', 'Gemini', 'TUI'],
+    links: [ { type: 'github', url: 'https://github.com/dotMavriQ/linea' } ],
+    year: 2025
+  },
+  {
+    slug: 'buflo',
+    title: 'BUFLO',
+    description: 'Billing Unified Flow Language & Orchestrator. DSL for defining, validating and running billing pipelines.',
+    image: bufloLogo,
+    tags: ['Lua', 'DSL', 'Billing'],
+    links: [ { type: 'github', url: 'https://github.com/dotMavriQ/Buflo' } ],
+    year: 2025
   },
 ];
