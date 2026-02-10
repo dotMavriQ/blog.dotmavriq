@@ -20,7 +20,7 @@ const orderedPortfolio = [
       <div class="flex flex-wrap items-center gap-2 text-xs md:text-[11px] font-mono" id="tag-filter" data-js="tag-filter">
         <button
           type="button"
-          class="tag-btn tag-btn-all px-3 py-1 rounded-md border font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50"
+          class="tag-btn tag-btn-all px-3 py-1 rounded-md border font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50"
           data-tag="__all__"
           data-active="true"
           aria-pressed="true"
@@ -28,7 +28,7 @@ const orderedPortfolio = [
         {allTags.map(tag => (
           <button
             type="button"
-            class="tag-btn px-3 py-1 rounded-md border font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50"
+            class="tag-btn px-3 py-1 rounded-md border font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50"
             data-tag={tag}
             data-active="false"
             aria-pressed="false"
@@ -40,9 +40,9 @@ const orderedPortfolio = [
 
   <section class="grid gap-6 md:gap-8 sm:grid-cols-2 xl:grid-cols-3 portfolio-grid" data-js="portfolio-grid">
   {orderedPortfolio.map(item => (
-  <div class={`group relative rounded-xl overflow-hidden border border-gruv-surface/70 bg-[#1d2021] shadow-md shadow-black/40 hover:shadow-lg hover:shadow-black/60 transition-all duration-300 flex flex-col ${item.featured ? 'ring-2 ring-gruv-yellow/40' : ''}`} data-tags={item.tags.join(',')}>
+  <div class={`group relative rounded-xl overflow-hidden border border-gruv-surface/70 bg-[#1d2021] shadow-md shadow-black/40 hover:shadow-lg hover:shadow-black/60 flex flex-col ${item.featured ? 'ring-2 ring-gruv-yellow/40' : ''}`} data-tags={item.tags.join(',')}>
           <div class="relative aspect-video overflow-hidden bg-gruv-bg/40">
-            <img src={typeof item.image === 'string' ? item.image : item.image.src} alt={item.title} loading="lazy" decoding="async" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.04] group-hover:rotate-[0.6deg]" />
+            <img src={typeof item.image === 'string' ? item.image : item.image.src} alt={item.title} width="640" height="360" loading="lazy" decoding="async" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.04] group-hover:rotate-[0.6deg]" />
             {item.featured && <span class="absolute top-2 left-2 text-[10px] font-mono tracking-wide bg-gruv-yellow/90 text-[#1d2021] px-2 py-0.5 rounded shadow shadow-black/50">FEATURED</span>}
             <div class="absolute inset-0 bg-gradient-to-t from-[#1d2021] via-transparent to-transparent opacity-70 pointer-events-none"></div>
           </div>
@@ -60,12 +60,12 @@ const orderedPortfolio = [
           <!-- badges -->
           <div class="absolute bottom-2 right-2 flex flex-wrap justify-end gap-2 max-w-[5rem]">
             {item.links.map(link => (
-              <a href={link.url} target="_blank" rel="noopener noreferrer" class="relative inline-flex items-center justify-center w-9 h-9 rounded-full bg-[#262b2d] text-gruv-fg border border-[#343b3e] shadow shadow-black/50 hover:bg-gruv-yellow hover:text-[#1d2021] hover:scale-105 hover:-translate-y-0.5 active:scale-95 transition-all" aria-label={`Open ${item.title} ${link.type}`} title={link.type}>
-                {link.type === 'github' && <img src="/icons/github.svg" alt="GitHub" class="w-5 h-5 opacity-90" />}
-                {link.type === 'live' && <img src="/site_icons/globe.svg" alt="Live" class="w-5 h-5 opacity-90" />}
-                {link.type === 'chrome' && <img src="/icons/chrome.svg" alt="Chrome Web Store" class="w-5 h-5" />}
-                {link.type === 'firefox' && <img src="/icons/firefox.svg" alt="Firefox Add-ons" class="w-5 h-5 opacity-90" />}
-                {link.type === 'wordpress' && <img src="/icons/wordpress.svg" alt="WordPress" class="w-5 h-5 opacity-90" />}
+              <a href={link.url} target="_blank" rel="noopener noreferrer" class="badge-link relative inline-flex items-center justify-center w-9 h-9 rounded-full bg-[#262b2d] text-gruv-fg border border-[#343b3e] shadow shadow-black/50 hover:bg-gruv-yellow hover:text-[#1d2021] hover:scale-105 hover:-translate-y-0.5 active:scale-95" aria-label={`Open ${item.title} ${link.type}`} title={link.type}>
+                {link.type === 'github' && <img src="/icons/github.svg" alt="GitHub" width="20" height="20" class="w-5 h-5 opacity-90" />}
+                {link.type === 'live' && <img src="/site_icons/globe.svg" alt="Live" width="20" height="20" class="w-5 h-5 opacity-90" />}
+                {link.type === 'chrome' && <img src="/icons/chrome.svg" alt="Chrome Web Store" width="20" height="20" class="w-5 h-5" />}
+                {link.type === 'firefox' && <img src="/icons/firefox.svg" alt="Firefox Add-ons" width="20" height="20" class="w-5 h-5 opacity-90" />}
+                {link.type === 'wordpress' && <img src="/icons/wordpress.svg" alt="WordPress" width="20" height="20" class="w-5 h-5 opacity-90" />}
                 {link.type === 'npm' && <span class="text-[11px] font-bold">npm</span>}
               </a>
             ))}
@@ -263,6 +263,7 @@ const orderedPortfolio = [
     background: rgba(60,56,54,0.7);
     color: #ebdbb2;
     box-shadow: 0 0 0 1px rgba(0,0,0,0.35);
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
   }
   .tag-btn:hover {
     background: rgba(80,73,69,0.8);
@@ -280,9 +281,12 @@ const orderedPortfolio = [
     border-color: #d79921;
   }
 
-  /* Card show/hide */
+  /* Card show/hide & transitions */
   [data-js="portfolio-grid"] > div {
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    transition: box-shadow .3s ease, transform .3s ease;
+  }
+  .badge-link {
+    transition: background-color .15s ease, color .15s ease, transform .15s ease;
   }
   .card-hidden {
     display: none !important;
@@ -290,7 +294,8 @@ const orderedPortfolio = [
 
   /* Easter egg rainbow animation for Portfolio header */
   #portfolio-secret { cursor: pointer; position: relative; }
-  #portfolio-secret:focus { outline: none; }
+  #portfolio-secret:focus:not(:focus-visible) { outline: none; }
+  #portfolio-secret:focus-visible { outline: 2px solid rgba(250,189,47,0.5); outline-offset: 2px; border-radius: 4px; }
   #portfolio-secret:hover, #portfolio-secret:focus-visible {
     background: linear-gradient(90deg,
       #fbf1c7 0%,

@@ -86,7 +86,7 @@ import "../styles/global.css";
         </p>
         <div class="mt-3">
           <a href="https://liberapay.com/dotmavriq" target="_blank" rel="noopener noreferrer" title="Support on Liberapay">
-            <img src="https://img.shields.io/liberapay/receives/dotMavriQ.svg?logo=liberapay" alt="Liberapay receives badge" class="inline-block align-middle" loading="lazy" referrerpolicy="no-referrer" />
+            <img src="https://img.shields.io/liberapay/receives/dotMavriQ.svg?logo=liberapay" alt="Liberapay receives badge" width="120" height="20" class="inline-block align-middle" loading="lazy" referrerpolicy="no-referrer" />
           </a>
         </div>
       </section>
@@ -130,16 +130,33 @@ import "../styles/global.css";
   const foldBtn = document.getElementById('fold-trigger');
   const modal = document.getElementById('qr-modal');
   const backdropSel = '[data-close]';
-  const trap = (e) => { if (e.key === 'Escape') closeModal(); };
+  function getFocusable() {
+    if (!modal) return [];
+    return [...modal.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),[tabindex]:not([tabindex="-1"])')];
+  }
+  function trapFocus(e) {
+    if (e.key === 'Escape') { closeModal(); return; }
+    if (e.key !== 'Tab') return;
+    const focusable = getFocusable();
+    if (!focusable.length) return;
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  }
   function openModal(){
     modal?.setAttribute('aria-hidden','false');
-    document.addEventListener('keydown', trap);
+    document.addEventListener('keydown', trapFocus);
     foldBtn?.setAttribute('aria-expanded','true');
+    requestAnimationFrame(() => { const f = getFocusable(); if (f.length) f[0].focus(); });
   }
   function closeModal(){
     modal?.setAttribute('aria-hidden','true');
-    document.removeEventListener('keydown', trap);
+    document.removeEventListener('keydown', trapFocus);
     foldBtn?.setAttribute('aria-expanded','false');
+    foldBtn?.focus();
   }
   foldBtn?.addEventListener('click', openModal);
   foldBtn?.addEventListener('keypress', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(); }});

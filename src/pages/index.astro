@@ -5,7 +5,7 @@ import ContactIcons from '../components/ContactIcons.astro';
 <BaseLayout title="blog.dotMavriQ" description="Personal site of dotMavriQ">
   <div class="flex flex-col items-center justify-center min-h-[calc(100vh-4.2rem-2.8rem)] text-center select-none relative">
     <figure class="relative mb-4 drop-shadow">
-      <img src="/solidsnakegbc.gif" alt="Solid Snake running" class="mx-auto w-[210px] sm:w-[250px] md:w-[280px] aspect-[4/3] object-contain rounded filter invert contrast-105" decoding="async" />
+      <img src="/solidsnakegbc.gif" alt="Solid Snake running" width="280" height="210" class="mx-auto w-[210px] sm:w-[250px] md:w-[280px] aspect-[4/3] object-contain rounded filter invert contrast-105" decoding="async" />
       <figcaption class="sr-only">Solid Snake pixel animation</figcaption>
     </figure>
     <ContactIcons />
@@ -23,7 +23,7 @@ import ContactIcons from '../components/ContactIcons.astro';
   </div>
 </BaseLayout>
 <style>
-  .btn-mat { @apply relative inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium text-sm tracking-tight bg-gruv-surface/60 text-gruv-fg border border-gruv-surface2 shadow-sm hover:shadow-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40; }
+  .btn-mat { @apply relative inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium text-sm tracking-tight bg-gruv-surface/60 text-gruv-fg border border-gruv-surface2 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40; transition: background-color .15s ease, color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
   .btn-mat:before { content:""; @apply absolute inset-0 rounded-lg opacity-0 transition-opacity; background:linear-gradient(145deg,rgba(255,255,255,0.07),rgba(255,255,255,0)); }
   .btn-mat:hover:before,.btn-mat:focus:before { @apply opacity-100; }
   .btn-mat:hover,.btn-mat:focus { @apply translate-y-[-1px]; }
