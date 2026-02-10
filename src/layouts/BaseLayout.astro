@@ -27,7 +27,7 @@ const canonicalURL = new URL(pathname, 'https://blog.dotmavriq.life').href;
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="description" content={description} />
-  <meta name="color-scheme" content="dark light" />
+  <meta name="color-scheme" content="dark" />
   <link rel="canonical" href={canonicalURL} />
   <!-- Open Graph -->
   <meta property="og:site_name" content="blog.dotMavriQ" />
@@ -48,7 +48,10 @@ const canonicalURL = new URL(pathname, 'https://blog.dotmavriq.life').href;
   <!-- 2025 font pairing: Inter (UI/body) + JetBrains Mono (code/meta) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   {pathname.startsWith('/contact') && (
+    <>
+    <link rel="preconnect" href="https://assets.calendly.com" />
     <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css" />
+    </>
   )}
   <!-- Matomo -->
   <script is:inline>
@@ -78,7 +81,7 @@ const canonicalURL = new URL(pathname, 'https://blog.dotmavriq.life').href;
     <header class="relative z-40 bg-[#121314]/95 backdrop-blur-sm border-b border-gruv-surface2/70 shadow-lg shadow-black/30">
       <nav aria-label="Primary" class="max-w-6xl mx-auto px-5 lg:px-6 py-3 sm:py-4 flex items-center justify-between gap-3 text-[15px] tracking-tight">
         <a href="/" aria-label="Home" class="group flex items-center gap-3 text-[20px] sm:text-[22px] font-extrabold font-heading text-gruv-yellow focus:outline-none focus:ring-2 focus:ring-gruv-yellow/60 rounded transition-colors">
-          <img src={siteLogo.src} width={56} height={56} alt="dotMavriQ logo" class="rounded-sm transition-transform duration-300 group-hover:scale-105" loading="lazy" decoding="async" />
+          <img src={siteLogo.src} width={56} height={56} alt="dotMavriQ logo" class="rounded-sm transition-transform duration-300 group-hover:scale-105" loading="eager" decoding="async" />
           <span class="leading-none">blog.dotMavriQ</span>
         </a>
         <!-- Desktop nav -->
@@ -126,7 +129,7 @@ const canonicalURL = new URL(pathname, 'https://blog.dotmavriq.life').href;
   .font-heading{ font-family:var(--font-ui); letter-spacing:-0.5px; }
   body{ font-family:var(--font-ui); }
   code,pre,.font-mono{ font-family:var(--font-mono); }
-  .nav-chip { @apply relative px-3 py-2 rounded-md font-medium text-gruv-fg/90 bg-[#1c1d1e] border border-[#242628] shadow-sm transition-all duration-150 hover:shadow-md focus:shadow-md focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40; }
+  .nav-chip { @apply relative px-3 py-2 rounded-md font-medium text-gruv-fg/90 bg-[#1c1d1e] border border-[#242628] shadow-sm hover:shadow-md focus:shadow-md focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40; transition: background-color .15s ease, color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
   .nav-chip:hover,.nav-chip:focus { @apply border-gruv-surface2 translate-y-[-1px]; }
   .nav-chip.is-active { @apply bg-gruv-yellow text-gruv-bg border-gruv-yellow shadow-md; }
   .nav-chip.is-active.nav-blue { @apply bg-gruv-blue; }
