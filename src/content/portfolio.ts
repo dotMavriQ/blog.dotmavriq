@@ -18,6 +18,7 @@ import teamtailorLogo from '../assets/portfolio/teamtailorwplogo.png';
 import bufloLogo from '../assets/portfolio/buflo.png';
 import lineawebLogo from '../assets/portfolio/lineaweb.png';
 import lineatuiLogo from '../assets/portfolio/lineatui.png';
+import tealScreenshot from '../assets/portfolio/tealscreenshot.png';
 export const portfolio: PortfolioItem[] = [
   {
     slug: 'habsiad',
@@ -43,7 +44,7 @@ export const portfolio: PortfolioItem[] = [
     title: 'Slactac',
     description: 'Chrome extension that overrides & thematically normalizes Slack channel names for cleaner focus.',
     image: slactacLogo,
-    tags: ['JavaScript','Chrome Extension'],
+    tags: ['JavaScript','Extension'],
     links: [
       { type: 'github', url: 'https://github.com/dotMavriQ/Slactac' },
       { type: 'chrome', url: 'https://chromewebstore.google.com/detail/slactac/gnjiocbockjlkpnlonimgihcbhpdephe' },
@@ -62,12 +63,12 @@ export const portfolio: PortfolioItem[] = [
   },
   {
     slug: 'teal',
-    title: 'teal',
-    description: 'Essential aggregator library providing minimal abstractions for data collection & transformation.',
-    image: 'https://opengraph.githubassets.com/1/dotMavriQ/teal',
-    tags: ['PHP','Library'],
+    title: 'TEAL',
+    description: 'Self-hosted media tracker for books, movies, and anime. Import from Goodreads, IMDb, and MyAnimeList. Metadata enrichment via OpenLibrary, TMDB, and Jikan.',
+    image: tealScreenshot,
+    tags: ['PHP', 'Laravel', 'Livewire', 'Tailwind'],
     links: [ { type: 'github', url: 'https://github.com/dotMavriQ/teal' } ],
-    year: 2024
+    year: 2025
   },
   {
     slug: 'teamtailor-integrator',
@@ -104,7 +105,7 @@ export const portfolio: PortfolioItem[] = [
     title: 'BUFLO',
     description: 'Billing Unified Flow Language & Orchestrator. DSL for defining, validating and running billing pipelines.',
     image: bufloLogo,
-    tags: ['Lua', 'DSL', 'Billing'],
+    tags: ['Lua', 'Billing'],
     links: [ { type: 'github', url: 'https://github.com/dotMavriQ/Buflo' } ],
     year: 2025
   },
