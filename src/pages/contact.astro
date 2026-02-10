@@ -10,12 +10,22 @@ import "../styles/global.css";
     <!-- Main contact card with socials and frayed corner; click opens QR modal -->
     <article
       id="contact-card"
-      class="contact-card frayed group relative mx-auto max-w-3xl rounded-2xl border border-gruv-surface2/90 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.5)] backdrop-blur-sm p-0 bg-transparent cursor-default"
+      class="contact-card frayed group relative mx-auto max-w-3xl p-0 bg-transparent cursor-default"
       aria-controls="qr-modal"
       aria-haspopup="dialog"
     >
+      <div class="bite-shape" aria-hidden="true"></div>
+      <div class="bite-edge" aria-hidden="true"></div>
+      <!-- Crumb dots scattered near the bite -->
+      <div class="bite-crumbs" aria-hidden="true">
+        <span style="top:22px;right:46px;width:3px;height:3px;opacity:.5"></span>
+        <span style="top:42px;right:66px;width:2px;height:2px;opacity:.4"></span>
+        <span style="top:60px;right:72px;width:3px;height:2px;opacity:.35;transform:rotate(20deg)"></span>
+        <span style="top:10px;right:40px;width:2px;height:2px;opacity:.3"></span>
+        <span style="top:72px;right:80px;width:2px;height:2px;opacity:.25;transform:rotate(-10deg)"></span>
+      </div>
       <button id="fold-trigger" class="fold-hit" type="button" aria-label="Open QR" title="Open QR" aria-expanded="false"></button>
-  <div class="surface rounded-2xl bg-gruv-surface/80 p-6 md:p-8">
+  <div class="surface rounded-2xl bg-gruv-surface/80 border border-gruv-surface2/90 p-6 md:p-8">
       <header class="mb-4 flex items-start justify-between gap-4">
         <div>
           <h2 class="text-2xl md:text-3xl font-bold text-gruv-fg tracking-tight">Let’s connect</h2>
@@ -177,31 +187,42 @@ import "../styles/global.css";
   .link { @apply text-gruv-yellow hover:text-gruv-yellow/90 underline underline-offset-2 decoration-dotted; }
   .btn-cta { @apply inline-flex items-center justify-center px-4 py-2 rounded-lg border border-gruv-surface2 bg-gruv-blue text-gruv-bg font-medium text-sm tracking-tight shadow hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40; }
 
-  /* Frayed top-right corner effect */
-  .frayed{ position:relative; overflow:hidden; }
-  .frayed:after{
-    content:"";
-  position:absolute; top:-1px; right:-1px; width:92px; height:92px; z-index:1;
-    background-image:url('/ui/fold-corner.svg');
-    background-size: 92px 92px; background-repeat:no-repeat; background-position: top right;
-    filter: drop-shadow(0 1px 0 rgba(0,0,0,0.28));
+  /* Bite taken out of top-right corner */
+  .frayed{ position:relative; overflow:visible; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.35)); }
+
+  /* The bite shape — page-bg colored, punched over the card corner.
+     Scalloped edge = tooth marks along a diagonal arc. */
+  .bite-shape{
+    position:absolute; top:-1px; right:-1px;
+    width:100px; height:82px; z-index:3;
+    background: #1d2021;
     pointer-events:none;
-  }
-  /* triangular hit area over the fold */
-  .fold-hit{ position:absolute; top:0; right:0; width:96px; height:96px; background:transparent; cursor:pointer; z-index:2; }
-  .fold-hit{ -webkit-mask: conic-gradient(from 45deg at 100% 0, #fff 0 90deg, transparent 0 360deg); mask: conic-gradient(from 45deg at 100% 0, #fff 0 90deg, transparent 0 360deg); }
-  .fold-hit:focus{ outline:2px solid rgba(250,189,47,0.5); outline-offset:2px; border-radius:0.5rem; }
-  .frayed:before{
-    content:"";
-    position:absolute; inset:-1px; pointer-events:none;
-    box-shadow: inset 0 1px 0 rgba(235,219,178,0.06);
+    clip-path: path('M100,0 L100,76 C96,70 84,64 80,60 C76,56 82,52 88,48 C94,44 82,40 76,36 C70,32 78,28 84,24 C90,20 78,16 72,12 C66,8 62,4 56,0 Z');
   }
 
-  /* Cut out only the inner fill to reveal background under the fold */
-  .contact-card .surface{
-    -webkit-mask: conic-gradient(from 45deg at 100% 0, transparent 0 90deg, #000 0 360deg);
-            mask: conic-gradient(from 45deg at 100% 0, transparent 0 90deg, #000 0 360deg);
+  /* Thin shadow strip along the bite edge for depth */
+  .bite-edge{
+    position:absolute; top:-1px; right:-1px;
+    width:100px; height:82px; z-index:4;
+    pointer-events:none;
+    background: linear-gradient(225deg, transparent 20%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.55) 100%);
+    clip-path: path('M100,0 L100,76 C97,71 85,66 81,62 C77,58 83,54 89,50 C95,46 83,42 77,38 C71,34 79,30 85,26 C91,22 79,18 73,14 C67,10 63,5 57,1 L56,0 Z');
   }
+
+  /* Hit area over the bite */
+  .fold-hit{
+    position:absolute; top:0; right:0; width:100px; height:82px;
+    background:transparent; cursor:pointer; z-index:5;
+    clip-path: path('M100,0 L100,76 C96,70 84,64 80,60 C76,56 82,52 88,48 C94,44 82,40 76,36 C70,32 78,28 84,24 C90,20 78,16 72,12 C66,8 62,4 56,0 Z');
+  }
+  .fold-hit:hover ~ .surface { filter: brightness(1.05); }
+  .fold-hit:focus-visible{ outline:2px solid rgba(250,189,47,0.5); outline-offset:2px; border-radius:0.5rem; }
+
+  .contact-card .surface{ position:relative; z-index:1; }
+
+  /* Scattered crumb dots near the bite */
+  .bite-crumbs{ position:absolute; top:0; right:0; width:110px; height:95px; z-index:2; pointer-events:none; }
+  .bite-crumbs span{ position:absolute; display:block; background:#504945; border-radius:50%; }
 
   /* Modal styles */
   #qr-modal[aria-hidden="true"] { display:none; }
