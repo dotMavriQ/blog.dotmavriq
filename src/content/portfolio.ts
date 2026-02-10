@@ -10,14 +10,14 @@ export interface PortfolioItem {
 }
 
 // Local logo image imports (Vite will emit optimized assets)
-import habsiadLogo from '../pages/portfolio/habsiadlogo.png';
-import linianLogo from '../pages/portfolio/linianlogo.png';
-import slactacLogo from '../pages/portfolio/slactaclogo.png';
-import blogLogo from '../pages/portfolio/dotmavriqlogo.png';
-import teamtailorLogo from '../pages/portfolio/teamtailorwplogo.png';
-import bufloLogo from '../pages/portfolio/buflo.png';
-import lineawebLogo from '../pages/portfolio/lineaweb.png';
-import lineatuiLogo from '../pages/portfolio/lineatui.png';
+import habsiadLogo from '../assets/portfolio/habsiadlogo.png';
+import linianLogo from '../assets/portfolio/linianlogo.png';
+import slactacLogo from '../assets/portfolio/slactaclogo.png';
+import blogLogo from '../assets/portfolio/dotmavriqlogo.png';
+import teamtailorLogo from '../assets/portfolio/teamtailorwplogo.png';
+import bufloLogo from '../assets/portfolio/buflo.png';
+import lineawebLogo from '../assets/portfolio/lineaweb.png';
+import lineatuiLogo from '../assets/portfolio/lineatui.png';
 export const portfolio: PortfolioItem[] = [
   {
     slug: 'habsiad',
