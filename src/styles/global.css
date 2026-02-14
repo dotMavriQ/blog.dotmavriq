@@ -5,6 +5,22 @@
 /* Gruvbox-inspired overrides */
 :root {
   color-scheme: dark;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Typography: balanced headings */
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+
+/* Touch: eliminate 300ms tap delay on interactive elements */
+a, button, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* Tabular figures for aligned numbers */
+.font-mono {
+  font-variant-numeric: tabular-nums;
 }
 
 .prose :where(code):not(:where([class~="not-prose"] *)) {

@@ -20,7 +20,7 @@ const orderedPortfolio = [
       <div class="flex flex-wrap items-center gap-2 text-xs md:text-[11px] font-mono" id="tag-filter" data-js="tag-filter">
         <button
           type="button"
-          class="tag-btn tag-btn-all px-3 py-1 rounded-md border font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50"
+          class="tag-btn tag-btn-all px-3 py-1 rounded-md border font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50"
           data-tag="__all__"
           data-active="true"
           aria-pressed="true"
@@ -28,7 +28,7 @@ const orderedPortfolio = [
         {allTags.map(tag => (
           <button
             type="button"
-            class="tag-btn px-3 py-1 rounded-md border font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50"
+            class="tag-btn px-3 py-1 rounded-md border font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50"
             data-tag={tag}
             data-active="false"
             aria-pressed="false"
@@ -191,6 +191,16 @@ const orderedPortfolio = [
   const allBtn = document.querySelector('[data-tag="__all__"]');
   const active = new Set();
 
+  function syncURL() {
+    const url = new URL(window.location.href);
+    if (active.size) {
+      url.searchParams.set('tags', [...active].join(','));
+    } else {
+      url.searchParams.delete('tags');
+    }
+    history.replaceState(null, '', url);
+  }
+
   function updateCards() {
     const showAll = !active.size;
     let visible = 0;
@@ -221,6 +231,8 @@ const orderedPortfolio = [
         countEl.classList.remove('hidden');
       }
     }
+
+    syncURL();
   }
 
   buttons.forEach(btn => {
@@ -253,6 +265,20 @@ const orderedPortfolio = [
       updateCards();
     });
   });
+
+  // Restore filter state from URL on page load
+  const initTags = new URL(window.location.href).searchParams.get('tags');
+  if (initTags) {
+    for (const tag of initTags.split(',')) {
+      const btn = document.querySelector(`[data-tag="${CSS.escape(tag)}"]`);
+      if (btn) {
+        active.add(tag);
+        btn.dataset.active = 'true';
+        btn.setAttribute('aria-pressed', 'true');
+      }
+    }
+    if (active.size) updateCards();
+  }
 
 </script>
 

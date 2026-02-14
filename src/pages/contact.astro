@@ -101,16 +101,16 @@ import "../styles/global.css";
         </div>
       </section>
 
-      <!-- Calendly card with popup trigger button -->
+      <!-- Cal.com card with popup trigger button -->
       <section class="rounded-xl border border-gruv-surface2 bg-gruv-surface/70 p-5 shadow-sm">
         <header>
           <h3 class="text-xl font-semibold tracking-tight text-gruv-fg">Book a meeting</h3>
         </header>
         <p class="mt-3 text-[14.5px] leading-relaxed text-gruv-fg/85">
-          Pick a time that works for you. You’ll receive a calendar invite with a secure video link.
+          Pick a time that works for you. You'll receive a calendar invite with a secure video link.
         </p>
         <div class="mt-4">
-          <a id="calendly-btn" href="https://calendly.com/dotmavriq" class="btn-cta">Open Calendly</a>
+          <a id="cal-btn" href="https://cal.com/dotmavriq" class="btn-cta" data-cal-link="dotmavriq" data-cal-config='{"theme":"dark"}'>Book a call</a>
         </div>
       </section>
     </div>
@@ -172,20 +172,38 @@ import "../styles/global.css";
   foldBtn?.addEventListener('keypress', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(); }});
   modal?.addEventListener('click', (e) => { const t = e.target; if (t instanceof HTMLElement && (t.matches(backdropSel) || t.closest(backdropSel))) closeModal(); });
 
-  // Calendly popup trigger
-  function openCalendly(e){
-    const url = 'https://calendly.com/dotmavriq';
-    if (window?.Calendly?.initPopupWidget) {
-      e?.preventDefault?.();
-      window.Calendly.initPopupWidget({ url });
-    } // else: allow default anchor navigation to open Calendly normally
+  // Cal.com — only load embed on first button click
+  var calBtn = document.getElementById('cal-btn');
+  var calReady = false;
+  if (calBtn) {
+    calBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (!calReady) {
+        calReady = true;
+        // Bootstrap Cal global + load embed.js
+        (function (C, A, L) {
+          var p = function (a, ar) { a.q.push(ar); };
+          var d = C.document;
+          C.Cal = C.Cal || function () {
+            var cal = C.Cal; var ar = arguments;
+            if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; }
+            if (ar[0] === L) { var api = function () { p(api, arguments); }; var namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; return void p(cal.ns[namespace], ar); } p(cal, ar); return; }
+            p(cal, ar);
+          };
+        })(window, "https://app.cal.com/embed/embed.js", "init");
+        Cal("init", {origin: "https://cal.com"});
+        Cal("ui", { theme: "dark", styles: { branding: { brandColor: "#fabd2f" } } });
+        Cal("modal", { calLink: "dotmavriq", config: { theme: "dark" } });
+      } else {
+        Cal("modal", { calLink: "dotmavriq", config: { theme: "dark" } });
+      }
+    });
   }
-  document.getElementById('calendly-btn')?.addEventListener('click', openCalendly);
 </script>
 
 <style>
   .link { @apply text-gruv-yellow hover:text-gruv-yellow/90 underline underline-offset-2 decoration-dotted; }
-  .btn-cta { @apply inline-flex items-center justify-center px-4 py-2 rounded-lg border border-gruv-surface2 bg-gruv-blue text-gruv-bg font-medium text-sm tracking-tight shadow hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40; }
+  .btn-cta { @apply inline-flex items-center justify-center px-4 py-2 rounded-lg border border-gruv-surface2 bg-gruv-blue text-gruv-bg font-medium text-sm tracking-tight shadow hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/40; }
 
   /* Bite taken out of top-right corner */
   .frayed{ position:relative; overflow:visible; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.35)); }
@@ -226,7 +244,7 @@ import "../styles/global.css";
 
   /* Modal styles */
   #qr-modal[aria-hidden="true"] { display:none; }
-  #qr-modal{ position:fixed; inset:0; z-index:60; display:grid; place-items:center; }
+  #qr-modal{ position:fixed; inset:0; z-index:60; display:grid; place-items:center; overscroll-behavior:contain; }
   #qr-modal .modal-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.55); backdrop-filter: blur(2px); }
   #qr-modal .modal-panel{
     position:relative; width:min(92vw, 520px);
@@ -234,9 +252,5 @@ import "../styles/global.css";
   }
   .close-x{ @apply inline-flex items-center justify-center w-8 h-8 rounded-md border border-gruv-surface2 bg-gruv-surface2/40 text-gruv-fg hover:bg-gruv-surface2; }
 
-  /* (no inline Calendly iframe styles needed for popup) */
 </style>
-
-<!-- Calendly popup script -->
-<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 
