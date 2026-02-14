@@ -174,12 +174,14 @@ import "../styles/global.css";
 
   // Cal.com — only load embed on first button click
   var calBtn = document.getElementById('cal-btn');
-  var calReady = false;
+  var calLoaded = false;
   if (calBtn) {
     calBtn.addEventListener('click', function(e) {
       e.preventDefault();
-      if (!calReady) {
-        calReady = true;
+      // Clean up any leftover Cal modal DOM from a previous session
+      document.querySelectorAll('cal-modal-box').forEach(function(el) { el.remove(); });
+      if (!calLoaded) {
+        calLoaded = true;
         // Bootstrap Cal global + load embed.js
         (function (C, A, L) {
           var p = function (a, ar) { a.q.push(ar); };
@@ -193,10 +195,8 @@ import "../styles/global.css";
         })(window, "https://app.cal.com/embed/embed.js", "init");
         Cal("init", {origin: "https://cal.com"});
         Cal("ui", { theme: "dark", styles: { branding: { brandColor: "#fabd2f" } } });
-        Cal("modal", { calLink: "dotmavriq", config: { theme: "dark" } });
-      } else {
-        Cal("modal", { calLink: "dotmavriq", config: { theme: "dark" } });
       }
+      Cal("modal", { calLink: "dotmavriq", config: { theme: "dark" } });
     });
   }
 </script>
