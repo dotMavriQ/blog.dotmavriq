@@ -110,9 +110,21 @@ import "../styles/global.css";
           Pick a time that works for you. You'll receive a calendar invite with a secure video link.
         </p>
         <div class="mt-4">
-          <a id="cal-btn" href="https://cal.com/dotmavriq" class="btn-cta" data-cal-link="dotmavriq" data-cal-config='{"theme":"dark"}'>Book a call</a>
+          <a id="cal-btn" href="https://cal.com/dotmavriq" class="btn-cta">Book a call</a>
         </div>
       </section>
+    </div>
+
+    <!-- Modal: Cal.com booking (our container, Cal renders inline inside) -->
+    <div id="cal-modal" aria-hidden="true" role="dialog" aria-labelledby="cal-modal-title" aria-modal="true">
+      <div class="cal-backdrop" data-cal-close></div>
+      <div class="cal-panel" role="document">
+        <header class="flex items-start justify-between gap-4">
+          <h2 id="cal-modal-title" class="text-lg font-semibold tracking-tight text-gruv-fg">Book a call</h2>
+          <button class="close-x" type="button" aria-label="Close" title="Close" data-cal-close>×</button>
+        </header>
+        <div id="cal-container" class="mt-4" style="min-height:500px;overflow-y:auto;"></div>
+      </div>
     </div>
 
     <!-- Modal: QR code to site -->
@@ -172,33 +184,46 @@ import "../styles/global.css";
   foldBtn?.addEventListener('keypress', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(); }});
   modal?.addEventListener('click', (e) => { const t = e.target; if (t instanceof HTMLElement && (t.matches(backdropSel) || t.closest(backdropSel))) closeModal(); });
 
-  // Cal.com — only load embed on first button click
+  // Cal.com — inline embed inside our own modal
   var calBtn = document.getElementById('cal-btn');
+  var calModal = document.getElementById('cal-modal');
   var calLoaded = false;
-  if (calBtn) {
-    calBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      // Clean up any leftover Cal modal DOM from a previous session
-      document.querySelectorAll('cal-modal-box').forEach(function(el) { el.remove(); });
-      if (!calLoaded) {
-        calLoaded = true;
-        // Bootstrap Cal global + load embed.js
-        (function (C, A, L) {
-          var p = function (a, ar) { a.q.push(ar); };
-          var d = C.document;
-          C.Cal = C.Cal || function () {
-            var cal = C.Cal; var ar = arguments;
-            if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; }
-            if (ar[0] === L) { var api = function () { p(api, arguments); }; var namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; return void p(cal.ns[namespace], ar); } p(cal, ar); return; }
-            p(cal, ar);
-          };
-        })(window, "https://app.cal.com/embed/embed.js", "init");
-        Cal("init", {origin: "https://cal.com"});
-        Cal("ui", { theme: "dark", styles: { branding: { brandColor: "#fabd2f" } } });
-      }
-      Cal("modal", { calLink: "dotmavriq", config: { theme: "dark" } });
-    });
+
+  function openCalModal() {
+    calModal.setAttribute('aria-hidden', 'false');
+    document.addEventListener('keydown', calEscHandler);
+    if (!calLoaded) {
+      calLoaded = true;
+      (function (C, A, L) {
+        var p = function (a, ar) { a.q.push(ar); };
+        var d = C.document;
+        C.Cal = C.Cal || function () {
+          var cal = C.Cal; var ar = arguments;
+          if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; }
+          if (ar[0] === L) { var api = function () { p(api, arguments); }; var namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; return void p(cal.ns[namespace], ar); } p(cal, ar); return; }
+          p(cal, ar);
+        };
+      })(window, "https://app.cal.com/embed/embed.js", "init");
+      Cal("init", {origin: "https://cal.com"});
+      Cal("inline", { elementOrSelector: "#cal-container", calLink: "dotmavriq", config: { theme: "dark" } });
+      Cal("ui", { theme: "dark", styles: { branding: { brandColor: "#fabd2f" } } });
+    }
   }
+
+  function closeCalModal() {
+    calModal.setAttribute('aria-hidden', 'true');
+    document.removeEventListener('keydown', calEscHandler);
+    calBtn?.focus();
+  }
+
+  function calEscHandler(e) {
+    if (e.key === 'Escape') closeCalModal();
+  }
+
+  calBtn?.addEventListener('click', function(e) { e.preventDefault(); openCalModal(); });
+  calModal?.querySelectorAll('[data-cal-close]').forEach(function(el) {
+    el.addEventListener('click', closeCalModal);
+  });
 </script>
 
 <style>
@@ -251,6 +276,15 @@ import "../styles/global.css";
     @apply rounded-xl border border-gruv-surface2 bg-gruv-surface p-5 shadow-lg;
   }
   .close-x{ @apply inline-flex items-center justify-center w-8 h-8 rounded-md border border-gruv-surface2 bg-gruv-surface2/40 text-gruv-fg hover:bg-gruv-surface2; }
+
+  /* Cal.com booking modal */
+  #cal-modal[aria-hidden="true"] { display:none; }
+  #cal-modal{ position:fixed; inset:0; z-index:60; display:grid; place-items:center; overscroll-behavior:contain; }
+  .cal-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.55); backdrop-filter: blur(2px); }
+  .cal-panel{
+    position:relative; width:min(96vw, 680px); max-height:90vh; overflow-y:auto;
+    @apply rounded-xl border border-gruv-surface2 bg-gruv-surface p-5 shadow-lg;
+  }
 
 </style>
 
