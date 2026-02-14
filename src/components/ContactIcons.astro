@@ -13,8 +13,8 @@ const links: Link[] = [
   <ul class="flex flex-wrap justify-center gap-4 text-sm" role="list">
     {links.map(l => (
       <li>
-        <a href={l.href} aria-label={l.label} title={l.label} class="group inline-flex items-center justify-center w-9 h-9 rounded-md bg-gruv-surface2/40 hover:bg-gruv-surface2 focus:bg-gruv-surface2 border border-gruv-surface transition" rel="noopener noreferrer" target="_blank">
-          <img src={l.icon} alt="" width="20" height="20" class="opacity-85 group-hover:opacity-100 group-focus:opacity-100 transition" loading="lazy" />
+        <a href={l.href} aria-label={l.label} title={l.label} class="group inline-flex items-center justify-center w-9 h-9 rounded-md bg-gruv-surface2/40 hover:bg-gruv-surface2 focus-visible:bg-gruv-surface2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/40 border border-gruv-surface transition" rel="noopener noreferrer" target="_blank">
+          <img src={l.icon} alt="" width="20" height="20" class="opacity-85 group-hover:opacity-100 group-focus-visible:opacity-100 transition" loading="lazy" />
         </a>
       </li>
     ))}

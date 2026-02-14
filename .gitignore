@@ -10,6 +10,14 @@ dist
 !.env.example
 /.idea/
 /.vscode/
+# Playwright
+playwright-report/
+test-results/
+
+# Claude Code
+.claude/
+.agents/
+
 # Secret matrix generation artifacts (kept local, not committed)
 scripts/gen-matrix-blob.js
 scripts/matrix_blob.txt

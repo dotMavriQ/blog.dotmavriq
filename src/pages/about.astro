@@ -2,39 +2,49 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 <BaseLayout title="About · dotMavriQ" description="About dotMavriQ">
-  <article class="relative z-30 max-w-3xl mx-auto px-4 sm:px-5 md:px-8 py-8 sm:py-10 md:py-14">
+  <article class="relative z-30 max-w-5xl mx-auto px-3 sm:px-5 md:px-8 py-10 md:py-14">
     <div class="about-card">
+      <img src="/sepiaface.png" alt="Sepia-toned portrait of Jonatan" width="192" height="192" class="about-portrait" loading="lazy" decoding="async" />
       <div class="about-copy space-y-6">
-        <p>Hi, my name is Jonatan—though many online know me as dotMavriQ. My journey into tech began in the mid-90s with Windows 95, but it was discovering Game Maker on a CD from a Swedish PC magazine that truly sparked my love for coding and digital creation. That passion grew into web development, starting with static XHTML sites and expanding into more dynamic builds with CSS and PHP.</p>
-        <p>In college, I built websites for local businesses, earned a Silver Medal at the 
-          <a href="https://www.mynewsdesk.com/se/ung_foeretagsamhet_skaraborg/pressreleases/vaaga-vara-egen-skaraborg-resultat-606181" target="_blank" rel="noopener noreferrer" aria-label="Vara UF-mässa (opens in a new tab)">Vara UF-mässa</a>, 
-          and completed a formative traineeship at 
+        <p>Hi, my name is Jonatan. My journey into tech began in the mid-90s with Windows 95, but it was discovering Game Maker on a CD from a Swedish PC magazine that truly sparked my love for coding and digital creation. That passion grew into web development, starting with static XHTML sites and expanding into more dynamic builds with CSS and PHP.</p>
+        <p>In college, I built websites for local businesses, earned a Silver Medal at the
+          <a href="https://www.mynewsdesk.com/se/ung_foeretagsamhet_skaraborg/pressreleases/vaaga-vara-egen-skaraborg-resultat-606181" target="_blank" rel="noopener noreferrer" aria-label="Vara UF-mässa (opens in a new tab)">Vara UF-mässa</a>,
+          and completed a formative traineeship at
           <a href="https://www.snus24.com/about-us" target="_blank" rel="noopener noreferrer" aria-label="Nordic Goods (opens in a new tab)">Nordic Goods</a>, working hands-on with Linux servers, Magento, and SEO.</p>
-        <p>My career then expanded at 
-          <a href="https://ember.se/" target="_blank" rel="noopener noreferrer" aria-label="Ember (opens in a new tab)">Ember</a> 
-          and 
-          <a href="https://duva.se/" target="_blank" rel="noopener noreferrer" aria-label="Duva (opens in a new tab)">Duva</a>, where I moved from WordPress to full-stack development—mastering Docker, Kubernetes, React, TypeScript, and Tailwind. I also served as President of Makerspace Lidköping, contributing nationally with web and tech solutions. Later, at 
-          <a href="https://iptor.com/" target="_blank" rel="noopener noreferrer" aria-label="IPTOR (opens in a new tab)">IPTOR</a> 
-          and 
+        <p>My career then expanded at
+          <a href="https://ember.se/" target="_blank" rel="noopener noreferrer" aria-label="Ember (opens in a new tab)">Ember</a>
+          and
+          <a href="https://duva.se/" target="_blank" rel="noopener noreferrer" aria-label="Duva (opens in a new tab)">Duva</a>, where I moved from WordPress to full-stack development—mastering Docker, Kubernetes, React, TypeScript, and Tailwind. I also served as President of Makerspace Lidköping, contributing nationally with web and tech solutions. Later, at
+          <a href="https://iptor.com/" target="_blank" rel="noopener noreferrer" aria-label="IPTOR (opens in a new tab)">IPTOR</a>
+          and
           <a href="https://www.blocklabs.io/" target="_blank" rel="noopener noreferrer" aria-label="Block Labs (opens in a new tab)">Block Labs</a>, I sharpened my skills in marketing-focused development and rapid application development.</p>
-        <p>Today, I’m the Senior Growth Developer at 
+        <p>Today, I'm the Senior Growth Developer at
           <a href="https://nordhealth.com" target="_blank" rel="noopener noreferrer" aria-label="Nordhealth (opens in a new tab)">Nordhealth</a>, where I extend the Marketing Team by maintaining and improving digital properties, designing robust deployments, and implementing new features for an emerging AI-driven healthcare leader.</p>
         <p>What drives me is a relentless curiosity and a commitment to delivering user-centered solutions that work. My diverse experience, combined with a genuine passion for technology, makes me a reliable problem-solver—someone who brings both technical expertise and a thoughtful, human approach to every project.</p>
-        <div class="about-media">
-          <img src="/sepiaface.png" alt="Sepia-toned portrait of Jonatan" width="192" height="192" class="about-portrait" loading="lazy" decoding="async" />
-          <p class="flex-1 sm:self-end">Outside of work, I enjoy playing bass guitar, cooking, reading, trekking, and spending quality time with my partner.</p>
-        </div>
+        <p class="about-closing">Outside of work, I enjoy playing bass guitar, cooking, reading, trekking, and spending quality time with my partner.</p>
       </div>
     </div>
   </article>
 </BaseLayout>
 
 <style>
-  .about-card { @apply rounded-xl bg-gruv-fg text-gruv-bg/95 shadow-md shadow-black/30 border border-gruv-surface overflow-hidden p-4 sm:p-6 md:p-8; }
+  .about-card { @apply relative rounded-lg bg-gruv-fg text-gruv-bg/95 shadow-md shadow-black/30 border border-gruv-surface overflow-hidden p-4 sm:p-6 md:p-10; }
   .about-copy p { @apply text-base sm:text-[17px] md:text-lg leading-relaxed break-words; }
-  .about-copy a { @apply underline text-[#076678] hover:text-[#458588] focus:outline-none focus:ring-2 focus:ring-[#458588] rounded-sm; }
-  .about-media { @apply flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-5 relative mt-2 !mt-2; }
-  .about-portrait { @apply hidden sm:block w-40 md:w-48 h-auto opacity-40 hover:opacity-70 transition-opacity duration-300 rounded-md select-none pointer-events-none mix-blend-multiply self-end sm:-ml-6 md:-ml-8 sm:-mb-6 md:-mb-8; }
+  .about-copy a { @apply underline text-[#076678] hover:text-[#458588] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#458588] rounded-sm; }
+  .about-portrait { @apply hidden sm:block absolute bottom-0 left-0 w-32 md:w-40 lg:w-48 h-auto opacity-40 hover:opacity-70 transition-opacity duration-300 select-none pointer-events-none mix-blend-multiply; }
+  .about-closing {
+    margin-left: 7rem;
+    margin-top: 4.6rem !important;
+  }
+  @media (min-width:768px){
+    .about-closing { margin-left: 8.5rem; }
+  }
+  @media (min-width:1024px){
+    .about-closing { margin-left: 11rem; }
+  }
+  @media (max-width:639px){
+    .about-closing { margin-left: 0; }
+  }
   @media (min-width:768px){
     .about-card{ backdrop-filter: blur(2px); }
   }

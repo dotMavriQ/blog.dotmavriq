@@ -23,15 +23,15 @@ import ContactIcons from '../components/ContactIcons.astro';
   </div>
 </BaseLayout>
 <style>
-  .btn-mat { @apply relative inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium text-sm tracking-tight bg-gruv-surface/60 text-gruv-fg border border-gruv-surface2 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gruv-yellow/40; transition: background-color .15s ease, color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
+  .btn-mat { @apply relative inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium text-sm tracking-tight bg-gruv-surface/60 text-gruv-fg border border-gruv-surface2 shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/40; transition: background-color .15s ease, color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
   .btn-mat:before { content:""; @apply absolute inset-0 rounded-lg opacity-0 transition-opacity; background:linear-gradient(145deg,rgba(255,255,255,0.07),rgba(255,255,255,0)); }
-  .btn-mat:hover:before,.btn-mat:focus:before { @apply opacity-100; }
-  .btn-mat:hover,.btn-mat:focus { @apply translate-y-[-1px]; }
-  .mat-yellow:hover,.mat-yellow:focus { @apply text-gruv-bg bg-gruv-yellow; }
-  .mat-blue:hover,.mat-blue:focus { @apply text-gruv-bg bg-gruv-blue; }
-  .mat-orange:hover,.mat-orange:focus { @apply text-gruv-bg bg-gruv-orange; }
-  .mat-green:hover,.mat-green:focus { @apply text-gruv-bg bg-gruv-green; }
-  .mat-red:hover,.mat-red:focus { @apply text-gruv-bg bg-gruv-red; }
+  .btn-mat:hover:before,.btn-mat:focus-visible:before { @apply opacity-100; }
+  .btn-mat:hover,.btn-mat:focus-visible { @apply translate-y-[-1px]; }
+  .mat-yellow:hover,.mat-yellow:focus-visible { @apply text-gruv-bg bg-gruv-yellow; }
+  .mat-blue:hover,.mat-blue:focus-visible { @apply text-gruv-bg bg-gruv-blue; }
+  .mat-orange:hover,.mat-orange:focus-visible { @apply text-gruv-bg bg-gruv-orange; }
+  .mat-green:hover,.mat-green:focus-visible { @apply text-gruv-bg bg-gruv-green; }
+  .mat-red:hover,.mat-red:focus-visible { @apply text-gruv-bg bg-gruv-red; }
   .accent-raise { box-shadow:0 0 0 0 rgba(131,165,152,0.4); }
   .accent-raise:hover { box-shadow:0 4px 18px -2px rgba(131,165,152,0.35),0 0 0 1px rgba(131,165,152,0.25); }
   @media (max-width:480px){ .btn-mat{ @apply px-4 py-2 text-[13px]; } }
