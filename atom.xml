@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>dotMavriQ Blog</title>
+  <subtitle>Articles, notes &amp; deep dives by dotMavriQ</subtitle>
+  <link href="https://blog.dotmavriq.life/atom.xml" rel="self" type="application/atom+xml" />
+  <link href="https://blog.dotmavriq.life" rel="alternate" type="text/html" />
+  <id>https://blog.dotmavriq.life/</id>
+  <updated>2026-02-09T00:00:00.000Z</updated>
+  <author><name>dotMavriQ</name></author>
+  <entry>
+    <title>Helsinki 2026</title>
+    <link href="https://blog.dotmavriq.life/blog/helsinki-2026/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/helsinki-2026/</id>
+    <published>2026-02-09T00:00:00.000Z</published>
+    <updated>2026-02-09T00:00:00.000Z</updated>
+    <summary>A winter trip to Helsinki.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+    <category term="Travel" />
+  </entry>
+  <entry>
+    <title>Goodbye Firefox</title>
+    <link href="https://blog.dotmavriq.life/blog/goodbye-firefox/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/goodbye-firefox/</id>
+    <published>2026-01-17T00:00:00.000Z</published>
+    <updated>2026-01-17T00:00:00.000Z</updated>
+    <summary>After years of holding on, I finally dropped Firefox.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Switching To" />
+    <category term="Digital Freedom" />
+    <category term="Consumer Rights" />
+  </entry>
+  <entry>
+    <title>Porto 2025 (Wardruna)</title>
+    <link href="https://blog.dotmavriq.life/blog/porto-2025/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/porto-2025/</id>
+    <published>2025-12-01T00:00:00.000Z</published>
+    <updated>2025-12-01T00:00:00.000Z</updated>
+    <summary>Wardruna in Porto.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+    <category term="Travel" />
+  </entry>
+  <entry>
+    <title>Reflecting on Two Years</title>
+    <link href="https://blog.dotmavriq.life/blog/reflecting-on-two-years/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/reflecting-on-two-years/</id>
+    <published>2025-10-05T00:00:00.000Z</published>
+    <updated>2025-10-05T00:00:00.000Z</updated>
+    <summary>Two years since moving to Portugal. Looking back at what changed.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+  </entry>
+  <entry>
+    <title>Got my DAP</title>
+    <link href="https://blog.dotmavriq.life/blog/got-my-dap/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/got-my-dap/</id>
+    <published>2025-09-25T00:00:00.000Z</published>
+    <updated>2025-09-25T00:00:00.000Z</updated>
+    <summary>After many years of supporting Spotify, I am switching back to a regular audio player. Here are my personal motivations.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+    <category term="Switching To" />
+    <category term="Digital Freedom" />
+    <category term="Consumer Rights" />
+  </entry>
+  <entry>
+    <title>Alicante 2025 (Nordhealth)</title>
+    <link href="https://blog.dotmavriq.life/blog/alicante-2025/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/alicante-2025/</id>
+    <published>2025-09-12T00:00:00.000Z</published>
+    <updated>2025-09-12T00:00:00.000Z</updated>
+    <summary>Sun, tapas, and unexpected discoveries along the Costa Blanca.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+    <category term="Travel" />
+  </entry>
+  <entry>
+    <title>Denmark 2025</title>
+    <link href="https://blog.dotmavriq.life/blog/denmark-2025/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/denmark-2025/</id>
+    <published>2025-08-16T00:00:00.000Z</published>
+    <updated>2025-08-16T00:00:00.000Z</updated>
+    <summary>A few days in Denmark, hygge and all.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+    <category term="Travel" />
+  </entry>
+  <entry>
+    <title>NOS Alive '25 (Muse &amp; Nine Inch Nails)</title>
+    <link href="https://blog.dotmavriq.life/blog/nos-alive-2025/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/nos-alive-2025/</id>
+    <published>2025-07-12T00:00:00.000Z</published>
+    <updated>2025-07-12T00:00:00.000Z</updated>
+    <summary>Muse and Nine Inch Nails at NOS Alive. One of the best nights.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+  </entry>
+  <entry>
+    <title>Zavial: Part Two</title>
+    <link href="https://blog.dotmavriq.life/blog/zavial/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/zavial/</id>
+    <published>2025-06-14T00:00:00.000Z</published>
+    <updated>2025-06-14T00:00:00.000Z</updated>
+    <summary>Birthday in the Algarve. Fish, books, and Moroccan radio.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+    <category term="Travel" />
+  </entry>
+  <entry>
+    <title>Ring Fit Adventure</title>
+    <link href="https://blog.dotmavriq.life/blog/ring-fit-adventure/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/ring-fit-adventure/</id>
+    <published>2025-05-27T00:00:00.000Z</published>
+    <updated>2025-05-27T00:00:00.000Z</updated>
+    <summary>Using Ring Fit Adventure as an actual workout routine. Does it hold up?</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+    <category term="Health" />
+  </entry>
+  <entry>
+    <title>WordCamp Lisboa 2025</title>
+    <link href="https://blog.dotmavriq.life/blog/wordcamp-lisboa-2025/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/wordcamp-lisboa-2025/</id>
+    <published>2025-05-16T00:00:00.000Z</published>
+    <updated>2025-05-16T00:00:00.000Z</updated>
+    <summary>My first WordCamp. Merch, talks, and good people.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+    <category term="WordPress" />
+  </entry>
+  <entry>
+    <title>Ghost 2025 (MEO Arena)</title>
+    <link href="https://blog.dotmavriq.life/blog/ghost-2025/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/ghost-2025/</id>
+    <published>2025-04-29T00:00:00.000Z</published>
+    <updated>2025-04-29T00:00:00.000Z</updated>
+    <summary>Ghost at MEO Arena, Lisbon. The Skeletour.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+  </entry>
+  <entry>
+    <title>The Blackout</title>
+    <link href="https://blog.dotmavriq.life/blog/the-blackout/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/the-blackout/</id>
+    <published>2025-04-28T00:00:00.000Z</published>
+    <updated>2025-04-28T00:00:00.000Z</updated>
+    <summary>The day the power went out across Portugal and Spain.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+  </entry>
+  <entry>
+    <title>Cognitive Load Theory</title>
+    <link href="https://blog.dotmavriq.life/blog/cognitive-load-theory/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/cognitive-load-theory/</id>
+    <published>2025-04-04T00:00:00.000Z</published>
+    <updated>2025-04-04T00:00:00.000Z</updated>
+    <summary>Your brain is a battery. Plan accordingly.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Productivity" />
+  </entry>
+  <entry>
+    <title>Locked in here with me</title>
+    <link href="https://blog.dotmavriq.life/blog/locked-in-here-with-me/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/locked-in-here-with-me/</id>
+    <published>2024-10-10T00:00:00.000Z</published>
+    <updated>2024-10-10T00:00:00.000Z</updated>
+    <summary>A long weekend with work friends at a five star hotel in Lisbon.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+  </entry>
+  <entry>
+    <title>Saw AIR live in Cascais</title>
+    <link href="https://blog.dotmavriq.life/blog/saw-air-live/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/saw-air-live/</id>
+    <published>2024-07-09T00:00:00.000Z</published>
+    <updated>2024-07-09T00:00:00.000Z</updated>
+    <summary>AIR played a show in Cascais and I was there.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+  </entry>
+  <entry>
+    <title>Got my Bass guitar!</title>
+    <link href="https://blog.dotmavriq.life/blog/bass-guitar/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/bass-guitar/</id>
+    <published>2024-03-28T00:00:00.000Z</published>
+    <updated>2024-03-28T00:00:00.000Z</updated>
+    <summary>Picking up the bass again and what it taught me about rhythm.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+  </entry>
+  <entry>
+    <title>Friends with PHP Again</title>
+    <link href="https://blog.dotmavriq.life/blog/friends-with-php-again/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/friends-with-php-again/</id>
+    <published>2024-02-01T00:00:00.000Z</published>
+    <updated>2024-02-01T00:00:00.000Z</updated>
+    <summary>I never thought I'd say this, but PHP and I are on good terms again.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="PHP" />
+    <category term="Developer" />
+    <category term="Laravel" />
+  </entry>
+  <entry>
+    <title>Yes, I Meditate (3/3)</title>
+    <link href="https://blog.dotmavriq.life/blog/yes-i-meditate/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/yes-i-meditate/</id>
+    <published>2024-01-17T00:00:00.000Z</published>
+    <updated>2024-01-17T00:00:00.000Z</updated>
+    <summary>On getting into meditation and what it actually does for me.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+    <category term="Health" />
+    <category term="Productivity" />
+  </entry>
+  <entry>
+    <title>Commonplace Notes (2/3)</title>
+    <link href="https://blog.dotmavriq.life/blog/commonplace-notes-2025/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/commonplace-notes-2025/</id>
+    <published>2024-01-10T00:00:00.000Z</published>
+    <updated>2024-01-10T00:00:00.000Z</updated>
+    <summary>A look at my commonplace note-taking system heading into 2025.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Productivity" />
+  </entry>
+  <entry>
+    <title>Obsidian (1/3)</title>
+    <link href="https://blog.dotmavriq.life/blog/obsidian/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/obsidian/</id>
+    <published>2024-01-03T00:00:00.000Z</published>
+    <updated>2024-01-03T00:00:00.000Z</updated>
+    <summary>My Obsidian setup and how it ties into everything else.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Productivity" />
+  </entry>
+  <entry>
+    <title>Moved to Portugal</title>
+    <link href="https://blog.dotmavriq.life/blog/moved-to-portugal/" rel="alternate" />
+    <id>https://blog.dotmavriq.life/blog/moved-to-portugal/</id>
+    <published>2023-10-05T00:00:00.000Z</published>
+    <updated>2023-10-05T00:00:00.000Z</updated>
+    <summary>We packed up and left Sweden for Lisbon. Here's what that was like.</summary>
+    <author><name>dotMavriQ</name></author>
+    <category term="Slice of Life" />
+  </entry>
+</feed>
