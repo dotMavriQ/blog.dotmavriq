@@ -2,7 +2,7 @@
 title: "Yes, I Meditate (3/3)"
 pubDate: 2024-01-17
 excerpt: "On getting into meditation and what it actually does for me."
-tags: [Slice of Life]
+tags: [Slice of Life, Health, Productivity]
 heroImage: "/blog/dotBlog_yesImeditate.png"
 draft: false
 ---
@@ -27,11 +27,11 @@ It was too tied to the notion of religion or explicit spirituality. The benefits
 
 ## Finding the right format
 
-But then I sort of found myself with some podcasts, like a lot of people do, while walking home one night. Fairly sure it wasn't [Sam Harris](https://en.wikipedia.org/wiki/Sam_Harris) but he has certainly become the face of "non-religious meditation" the last couple of years.
+But then I sort of found myself with some podcasts, like a lot of people do, while walking home one night. Fairly sure it wasn't a [Sam Harris](https://en.wikipedia.org/wiki/Sam_Harris) podcast specifically, though Sam Harris has certainly become the face of secular, non-religious meditation in recent years.
 
 I started with [Headspace](https://en.wikipedia.org/wiki/Headspace_(company)). It was this app with a calm male British voice. Back then it had quite a lot of recordings that it provided for free before it decided to pull tighter to make more revenue.
 
-Eventually I got "a scholarship" for his [Waking Up](https://en.wikipedia.org/wiki/Waking_Up_(app)) app. That's what Sam Harris calls the free trial he gives out to people who can't justify dropping 90€ on meditation recordings.
+For a while I used his [Waking Up](https://en.wikipedia.org/wiki/Waking_Up_(app)) app after getting "a scholarship". That's what Sam Harris calls the free trial he gives out to people who can't justify dropping 90€ on meditation recordings. I'm no longer pursuing that route, but it served its purpose at the time.
 
 ## What it actually does for me
 
@@ -47,3 +47,7 @@ The simple formatting made it easy to stick with. And in my most committed perio
 ## Keeping at it
 
 I'm not perfect about it... throughout tougher periods in a year I might dip out. But I know how much it helps me and I intend to keep the habit up because of it.
+
+## Resources
+
+If you're looking for a free, no-strings-attached way to get started, I'd strongly recommend [Medito](https://meditofoundation.org/). It's a non-profit, fully free meditation app with a solid library of guided sessions: no subscription tiers, no scholarship workarounds, just a clean and honest tool. The foundation's mission is to make meditation accessible to everyone regardless of income, which sits well with me. It covers the basics well and is a great entry point if you don't want to commit to a paid platform before you even know if it sticks.

@@ -180,13 +180,13 @@ declare module 'astro:content' {
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
-"denmark-2025.md": {
-	id: "denmark-2025.md";
+"denmark-2025.mdx": {
+	id: "denmark-2025.mdx";
   slug: "denmark-2025";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
-} & { render(): Render[".md"] };
+} & { render(): Render[".mdx"] };
 "friends-with-php-again.md": {
 	id: "friends-with-php-again.md";
   slug: "friends-with-php-again";
@@ -264,13 +264,13 @@ declare module 'astro:content' {
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
-"ring-fit-adventure.md": {
-	id: "ring-fit-adventure.md";
+"ring-fit-adventure.mdx": {
+	id: "ring-fit-adventure.mdx";
   slug: "ring-fit-adventure";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
-} & { render(): Render[".md"] };
+} & { render(): Render[".mdx"] };
 "saw-air-live.md": {
 	id: "saw-air-live.md";
   slug: "saw-air-live";
@@ -285,13 +285,13 @@ declare module 'astro:content' {
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
-"wordcamp-lisboa-2025.md": {
-	id: "wordcamp-lisboa-2025.md";
+"wordcamp-lisboa-2025.mdx": {
+	id: "wordcamp-lisboa-2025.mdx";
   slug: "wordcamp-lisboa-2025";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
-} & { render(): Render[".md"] };
+} & { render(): Render[".mdx"] };
 "yes-i-meditate.md": {
 	id: "yes-i-meditate.md";
   slug: "yes-i-meditate";
@@ -299,13 +299,13 @@ declare module 'astro:content' {
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
-"zavial.md": {
-	id: "zavial.md";
+"zavial.mdx": {
+	id: "zavial.mdx";
   slug: "zavial";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
-} & { render(): Render[".md"] };
+} & { render(): Render[".mdx"] };
 };
 
 	};

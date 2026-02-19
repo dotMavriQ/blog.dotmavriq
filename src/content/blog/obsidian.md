@@ -2,7 +2,7 @@
 title: "Obsidian (1/3)"
 pubDate: 2024-01-03
 excerpt: "My Obsidian setup and how it ties into everything else."
-tags: [productivity]
+tags: [Productivity]
 heroImage: "/blog/dotBlog_Obsidian.png"
 draft: false
 ---
