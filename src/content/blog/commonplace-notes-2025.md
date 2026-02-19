@@ -2,7 +2,7 @@
 title: "Commonplace Notes (2/3)"
 pubDate: 2024-01-10
 excerpt: "A look at my commonplace note-taking system heading into 2025."
-tags: [productivity]
+tags: [Productivity]
 heroImage: "/blog/dotBlog_CommonplaceNotes2025.png"
 draft: false
 ---

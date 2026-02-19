@@ -2,7 +2,7 @@
 title: "Cognitive Load Theory"
 pubDate: 2025-04-04
 excerpt: "Your brain is a battery. Plan accordingly."
-tags: [productivity]
+tags: [Productivity]
 heroImage: "/blog/dotBlog_CognitiveLoadTheory.png"
 draft: false
 ---

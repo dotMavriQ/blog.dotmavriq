@@ -14,7 +14,8 @@ export async function GET() {
       link: `/blog/${p.slug}/`,
       title: p.data.title,
       pubDate: p.data.pubDate,
-      description: p.data.excerpt
+      description: p.data.excerpt,
+      categories: p.data.tags ?? []
     }))
   });
 }

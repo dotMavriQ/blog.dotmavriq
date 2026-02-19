@@ -10,6 +10,7 @@ export async function GET() {
 
   const entries = posts.map(p => {
     const url = `${site}/blog/${p.slug}/`;
+    const categories = (p.data.tags ?? []).map((t: string) => `    <category term="${escapeXml(t)}" />`).join('\n');
     return `  <entry>
     <title>${escapeXml(p.data.title)}</title>
     <link href="${url}" rel="alternate" />
@@ -18,6 +19,7 @@ export async function GET() {
     <updated>${p.data.pubDate.toISOString()}</updated>
     <summary>${escapeXml(p.data.excerpt || '')}</summary>
     <author><name>dotMavriQ</name></author>
+${categories}
   </entry>`;
   }).join('\n');
 

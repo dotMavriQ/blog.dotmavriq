@@ -1,8 +1,8 @@
 ---
 title: "Got my DAP"
 pubDate: 2025-09-25
-excerpt: "Ditching Spotify for a dedicated music player and why it matters."
-tags: [Slice of Life, Consumer Rights]
+excerpt: "After many years of supporting Spotify, I am switching back to a regular audio player. Here are my personal motivations."
+tags: [Slice of Life, Switching To, Digital Freedom, Consumer Rights]
 heroImage: "/blog/dotBlog_DAP.png"
 draft: false
 ---

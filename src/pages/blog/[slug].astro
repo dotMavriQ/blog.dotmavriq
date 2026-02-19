@@ -26,6 +26,21 @@ const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 const wordCount = post.body?.split(/\s+/).length || 0;
 const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
+// JSON-LD structured data
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.excerpt || '',
+  datePublished: post.data.pubDate.toISOString(),
+  dateModified: post.data.pubDate.toISOString(),
+  author: { '@type': 'Person', name: 'dotMavriQ', url: 'https://blog.dotmavriq.life/about' },
+  publisher: { '@type': 'Person', name: 'dotMavriQ', url: 'https://blog.dotmavriq.life' },
+  url: `https://blog.dotmavriq.life/blog/${post.slug}/`,
+  ...(post.data.heroImage ? { image: `https://blog.dotmavriq.life${post.data.heroImage}` } : {}),
+  keywords: (post.data.tags ?? []).join(', '),
+};
+
 // Filter to h2/h3 for ToC
 const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
@@ -33,7 +48,9 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 <BaseLayout
   title={`${post.data.title} · dotMavriQ`}
   description={post.data.excerpt || `Blog post: ${post.data.title}`}
+  ogImage={post.data.heroImage}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
   <article class="relative z-30 max-w-6xl mx-auto px-5 md:px-8 py-10 md:py-14">
     <div class="lg:flex lg:gap-10">
       <!-- Main content -->
