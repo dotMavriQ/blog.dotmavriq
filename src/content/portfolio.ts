@@ -19,6 +19,7 @@ import bufloLogo from '../assets/portfolio/buflo.png';
 import lineawebLogo from '../assets/portfolio/lineaweb.png';
 import lineatuiLogo from '../assets/portfolio/lineatui.png';
 import tealScreenshot from '../assets/portfolio/tealscreenshot.png';
+import foodtrotterScreenshot from '../assets/portfolio/foodtrotter.png';
 export const portfolio: PortfolioItem[] = [
   {
     slug: 'habsiad',
@@ -99,6 +100,18 @@ export const portfolio: PortfolioItem[] = [
     tags: ['Lua', 'AI', 'Linear', 'Gemini', 'TUI'],
     links: [ { type: 'github', url: 'https://github.com/dotMavriQ/linea' } ],
     year: 2025
+  },
+  {
+    slug: 'foodtrotter',
+    title: 'Foodtrotter',
+    description: 'Spin-the-wheel app for discovering global cuisines. Pick a random country and get recipes, cultural context, and Wikipedia deep links.',
+    image: foodtrotterScreenshot,
+    tags: ['JavaScript', 'CSS', 'HTML'],
+    links: [
+      { type: 'github', url: 'https://github.com/dotMavriQ/foodtrotter' },
+      { type: 'live', url: 'https://dotmavriq.github.io/foodtrotter/' }
+    ],
+    year: 2024
   },
   {
     slug: 'buflo',

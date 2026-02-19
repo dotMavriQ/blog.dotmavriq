@@ -1,0 +1,383 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
+---
+
+<BaseLayout title="Blog · dotMavriQ" description="Articles, notes & deep dives by dotMavriQ">
+  <article class="relative z-30 max-w-6xl mx-auto px-5 md:px-8 py-10 md:py-14">
+    <header class="mb-10">
+      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-gruv-fg">Blog</h1>
+          <p class="mt-2 text-[15px] leading-relaxed max-w-2xl text-gruv-fg/85">Long-form writeups, deep dives, travel notes, and whatever else feels worth putting into words.</p>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div class="mt-6 relative max-w-md">
+        <label for="blog-search" class="sr-only">Search posts</label>
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gruv-muted pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          id="blog-search"
+          type="search"
+          autocomplete="off"
+          placeholder="Search posts..."
+          class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gruv-surface2/70 bg-[#1d2021] text-gruv-fg text-sm font-mono placeholder:text-gruv-muted/60 focus:outline-none focus:ring-2 focus:ring-gruv-yellow/50 focus:border-gruv-yellow/50"
+        />
+      </div>
+
+      <!-- Tag filter -->
+      <div class="mt-4 flex flex-wrap items-center gap-2 text-xs md:text-[11px] font-mono" id="tag-filter" data-js="tag-filter">
+        <button
+          type="button"
+          class="tag-btn px-3 py-1 rounded-md border font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50"
+          data-tag="__all__"
+          data-active="true"
+          aria-pressed="true"
+        >All</button>
+        {allTags.map((tag) => (
+          <button
+            type="button"
+            class="tag-btn px-3 py-1 rounded-md border font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50"
+            data-tag={tag}
+            data-active="false"
+            aria-pressed="false"
+          >{tag}</button>
+        ))}
+        <span id="filter-count" class="text-[11px] text-gruv-muted ml-1 hidden" aria-live="polite"></span>
+      </div>
+    </header>
+
+    <!-- Post grid -->
+    <section class="grid gap-6 md:gap-8 lg:grid-cols-2" id="blog-grid" data-js="blog-grid">
+      {posts.map((post) => (
+        <a
+          href={`/blog/${post.slug}/`}
+          class="group relative rounded-xl overflow-hidden border border-gruv-surface/70 bg-[#1d2021] shadow-md shadow-black/40 hover:shadow-lg hover:shadow-black/60 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50"
+          data-tags={post.data.tags.join(",")}
+          data-title={post.data.title.toLowerCase()}
+          data-excerpt={(post.data.excerpt || "").toLowerCase()}
+        >
+          {post.data.heroImage && (
+            <div class="relative aspect-video overflow-hidden bg-gruv-bg/40">
+              <img
+                src={post.data.heroImage}
+                alt={post.data.title}
+                width="768"
+                height="432"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.04] brightness-[0.97] contrast-[0.97] saturate-[0.92] blur-[0.4px]"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-[#1d2021] via-transparent to-transparent opacity-70 pointer-events-none"></div>
+            </div>
+          )}
+          <div class="flex-1 p-5 flex flex-col gap-3">
+            <h2 class="text-lg font-semibold tracking-tight text-gruv-fg group-hover:text-gruv-yellow transition-colors">{post.data.title}</h2>
+            <time class="text-[11px] font-mono text-gruv-muted" style="font-variant-numeric: tabular-nums;" datetime={post.data.pubDate.toISOString()}>
+              {new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(post.data.pubDate)}
+            </time>
+            {post.data.excerpt && (
+              <p class="text-sm leading-relaxed text-gruv-fg/90 line-clamp-3">{post.data.excerpt}</p>
+            )}
+            <div class="flex flex-wrap gap-1.5 mt-auto pt-2">
+              {post.data.tags.map((tag) => (
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#504945]/80 border border-[#bdae93]/30 text-[#ebdbb2] shadow-[0_0_0_1px_rgba(0,0,0,0.25)] tracking-wide">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </a>
+      ))}
+    </section>
+
+    <!-- Load More -->
+    <div class="mt-10 flex justify-center" id="load-more-wrap">
+      <button
+        id="load-more-btn"
+        type="button"
+        class="px-6 py-2.5 rounded-lg border border-gruv-surface2/70 bg-[#1d2021] text-gruv-fg text-sm font-mono hover:bg-gruv-surface hover:border-gruv-yellow/50 hover:text-gruv-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50 transition-colors"
+      >
+        Load more posts
+      </button>
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  const PAGE_SIZE = 6;
+  const searchInput = document.getElementById('blog-search') as HTMLInputElement;
+  const cards = document.querySelectorAll<HTMLElement>('#blog-grid > a');
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-js="tag-filter"] button');
+  const countEl = document.getElementById('filter-count');
+  const allBtn = document.querySelector<HTMLButtonElement>('[data-tag="__all__"]');
+  const loadMoreBtn = document.getElementById('load-more-btn');
+  const loadMoreWrap = document.getElementById('load-more-wrap');
+  const activeTags = new Set<string>();
+  let searchQuery = '';
+  let visibleLimit = PAGE_SIZE;
+  let debounceTimer: ReturnType<typeof setTimeout>;
+
+  function syncURL() {
+    const url = new URL(window.location.href);
+    if (activeTags.size) {
+      url.searchParams.set('tags', [...activeTags].join(','));
+    } else {
+      url.searchParams.delete('tags');
+    }
+    if (searchQuery) {
+      url.searchParams.set('q', searchQuery);
+    } else {
+      url.searchParams.delete('q');
+    }
+    history.replaceState(null, '', url);
+  }
+
+  // Fuzzy match: returns a score (0 = no match, higher = better).
+  // Handles typos (edit distance), substring matches, and out-of-order words.
+  function fuzzyScore(query: string, text: string): number {
+    if (!query || !text) return 0;
+    const q = query.toLowerCase();
+    const t = text.toLowerCase();
+
+    // Exact substring — best possible match
+    if (t.includes(q)) return 100;
+
+    // Word-level: every query word must fuzzy-match at least one text word
+    const qWords = q.split(/\s+/).filter(Boolean);
+    const tWords = t.split(/[\s,]+/).filter(Boolean);
+    if (qWords.length === 0) return 0;
+
+    let totalScore = 0;
+    for (const qw of qWords) {
+      let bestWord = 0;
+      for (const tw of tWords) {
+        // Exact word substring
+        if (tw.includes(qw)) { bestWord = Math.max(bestWord, 80); continue; }
+        if (tw.length >= 3 && qw.includes(tw)) { bestWord = Math.max(bestWord, 70); continue; }
+        // Starts-with bonus
+        if (tw.startsWith(qw.slice(0, 2))) {
+          const d = editDist(qw, tw);
+          const maxLen = Math.max(qw.length, tw.length);
+          if (d <= Math.ceil(maxLen * 0.45)) {
+            bestWord = Math.max(bestWord, 60 - d * 8);
+          }
+          continue;
+        }
+        // General edit distance (allow ~40% errors)
+        const d = editDist(qw, tw);
+        const maxLen = Math.max(qw.length, tw.length);
+        if (d <= Math.ceil(maxLen * 0.4)) {
+          bestWord = Math.max(bestWord, 50 - d * 10);
+        }
+      }
+      if (bestWord === 0) return 0; // one query word matched nothing — fail
+      totalScore += bestWord;
+    }
+    return totalScore / qWords.length;
+  }
+
+  // Levenshtein distance (bounded for perf — bails early past threshold)
+  function editDist(a: string, b: string): number {
+    const m = a.length, n = b.length;
+    if (Math.abs(m - n) > 3) return Math.max(m, n); // fast bail
+    const prev = Array.from({ length: n + 1 }, (_, i) => i);
+    const curr = new Array(n + 1);
+    for (let i = 1; i <= m; i++) {
+      curr[0] = i;
+      for (let j = 1; j <= n; j++) {
+        curr[j] = a[i - 1] === b[j - 1]
+          ? prev[j - 1]
+          : 1 + Math.min(prev[j - 1], prev[j], curr[j - 1]);
+      }
+      for (let j = 0; j <= n; j++) prev[j] = curr[j];
+    }
+    return prev[n];
+  }
+
+  function scoreCard(card: HTMLElement): number {
+    if (!searchQuery) return 1;
+    const title = card.dataset.title || '';
+    const excerpt = card.dataset.excerpt || '';
+    const tags = card.dataset.tags || '';
+    // Weight: title > tags > excerpt
+    const ts = fuzzyScore(searchQuery, title);
+    const gs = fuzzyScore(searchQuery, tags);
+    const es = fuzzyScore(searchQuery, excerpt);
+    return Math.max(ts * 1.0, gs * 0.85, es * 0.7);
+  }
+
+  function updateCards() {
+    const showAll = !activeTags.size;
+    let visible = 0;
+
+    // Score and sort
+    const scored: { el: HTMLElement; score: number }[] = [];
+    cards.forEach((c) => {
+      const tags = c.dataset.tags?.split(',') || [];
+      const tagMatch = showAll || [...activeTags].every((a) => tags.includes(a));
+      const score = tagMatch ? scoreCard(c) : 0;
+      scored.push({ el: c, score });
+    });
+
+    // Sort by score descending (only when searching)
+    if (searchQuery) {
+      scored.sort((a, b) => b.score - a.score);
+      const grid = document.getElementById('blog-grid');
+      if (grid) {
+        for (const { el } of scored) grid.appendChild(el);
+      }
+    }
+
+    // When searching or filtering, show all matches (no pagination limit)
+    const isFiltering = searchQuery || !showAll;
+    let matched = 0;
+
+    scored.forEach(({ el, score }) => {
+      if (score > 0) {
+        matched++;
+        if (isFiltering || matched <= visibleLimit) {
+          el.classList.remove('card-hidden');
+          visible++;
+        } else {
+          el.classList.add('card-hidden');
+        }
+      } else {
+        el.classList.add('card-hidden');
+      }
+    });
+
+    if (allBtn) {
+      allBtn.dataset.active = showAll ? 'true' : 'false';
+      allBtn.setAttribute('aria-pressed', String(showAll));
+    }
+
+    // Show/hide Load More button
+    if (loadMoreWrap) {
+      if (isFiltering || visibleLimit >= matched) {
+        loadMoreWrap.classList.add('hidden');
+      } else {
+        loadMoreWrap.classList.remove('hidden');
+      }
+    }
+
+    if (countEl) {
+      if (showAll && !searchQuery) {
+        countEl.classList.add('hidden');
+      } else {
+        countEl.textContent = `${visible} of ${matched}`;
+        countEl.classList.remove('hidden');
+      }
+    }
+
+    syncURL();
+  }
+
+  // Tag filter
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.tag;
+      if (!tag) return;
+
+      if (tag === '__all__') {
+        activeTags.clear();
+        buttons.forEach((b) => {
+          if (b.dataset.tag !== '__all__') {
+            b.dataset.active = 'false';
+            b.setAttribute('aria-pressed', 'false');
+          }
+        });
+        updateCards();
+        return;
+      }
+
+      if (activeTags.has(tag)) {
+        activeTags.delete(tag);
+        btn.dataset.active = 'false';
+        btn.setAttribute('aria-pressed', 'false');
+      } else {
+        activeTags.add(tag);
+        btn.dataset.active = 'true';
+        btn.setAttribute('aria-pressed', 'true');
+      }
+      updateCards();
+    });
+  });
+
+  // Search
+  searchInput?.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      searchQuery = searchInput.value.trim();
+      updateCards();
+    }, 150);
+  });
+
+  // Restore state from URL
+  const params = new URL(window.location.href).searchParams;
+  const initTags = params.get('tags');
+  if (initTags) {
+    for (const tag of initTags.split(',')) {
+      const btn = document.querySelector<HTMLButtonElement>(`[data-tag="${CSS.escape(tag)}"]`);
+      if (btn) {
+        activeTags.add(tag);
+        btn.dataset.active = 'true';
+        btn.setAttribute('aria-pressed', 'true');
+      }
+    }
+  }
+  const initQ = params.get('q');
+  if (initQ && searchInput) {
+    searchInput.value = initQ;
+    searchQuery = initQ;
+  }
+  updateCards();
+
+  // Load More
+  loadMoreBtn?.addEventListener('click', () => {
+    visibleLimit += PAGE_SIZE;
+    updateCards();
+  });
+</script>
+
+<style>
+  .tag-btn {
+    border-color: rgba(189,174,147,0.25);
+    background: rgba(60,56,54,0.7);
+    color: #ebdbb2;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.35);
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+  }
+  .tag-btn:hover {
+    background: rgba(80,73,69,0.8);
+    border-color: rgba(189,174,147,0.5);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.55);
+  }
+  .tag-btn[data-active="true"] {
+    background: #fabd2f;
+    border-color: #fabd2f;
+    color: #1d2021;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  }
+  .tag-btn[data-active="true"]:hover {
+    background: #d79921;
+    border-color: #d79921;
+  }
+  .card-hidden {
+    display: none !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #blog-grid a img {
+      transition: none !important;
+    }
+  }
+</style>
