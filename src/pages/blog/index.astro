@@ -17,6 +17,17 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
           <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-gruv-fg">Blog</h1>
           <p class="mt-2 text-[15px] leading-relaxed max-w-2xl text-gruv-fg/85">A Swede in Portugal writing about concerts, travel, tools he builds, and the quiet work of figuring things out.</p>
         </div>
+        <div class="flex flex-col sm:flex-row md:flex-col gap-2 shrink-0 mt-2 md:mt-0 md:items-end">
+          <div class="flex items-start gap-2.5 rounded-lg border border-gruv-surface2/60 bg-gruv-surface0/40 px-3.5 py-2.5 max-w-xs text-[12px] leading-snug text-gruv-fg/80">
+            <span class="text-base leading-none mt-px shrink-0">✍️</span>
+            <span>Every word here is written by <strong class="text-gruv-fg font-semibold">Jonatan Jansson</strong>, a human being. No AI ghostwriting.</span>
+          </div>
+          <a href="https://social.dotmavriq.life/@dotmavriq" target="_blank" rel="noopener noreferrer"
+            class="flex items-start gap-2.5 rounded-lg border border-gruv-surface2/60 bg-gruv-surface0/40 px-3.5 py-2.5 max-w-xs text-[12px] leading-snug text-gruv-fg/80 hover:border-gruv-yellow/50 hover:bg-gruv-surface1/40 transition-colors">
+            <span class="text-base leading-none mt-px shrink-0">🐘</span>
+            <span>I post more often on my social feed. <strong class="text-gruv-fg font-semibold">Follow me on Mastodon</strong> if you don't want to miss anything.</span>
+          </a>
+        </div>
       </div>
 
       <!-- Search -->
