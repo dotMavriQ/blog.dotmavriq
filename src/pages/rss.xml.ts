@@ -2,11 +2,13 @@ import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 
 export async function GET() {
-  let posts: any[] = [];
-  try { posts = await getCollection('blog'); } catch { posts = []; }
+  const posts = (await getCollection('blog'))
+    .filter(p => !p.data.draft)
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
   return rss({
     title: 'dotMavriQ Blog',
-    description: 'Recent posts',
+    description: 'Articles, notes & deep dives by dotMavriQ',
     site: 'https://blog.dotmavriq.life',
     items: posts.map(p => ({
       link: `/blog/${p.slug}/`,

@@ -42,12 +42,13 @@ const canonicalURL = new URL(pathname, 'https://blog.dotmavriq.life').href;
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content="/logo.png" />
     <link rel="alternate" type="application/rss+xml" href="/rss.xml" />
+    <link rel="alternate" type="application/atom+xml" href="/atom.xml" />
     <meta name="theme-color" content="#1d2021" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- 2025 font pairing: Inter (UI/body) + JetBrains Mono (code/meta) — loaded async to unblock render -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;0,7..72,700;1,7..72,400;1,7..72,500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;0,7..72,700;1,7..72,400;1,7..72,500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   {/* Cal.com embed loads lazily on button click — no preconnect needed */}
   <!-- GoatCounter -->
   <script data-goatcounter="https://dotmavriq.goatcounter.com/count" async src="//gc.zgo.at/count.js" is:inline></script>
@@ -64,13 +65,13 @@ const canonicalURL = new URL(pathname, 'https://blog.dotmavriq.life').href;
     )}
     <ShakeDetector />
     <header class="relative z-40 bg-[#121314]/95 backdrop-blur-sm border-b border-gruv-surface2/70 shadow-lg shadow-black/30">
-      <nav aria-label="Primary" class="max-w-6xl mx-auto px-5 lg:px-6 py-3 sm:py-4 flex items-center justify-between gap-3 text-[15px] tracking-tight">
+      <nav aria-label="Primary" class="max-w-6xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between gap-3 text-[15px] tracking-tight">
         <a href="/" aria-label="Home" class="group flex items-center gap-3 text-[20px] sm:text-[22px] font-extrabold font-heading text-gruv-yellow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/60 rounded transition-colors">
           <img src={siteLogo.src} width={56} height={56} alt="dotMavriQ logo" class="rounded-sm transition-transform duration-300 group-hover:scale-105" loading="eager" fetchpriority="high" decoding="async" />
           <span class="leading-none">blog.dotMavriQ</span>
         </a>
         <!-- Desktop nav -->
-        <div class="hidden md:flex flex-wrap items-center gap-3 ml-auto">
+        <div class="hidden md:flex items-center gap-3 ml-auto">
           <a class:list={["nav-chip","nav-orange", isActive('/about') && 'is-active']} aria-current={isActive('/about') ? 'page' : undefined} href="/about">About</a>
           <a class:list={["nav-chip","nav-green", isActive('/cv') && 'is-active']} aria-current={isActive('/cv') ? 'page' : undefined} href="/cv">CV</a>
           <a class:list={["nav-chip","nav-yellow", isActive('/portfolio') && 'is-active']} aria-current={isActive('/portfolio') ? 'page' : undefined} href="/portfolio">Portfolio</a>
@@ -85,7 +86,7 @@ const canonicalURL = new URL(pathname, 'https://blog.dotmavriq.life').href;
         </button>
       </nav>
       <!-- Mobile menu panel -->
-      <div id="mobile-menu" class="md:hidden max-w-6xl mx-auto px-5 lg:px-6 pb-3 hidden" role="region" aria-label="Mobile">
+      <div id="mobile-menu" class="md:hidden max-w-6xl mx-auto px-5 md:px-8 pb-3 hidden" role="region" aria-label="Mobile">
         <div class="flex flex-col gap-2">
           <a class:list={["nav-chip","nav-orange","w-full", isActive('/about') && 'is-active']} aria-current={isActive('/about') ? 'page' : undefined} href="/about">About</a>
           <a class:list={["nav-chip","nav-green","w-full", isActive('/cv') && 'is-active']} aria-current={isActive('/cv') ? 'page' : undefined} href="/cv">CV</a>
@@ -111,12 +112,14 @@ const canonicalURL = new URL(pathname, 'https://blog.dotmavriq.life').href;
 </html>
 <style>
   :root { --font-ui:'Inter',system-ui,sans-serif; --font-mono:'JetBrains Mono','Fira Code',monospace; }
+  html { scrollbar-width: none; }
+  html::-webkit-scrollbar { display: none; }
   .font-heading{ font-family:var(--font-ui); letter-spacing:-0.5px; }
   body{ font-family:var(--font-ui); }
   code,pre,.font-mono{ font-family:var(--font-mono); }
-  .nav-chip { @apply relative px-3 py-2 rounded-md font-medium text-gruv-fg/90 bg-[#1c1d1e] border border-[#242628] shadow-sm hover:shadow-md focus-visible:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/40; transition: background-color .15s ease, color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
-  .nav-chip:hover,.nav-chip:focus-visible { @apply border-gruv-surface2 translate-y-[-1px]; }
-  .nav-chip.is-active { @apply bg-gruv-yellow text-gruv-bg border-gruv-yellow shadow-md; }
+  .nav-chip { @apply relative px-3 py-2 rounded-md font-medium text-gruv-fg/90 bg-[#1c1d1e] border border-[#242628] shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/40; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .nav-chip:hover,.nav-chip:focus-visible { @apply border-gruv-surface2; }
+  .nav-chip.is-active { @apply bg-gruv-yellow text-gruv-bg border-gruv-yellow; }
   .nav-chip.is-active.nav-blue { @apply bg-gruv-blue; }
   .nav-chip.is-active.nav-green { @apply bg-gruv-green; }
   .nav-chip.is-active.nav-orange { @apply bg-gruv-orange; }

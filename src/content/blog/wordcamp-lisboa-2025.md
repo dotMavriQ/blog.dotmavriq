@@ -1,0 +1,36 @@
+---
+title: "WordCamp Lisboa 2025"
+pubDate: 2025-05-16
+excerpt: "My first WordCamp. Merch, talks, and good people."
+tags: [Slice of Life, WordPress]
+heroImage: "/blog/dotBlog_WordCampLisboa2025.png"
+draft: false
+---
+
+I touched my first [WordPress](https://en.wikipedia.org/wiki/WordPress) page before 2008 and I've stumbled upon WordPress sites at every single place I've worked since. It's the thing that just keeps showing up no matter what direction my career takes. Leaning my CV to highlight just how much WordPress I'd actually been doing is what got me my first job here in Portugal. At this point I must be close to having worked with it for a decade.
+
+So when [WordCamp Lisboa 2025](https://lisboa.wordcamp.org/2025/) was announced right here in my city, there was no excuse left.
+
+## Day one
+
+In typical Jonatan fashion I didn't really prep that much for day one. I just showed up.
+
+But it was cool either way. I spent most of the time getting a feel for the grounds, figuring out where things were, grabbing some merch. I watched people doing community contributions and workshopping, all that good stuff. It was enough to get a sense of the vibe and I left feeling stoked about coming back for day two.
+
+When I got home I wolfed down an [Uber Eats](https://en.wikipedia.org/wiki/Uber_Eats) order from one of my favorite nearby places, Nicolau, and then spent some time with [Dune](https://en.wikipedia.org/wiki/Dune_(novel)) which I had just started reading for the first time in my life. Felt inspired to actually try contributing to the WordPress community myself. The energy at the event was that kind of contagious.
+
+## Day two
+
+Day two was the real one. I ended up hanging out with the people over at [WidgiLabs](https://widgilabs.com/). Raul, Bruno, Nuno and a bunch of others made me feel right at home, which is not a small thing when you're walking into a community event alone for the first time.
+
+I attended a mix of English and Portuguese presentations. The Portuguese ones were a good exercise for me too, being that I'm still improving my language skills. The talks ranged from technical deep dives to community building and everything in between.
+
+## The merch situation
+
+I got tons of merch. Stickers, pins, bags. The WordCamp merch game is strong and I was not above hoarding.
+
+## Why it mattered
+
+There's something about being in a room with people who care about the same tools you use every day. I've spent years working with WordPress in various capacities and it can feel like a solitary thing when you're just sitting at your desk pushing code. Meeting people who build plugins, design themes, run agencies, or just blog with it was a good reminder that there's a whole community behind the software.
+
+Probably not my last WordCamp is all I can say.

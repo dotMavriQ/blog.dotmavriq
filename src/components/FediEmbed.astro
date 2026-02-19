@@ -1,0 +1,431 @@
+---
+interface Props {
+  url: string;
+}
+
+const { url } = Astro.props;
+
+// Extract instance origin and post ID from a Pleroma/Mastodon post URL
+const parsed = new URL(url);
+const origin = parsed.origin;
+const postId = parsed.pathname.split("/").pop()!;
+
+// Fetch the post via public Mastodon-compatible API at build time
+const res = await fetch(`${origin}/api/v1/statuses/${postId}`);
+if (!res.ok) {
+  throw new Error(`FediEmbed: failed to fetch ${url} — ${res.status}`);
+}
+const post = await res.json();
+
+const displayName: string = post.account.display_name || post.account.acct;
+const handle: string = `@${post.account.acct}@${parsed.hostname}`;
+const avatarUrl: string = post.account.avatar;
+const createdAt: string = post.created_at;
+const postUrl: string = post.url;
+
+// Strip HTML to plain text, preserving line breaks
+const textContent: string = (post.content as string)
+  .replace(/<br\s*\/?>/gi, "\n")
+  .replace(/<[^>]*>/g, "")
+  .replace(/&#39;/g, "'")
+  .replace(/&quot;/g, '"')
+  .replace(/&amp;/g, "&")
+  .replace(/&lt;/g, "<")
+  .replace(/&gt;/g, ">");
+
+const fullText = textContent.split("\n").filter((l: string) => l.trim() !== "").join("\n");
+const truncated = fullText.length > 500;
+const displayText = truncated ? fullText.slice(0, 500).replace(/\s+\S*$/, "") : fullText;
+const lines = displayText.split("\n");
+
+interface MediaAttachment {
+  type: string;
+  preview_url: string;
+  url: string;
+  description?: string;
+}
+
+const media: MediaAttachment[] = (post.media_attachments || []).filter(
+  (m: MediaAttachment) => m.type === "image"
+);
+
+const dateStr = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+}).format(new Date(createdAt));
+---
+
+<details class="fedi-embed">
+  <summary class="fedi-embed-toggle">
+    <svg class="fedi-embed-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="fedi-embed-toggle-text">From the social feed</span>
+    <span class="fedi-embed-toggle-handle">{handle}</span>
+  </summary>
+
+  <div class="fedi-embed-card">
+    <div class="fedi-embed-header">
+      <img
+        src={avatarUrl}
+        alt={`${displayName}'s avatar`}
+        class="fedi-embed-avatar"
+        width="40"
+        height="40"
+        loading="lazy"
+      />
+      <div class="fedi-embed-identity">
+        <span class="fedi-embed-name">{displayName}</span>
+        <span class="fedi-embed-handle">{handle}</span>
+      </div>
+    </div>
+
+    <div class="fedi-embed-body">
+      {lines.map((line: string) => <p>{line}</p>)}
+      {truncated && (
+        <a href={postUrl} target="_blank" rel="noopener noreferrer" class="fedi-embed-readmore">
+          …Read entire post ↗
+        </a>
+      )}
+    </div>
+
+    {media.length > 0 && (
+      <div class={`fedi-embed-media fedi-embed-media-${Math.min(media.length, 4)}`}>
+        {media.map((m: MediaAttachment, i: number) => (
+          <button
+            type="button"
+            class="fedi-lightbox-trigger"
+            data-full={m.url}
+            data-alt={m.description || "Attached image"}
+            data-gallery={postId}
+            data-index={i}
+          >
+            <img
+              src={m.preview_url}
+              alt={m.description || "Attached image"}
+              loading="lazy"
+            />
+          </button>
+        ))}
+      </div>
+    )}
+
+    <div class="fedi-embed-footer">
+      <a href={postUrl} target="_blank" rel="noopener noreferrer">
+        {dateStr} · View on Fediverse ↗
+      </a>
+    </div>
+  </div>
+</details>
+
+<style>
+  /* ── Collapsible wrapper ── */
+  .fedi-embed {
+    margin: 1.5em 0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .fedi-embed-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    background: #282828;
+    color: #ebdbb2;
+    border: 1px solid #3c3836;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: background 0.15s ease;
+  }
+
+  .fedi-embed-toggle::-webkit-details-marker {
+    display: none;
+  }
+
+  .fedi-embed-toggle:hover {
+    background: #32302f;
+  }
+
+  .fedi-embed[open] .fedi-embed-toggle {
+    border-radius: 0.5rem 0.5rem 0 0;
+    border-bottom-color: #504945;
+  }
+
+  .fedi-embed-chevron {
+    flex-shrink: 0;
+    color: #a89984;
+    transition: transform 0.2s ease;
+  }
+
+  .fedi-embed[open] .fedi-embed-chevron {
+    transform: rotate(180deg);
+  }
+
+  .fedi-embed-toggle-text {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ebdbb2;
+  }
+
+  .fedi-embed-toggle-handle {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.7rem;
+    color: #928374;
+    margin-left: auto;
+  }
+
+  /* ── Expanded card ── */
+  .fedi-embed-card {
+    background: #f2e5bc;
+    border: 1px solid #d5c4a1;
+    border-top: none;
+    border-radius: 0 0 0.5rem 0.5rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .fedi-embed-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .fedi-embed-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: none;
+    margin: 0;
+  }
+
+  .fedi-embed-identity {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .fedi-embed-name {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #282828;
+    line-height: 1.3;
+  }
+
+  .fedi-embed-handle {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.75rem;
+    color: #928374;
+    line-height: 1.3;
+  }
+
+  .fedi-embed-body {
+    font-family: 'Literata', 'Charter', 'Georgia', serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #3c3836;
+  }
+
+  .fedi-embed-body p {
+    margin-bottom: 0.5em;
+  }
+
+  .fedi-embed-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .fedi-embed-readmore {
+    display: inline-block;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: #076678;
+    text-decoration: none;
+    margin-top: 0.25em;
+    transition: color 0.15s ease;
+  }
+
+  .fedi-embed-readmore:hover {
+    color: #b57614;
+  }
+
+  /* ── Media grid ── */
+  .fedi-embed-media {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .fedi-embed-media-1 { grid-template-columns: 1fr; }
+  .fedi-embed-media-2 { grid-template-columns: 1fr 1fr; }
+  .fedi-embed-media-3,
+  .fedi-embed-media-4 { grid-template-columns: 1fr 1fr; }
+
+  .fedi-lightbox-trigger {
+    display: block;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    line-height: 0;
+    border-radius: 0.375rem;
+    overflow: hidden;
+  }
+
+  .fedi-lightbox-trigger img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 16 / 10;
+    margin: 0;
+    box-shadow: none;
+    transition: opacity 0.15s ease;
+    display: block;
+  }
+
+  .fedi-lightbox-trigger:hover img {
+    opacity: 0.85;
+  }
+
+  /* ── Footer ── */
+  .fedi-embed-footer {
+    margin-top: 0.75rem;
+    padding-top: 0.625rem;
+    border-top: 1px solid #d5c4a1;
+  }
+
+  .fedi-embed-footer a {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.75rem;
+    color: #928374;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .fedi-embed-footer a:hover {
+    color: #076678;
+  }
+</style>
+
+<script>
+  // Lightbox — initialises once even with multiple FediEmbed instances
+  if (!document.getElementById('fedi-lightbox')) {
+    const overlay = document.createElement('div');
+    overlay.id = 'fedi-lightbox';
+    Object.assign(overlay.style, {
+      position: 'fixed', inset: '0', zIndex: '9999',
+      background: 'rgba(0,0,0,0.92)', display: 'none',
+      alignItems: 'center', justifyContent: 'center',
+      flexDirection: 'column', cursor: 'pointer',
+    });
+
+    const img = document.createElement('img');
+    Object.assign(img.style, {
+      maxWidth: '92vw', maxHeight: '85vh', objectFit: 'contain',
+      borderRadius: '0.375rem', cursor: 'default',
+    });
+
+    const close = document.createElement('button');
+    close.textContent = '✕';
+    close.setAttribute('aria-label', 'Close lightbox');
+    Object.assign(close.style, {
+      position: 'absolute', top: '1rem', right: '1.25rem',
+      background: 'none', border: 'none', color: '#ebdbb2',
+      fontSize: '1.5rem', cursor: 'pointer', lineHeight: '1',
+      fontFamily: 'Inter, system-ui, sans-serif', fontWeight: '300',
+      padding: '0.5rem', opacity: '0.8',
+    });
+    close.addEventListener('mouseenter', () => close.style.opacity = '1');
+    close.addEventListener('mouseleave', () => close.style.opacity = '0.8');
+
+    const counter = document.createElement('div');
+    Object.assign(counter.style, {
+      position: 'absolute', bottom: '1rem',
+      color: '#a89984', fontFamily: 'JetBrains Mono, monospace',
+      fontSize: '0.75rem', userSelect: 'none',
+    });
+
+    const navBtn = (label: string, left: boolean) => {
+      const btn = document.createElement('button');
+      btn.textContent = left ? '‹' : '›';
+      btn.setAttribute('aria-label', label);
+      Object.assign(btn.style, {
+        position: 'absolute', top: '50%', transform: 'translateY(-50%)',
+        [left ? 'left' : 'right']: '0.75rem',
+        background: 'none', border: 'none', color: '#ebdbb2',
+        fontSize: '2.5rem', cursor: 'pointer', lineHeight: '1',
+        fontFamily: 'Inter, system-ui, sans-serif', fontWeight: '300',
+        padding: '0.75rem', opacity: '0.6',
+      });
+      btn.addEventListener('mouseenter', () => btn.style.opacity = '1');
+      btn.addEventListener('mouseleave', () => btn.style.opacity = '0.6');
+      return btn;
+    };
+    const prevBtn = navBtn('Previous image', true);
+    const nextBtn = navBtn('Next image', false);
+
+    overlay.append(close, img, prevBtn, nextBtn, counter);
+    document.body.appendChild(overlay);
+
+    let gallery: HTMLButtonElement[] = [];
+    let currentIdx = 0;
+
+    function show(idx: number) {
+      currentIdx = idx;
+      const btn = gallery[idx];
+      img.src = btn.dataset.full || '';
+      img.alt = btn.dataset.alt || '';
+      counter.textContent = gallery.length > 1 ? `${idx + 1} / ${gallery.length}` : '';
+      prevBtn.style.display = gallery.length > 1 ? '' : 'none';
+      nextBtn.style.display = gallery.length > 1 ? '' : 'none';
+      overlay.style.display = 'flex';
+      document.documentElement.style.overflow = 'hidden';
+    }
+
+    function hide() {
+      overlay.style.display = 'none';
+      document.documentElement.style.overflow = '';
+      img.src = '';
+    }
+
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      show((currentIdx - 1 + gallery.length) % gallery.length);
+    });
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      show((currentIdx + 1) % gallery.length);
+    });
+    close.addEventListener('click', hide);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) hide(); });
+    img.addEventListener('click', (e) => e.stopPropagation());
+
+    document.addEventListener('keydown', (e) => {
+      if (overlay.style.display === 'none') return;
+      if (e.key === 'Escape') hide();
+      if (e.key === 'ArrowLeft') show((currentIdx - 1 + gallery.length) % gallery.length);
+      if (e.key === 'ArrowRight') show((currentIdx + 1) % gallery.length);
+    });
+
+    // Delegate clicks from any trigger
+    document.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.fedi-lightbox-trigger');
+      if (!btn) return;
+      const galleryId = btn.dataset.gallery;
+      gallery = Array.from(document.querySelectorAll<HTMLButtonElement>(
+        `.fedi-lightbox-trigger[data-gallery="${galleryId}"]`
+      ));
+      show(Number(btn.dataset.index) || 0);
+    });
+  }
+</script>

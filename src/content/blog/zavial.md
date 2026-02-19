@@ -1,0 +1,58 @@
+---
+title: "Zavial: Part Two"
+pubDate: 2025-06-14
+excerpt: "Birthday in the Algarve. Fish, books, and Moroccan radio."
+tags: [Slice of Life]
+heroImage: "/blog/dotBlog_Zavial.png"
+draft: false
+---
+
+Margarida and her family had planned to celebrate my 33rd birthday in lovely [Zavial](https://en.wikipedia.org/wiki/Praia_da_Zavial), down in the [Algarve](https://en.wikipedia.org/wiki/Algarve) near [Vila do Bispo](https://en.wikipedia.org/wiki/Vila_do_Bispo). This is the second time we go. Hence the "pt 2."
+
+## Prep chaos
+
+The days before were a scramble. [Dia de Portugal](https://en.wikipedia.org/wiki/Portugal_Day) gave me a mellow holiday that I spent coding [Astro](https://en.wikipedia.org/wiki/Astro_(web_framework)), eating grilled salmon and a cheese platter. The next day I had two errands to knock out before leaving: grab a MiFi dongle from [CascaiShopping](https://en.wikipedia.org/wiki/CascaiShopping) and get a haircut. Margarida coaxed me into the new barbershop there. Osmar cut me and dare I say he did an excellent job. Might even go for the beard care next time.
+
+I was also sweating over whether my shipment of [snus](https://en.wikipedia.org/wiki/Snus) would arrive before the 13th, because if not I'd have thrown 90 euros at something that would get sent back while I was in the Algarve. It arrived. Crisis averted.
+
+## Getting there
+
+Margarida and her family are an adventurous bunch. We packed until 2 in the morning and at 05:00 we were already out of bed to beat traffic. We brought poor little Matilde the cat this time as she hasn't been feeling too well. She meowed a lot at first since she's not used to being transported, but she eased into it towards the end.
+
+We stopped for a quick breakfast around 09:00. Margarida and I went with the gluten-free [gila melon](https://en.wikipedia.org/wiki/Cucurbita_ficifolia) cake, which is a Portuguese thing you should try if you haven't.
+
+By 11:11 we greeted Hermenegildo and Isilda, our hosts. If anyone ever wants to visit Zavial, I highly recommend renting rooms from them. Genuinely kind people.
+
+## Day one
+
+I immediately felt like napping for an undisclosed amount of time, but the team had other plans. We went straight to a nearby restaurant where I inhaled a burger and two bottles of Why Not Organic Soda with peach and ginger flavor. Love that stuff.
+
+After that I excused myself and took a nap until 18:00. Then I set up the [Vodafone](https://en.wikipedia.org/wiki/Vodafone_Portugal) MiFi dongle I'd bought specifically for this trip so I could work remotely without hunting for WiFi in a town that probably doesn't have a library. Web dev that does sysadmin things needs more than 40 gigs of mobile data, so the MiFi was the move.
+
+That evening me and Margarida played some [Ring Fit Adventure](https://en.wikipedia.org/wiki/Ring_Fit_Adventure) (yep, we brought it), showered, talked, laughed at [Moroccan FM radio](https://en.wikipedia.org/wiki/Radio_in_Morocco) bleeding through from across the strait, and read books until bed. The Algarve is close enough to North Africa that you pick up their stations. It's a fun detail.
+
+## Birthday
+
+June 14th. I turned 33.
+
+We celebrated with Carlos and Xana and I asked that we keep it mellow. We popped a bottle of [Moët](https://en.wikipedia.org/wiki/Mo%C3%ABt_%26_Chandon), courtesy of Margarida, and ended up falling asleep on the sun chairs for a moment. Not a bad way to spend a birthday.
+
+## The food
+
+We grilled a lot of fish throughout the stay. [Dourada](https://en.wikipedia.org/wiki/Gilt-head_bream), [robalo](https://en.wikipedia.org/wiki/European_bass), [pregado](https://en.wikipedia.org/wiki/Turbot). We also grilled some great pork. Ate at our favorite nearby restaurant, [A Sagres](https://www.asagres.pt/), twice.
+
+We took a short trip to [Lagos](https://en.wikipedia.org/wiki/Lagos,_Portugal) to buy some traditional sweets and look at the bay. I had a double cherry [Magnum](https://en.wikipedia.org/wiki/Magnum_(ice_cream)). No regrets.
+
+## The vibe
+
+A lot of this trip was just... being there. Catching sun. Having drinks. Reading [Dune](https://en.wikipedia.org/wiki/Dune_(novel)) until my eyes hurt. The little bar nearby with the almond-flavored drinks. Swimming in the ocean. Sitting on the rocks. Looking at the cliffs.
+
+There's not a lot of phone signal down there and that's part of the charm. You slow down because there's nothing to scroll. The days stretch out. You eat when you're hungry, nap when you're tired, and the biggest decision is whether to go to the beach before or after lunch.
+
+## Coming home
+
+The day before we left, me and Margarida went for a walk with the camera to take some pictures of the area. A proper goodbye to Zavial until next time.
+
+Then we drove home, went to [IKEA](https://en.wikipedia.org/wiki/IKEA) in Alfragide, burned an insane amount of money, and I had [daimtårta](https://en.wikipedia.org/wiki/Daim_(chocolate)). Bought Dumle and potatischips and some kitchen stuff. We were there for something like four hours.
+
+Been over two years since I touched down on Swedish soil at that point. Starting to miss it, especially the people. But Zavial is a pretty good consolation prize.
