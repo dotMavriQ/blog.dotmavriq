@@ -62,6 +62,7 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
         <a
           href={`/blog/${post.slug}/`}
           class="group relative rounded-xl overflow-hidden border border-gruv-surface/70 bg-[#1d2021] shadow-md shadow-black/40 hover:shadow-lg hover:shadow-black/60 flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gruv-yellow/50"
+          data-slug={post.slug}
           data-tags={post.data.tags.join(",")}
           data-title={post.data.title.toLowerCase()}
           data-excerpt={(post.data.excerpt || "").toLowerCase()}
@@ -114,6 +115,16 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
 </BaseLayout>
 
 <script>
+  // ─── Types ───────────────────────────────────────────────────────────────
+  interface PostEntry {
+    slug: string;
+    title: string;
+    excerpt: string;
+    tags: string[];
+    body: string;
+  }
+
+  // ─── State ───────────────────────────────────────────────────────────────
   const PAGE_SIZE = 6;
   const searchInput = document.getElementById('blog-search') as HTMLInputElement;
   const cards = document.querySelectorAll<HTMLElement>('#blog-grid > a');
@@ -127,226 +138,220 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
   let visibleLimit = PAGE_SIZE;
   let debounceTimer: ReturnType<typeof setTimeout>;
 
+  // Full-content search index — loaded lazily on first keystroke
+  let index: PostEntry[] | null = null;
+  let indexBySlug: Map<string, PostEntry> | null = null;
+  let indexLoading = false;
+
+  async function loadIndex() {
+    if (index || indexLoading) return;
+    indexLoading = true;
+    try {
+      const res = await fetch('/search-index.json');
+      index = await res.json() as PostEntry[];
+      indexBySlug = new Map(index.map(e => [e.slug, e]));
+    } catch { /* silently fall back to card-data-only search */ }
+    indexLoading = false;
+  }
+
+  // ─── Helpers ─────────────────────────────────────────────────────────────
   function syncURL() {
     const url = new URL(window.location.href);
-    if (activeTags.size) {
-      url.searchParams.set('tags', [...activeTags].join(','));
-    } else {
-      url.searchParams.delete('tags');
-    }
-    if (searchQuery) {
-      url.searchParams.set('q', searchQuery);
-    } else {
-      url.searchParams.delete('q');
-    }
+    activeTags.size ? url.searchParams.set('tags', [...activeTags].join(',')) : url.searchParams.delete('tags');
+    searchQuery ? url.searchParams.set('q', searchQuery) : url.searchParams.delete('q');
     history.replaceState(null, '', url);
   }
 
-  // Fuzzy match: returns a score (0 = no match, higher = better).
-  // Handles typos (edit distance), substring matches, and out-of-order words.
-  function fuzzyScore(query: string, text: string): number {
-    if (!query || !text) return 0;
-    const q = query.toLowerCase();
-    const t = text.toLowerCase();
-
-    // Exact substring — best possible match
-    if (t.includes(q)) return 100;
-
-    // Word-level: every query word must fuzzy-match at least one text word
-    const qWords = q.split(/\s+/).filter(Boolean);
-    const tWords = t.split(/[\s,]+/).filter(Boolean);
-    if (qWords.length === 0) return 0;
-
-    let totalScore = 0;
-    for (const qw of qWords) {
-      let bestWord = 0;
-      for (const tw of tWords) {
-        // Exact word substring
-        if (tw.includes(qw)) { bestWord = Math.max(bestWord, 80); continue; }
-        if (tw.length >= 3 && qw.includes(tw)) { bestWord = Math.max(bestWord, 70); continue; }
-        // Starts-with bonus
-        if (tw.startsWith(qw.slice(0, 2))) {
-          const d = editDist(qw, tw);
-          const maxLen = Math.max(qw.length, tw.length);
-          if (d <= Math.ceil(maxLen * 0.45)) {
-            bestWord = Math.max(bestWord, 60 - d * 8);
-          }
-          continue;
-        }
-        // General edit distance (allow ~40% errors)
-        const d = editDist(qw, tw);
-        const maxLen = Math.max(qw.length, tw.length);
-        if (d <= Math.ceil(maxLen * 0.4)) {
-          bestWord = Math.max(bestWord, 50 - d * 10);
-        }
-      }
-      if (bestWord === 0) return 0; // one query word matched nothing — fail
-      totalScore += bestWord;
-    }
-    return totalScore / qWords.length;
-  }
-
-  // Levenshtein distance (bounded for perf — bails early past threshold)
-  function editDist(a: string, b: string): number {
-    const m = a.length, n = b.length;
-    if (Math.abs(m - n) > 3) return Math.max(m, n); // fast bail
-    const prev = Array.from({ length: n + 1 }, (_, i) => i);
-    const curr = new Array(n + 1);
-    for (let i = 1; i <= m; i++) {
+  // Levenshtein distance, bails early past `limit`
+  function editDist(a: string, b: string, limit: number): number {
+    if (Math.abs(a.length - b.length) > limit) return limit + 1;
+    const prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+    const curr = new Array(b.length + 1);
+    for (let i = 1; i <= a.length; i++) {
       curr[0] = i;
-      for (let j = 1; j <= n; j++) {
+      for (let j = 1; j <= b.length; j++) {
         curr[j] = a[i - 1] === b[j - 1]
           ? prev[j - 1]
           : 1 + Math.min(prev[j - 1], prev[j], curr[j - 1]);
       }
-      for (let j = 0; j <= n; j++) prev[j] = curr[j];
+      for (let j = 0; j <= b.length; j++) prev[j] = curr[j];
     }
-    return prev[n];
+    return prev[b.length];
   }
 
+  // Max fuzzy edits per query-word length (strict — prevents false positives)
+  function maxEdits(len: number): number {
+    if (len <= 4) return 0;  // short words: substring only
+    if (len <= 7) return 1;  // e.g. "Trine" — 1 edit max
+    if (len <= 11) return 2;
+    return 3;
+  }
+
+  // Score a query word against all words in a text field.
+  // Returns 0 if no match, otherwise a positive score.
+  function scoreWord(qw: string, textWords: string[]): number {
+    let best = 0;
+    const me = maxEdits(qw.length);
+    for (const tw of textWords) {
+      if (tw === qw)                { best = Math.max(best, 100); break; } // exact
+      if (tw.includes(qw))          { best = Math.max(best, 85); continue; } // substring match
+      if (me > 0) {
+        const d = editDist(qw, tw, me);
+        if (d <= me) best = Math.max(best, 70 - d * 15);
+      }
+    }
+    return best;
+  }
+
+  // Score all query words against a field; returns 0 if any word misses.
+  function scoreField(qWords: string[], fieldWords: string[]): number {
+    if (!fieldWords.length) return 0;
+    let total = 0;
+    for (const qw of qWords) {
+      const s = scoreWord(qw, fieldWords);
+      if (s === 0) return 0; // all query words must hit
+      total += s;
+    }
+    return total / qWords.length;
+  }
+
+  function tokenize(text: string): string[] {
+    return text.toLowerCase().split(/[\s,.:;!?'"_\-/\\()\[\]{}|]+/).filter(w => w.length > 0);
+  }
+
+  // Full scoring: title > tags > excerpt > body
+  // Uses index body when available, card data-attrs as fallback.
   function scoreCard(card: HTMLElement): number {
     if (!searchQuery) return 1;
-    const title = card.dataset.title || '';
-    const excerpt = card.dataset.excerpt || '';
-    const tags = card.dataset.tags || '';
-    // Weight: title > tags > excerpt
-    const ts = fuzzyScore(searchQuery, title);
-    const gs = fuzzyScore(searchQuery, tags);
-    const es = fuzzyScore(searchQuery, excerpt);
-    return Math.max(ts * 1.0, gs * 0.85, es * 0.7);
+    const q = searchQuery.toLowerCase();
+    const qWords = tokenize(q);
+    if (!qWords.length) return 1;
+
+    const slug = card.dataset.slug || '';
+    const entry = indexBySlug?.get(slug);
+
+    const titleRaw = card.dataset.title || '';
+    const excerptRaw = card.dataset.excerpt || '';
+    const tagsRaw = card.dataset.tags || '';
+    const bodyRaw = entry?.body ?? '';
+
+    // Exact phrase shortcut (highest priority)
+    if (titleRaw.includes(q))   return 1000;
+    if (bodyRaw.toLowerCase().includes(q)) return 500;
+    if (excerptRaw.includes(q)) return 400;
+    if (tagsRaw.toLowerCase().includes(q)) return 450;
+
+    const titleWords   = tokenize(titleRaw);
+    const excerptWords = tokenize(excerptRaw);
+    const tagWords     = tokenize(tagsRaw);
+    const bodyWords    = bodyRaw ? tokenize(bodyRaw) : [];
+
+    // Field scores with descending weights
+    const tScore = scoreField(qWords, titleWords)   * 4.0;
+    const gScore = scoreField(qWords, tagWords)     * 2.5;
+    const eScore = scoreField(qWords, excerptWords) * 1.5;
+    const bScore = scoreField(qWords, bodyWords)    * 1.0;
+
+    // Must match at least one field
+    const top = Math.max(tScore, gScore, eScore, bScore);
+    return top > 0 ? top : 0;
   }
 
+  // ─── Render ──────────────────────────────────────────────────────────────
   function updateCards() {
     const showAll = !activeTags.size;
-    let visible = 0;
+    const isFiltering = !!searchQuery || !showAll;
 
-    // Score and sort
     const scored: { el: HTMLElement; score: number }[] = [];
-    cards.forEach((c) => {
-      const tags = c.dataset.tags?.split(',') || [];
-      const tagMatch = showAll || [...activeTags].every((a) => tags.includes(a));
-      const score = tagMatch ? scoreCard(c) : 0;
-      scored.push({ el: c, score });
+    cards.forEach(c => {
+      const tags = c.dataset.tags?.split(',') ?? [];
+      const tagMatch = showAll || [...activeTags].every(a => tags.includes(a));
+      scored.push({ el: c, score: tagMatch ? scoreCard(c) : 0 });
     });
 
-    // Sort by score descending (only when searching)
     if (searchQuery) {
       scored.sort((a, b) => b.score - a.score);
       const grid = document.getElementById('blog-grid');
-      if (grid) {
-        for (const { el } of scored) grid.appendChild(el);
-      }
+      if (grid) for (const { el } of scored) grid.appendChild(el);
     }
 
-    // When searching or filtering, show all matches (no pagination limit)
-    const isFiltering = searchQuery || !showAll;
-    let matched = 0;
-
+    let matched = 0, visible = 0;
     scored.forEach(({ el, score }) => {
       if (score > 0) {
         matched++;
-        if (isFiltering || matched <= visibleLimit) {
-          el.classList.remove('card-hidden');
-          visible++;
-        } else {
-          el.classList.add('card-hidden');
-        }
+        const show = isFiltering || matched <= visibleLimit;
+        el.classList.toggle('card-hidden', !show);
+        if (show) visible++;
       } else {
         el.classList.add('card-hidden');
       }
     });
 
     if (allBtn) {
-      allBtn.dataset.active = showAll ? 'true' : 'false';
+      allBtn.dataset.active = String(showAll);
       allBtn.setAttribute('aria-pressed', String(showAll));
     }
-
-    // Show/hide Load More button
     if (loadMoreWrap) {
-      if (isFiltering || visibleLimit >= matched) {
-        loadMoreWrap.classList.add('hidden');
-      } else {
-        loadMoreWrap.classList.remove('hidden');
-      }
+      loadMoreWrap.classList.toggle('hidden', isFiltering || visibleLimit >= matched);
     }
-
     if (countEl) {
       if (showAll && !searchQuery) {
         countEl.classList.add('hidden');
       } else {
-        countEl.textContent = `${visible} of ${matched}`;
+        countEl.textContent = `${visible} result${visible !== 1 ? 's' : ''}`;
         countEl.classList.remove('hidden');
       }
     }
-
     syncURL();
   }
 
-  // Tag filter
-  buttons.forEach((btn) => {
+  // ─── Events ──────────────────────────────────────────────────────────────
+  buttons.forEach(btn => {
     btn.addEventListener('click', () => {
       const tag = btn.dataset.tag;
       if (!tag) return;
-
       if (tag === '__all__') {
         activeTags.clear();
-        buttons.forEach((b) => {
-          if (b.dataset.tag !== '__all__') {
-            b.dataset.active = 'false';
-            b.setAttribute('aria-pressed', 'false');
-          }
-        });
-        updateCards();
-        return;
-      }
-
-      if (activeTags.has(tag)) {
-        activeTags.delete(tag);
-        btn.dataset.active = 'false';
-        btn.setAttribute('aria-pressed', 'false');
+        buttons.forEach(b => { if (b.dataset.tag !== '__all__') { b.dataset.active = 'false'; b.setAttribute('aria-pressed', 'false'); } });
+      } else if (activeTags.has(tag)) {
+        activeTags.delete(tag); btn.dataset.active = 'false'; btn.setAttribute('aria-pressed', 'false');
       } else {
-        activeTags.add(tag);
-        btn.dataset.active = 'true';
-        btn.setAttribute('aria-pressed', 'true');
+        activeTags.add(tag); btn.dataset.active = 'true'; btn.setAttribute('aria-pressed', 'true');
       }
       updateCards();
     });
   });
 
-  // Search
   searchInput?.addEventListener('input', () => {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
+    debounceTimer = setTimeout(async () => {
       searchQuery = searchInput.value.trim();
+      if (searchQuery && !index) {
+        await loadIndex();
+      }
       updateCards();
     }, 150);
   });
 
-  // Restore state from URL
+  loadMoreBtn?.addEventListener('click', () => { visibleLimit += PAGE_SIZE; updateCards(); });
+
+  // ─── Restore from URL ────────────────────────────────────────────────────
   const params = new URL(window.location.href).searchParams;
   const initTags = params.get('tags');
   if (initTags) {
     for (const tag of initTags.split(',')) {
       const btn = document.querySelector<HTMLButtonElement>(`[data-tag="${CSS.escape(tag)}"]`);
-      if (btn) {
-        activeTags.add(tag);
-        btn.dataset.active = 'true';
-        btn.setAttribute('aria-pressed', 'true');
-      }
+      if (btn) { activeTags.add(tag); btn.dataset.active = 'true'; btn.setAttribute('aria-pressed', 'true'); }
     }
   }
   const initQ = params.get('q');
   if (initQ && searchInput) {
     searchInput.value = initQ;
     searchQuery = initQ;
-  }
-  updateCards();
-
-  // Load More
-  loadMoreBtn?.addEventListener('click', () => {
-    visibleLimit += PAGE_SIZE;
+    loadIndex().then(updateCards);
+  } else {
     updateCards();
-  });
+  }
 </script>
 
 <style>
