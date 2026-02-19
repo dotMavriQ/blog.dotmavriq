@@ -194,7 +194,7 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
     const me = maxEdits(qw.length);
     for (const tw of textWords) {
       if (tw === qw)                { best = Math.max(best, 100); break; } // exact
-      if (tw.includes(qw))          { best = Math.max(best, 85); continue; } // substring match
+      if (tw.startsWith(qw))        { best = Math.max(best, 85); continue; } // prefix match
       if (me > 0) {
         const d = editDist(qw, tw, me);
         if (d <= me) best = Math.max(best, 70 - d * 15);
@@ -236,10 +236,18 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
     const bodyRaw = entry?.body ?? '';
 
     // Exact phrase shortcut (highest priority)
-    if (titleRaw.includes(q))   return 1000;
-    if (bodyRaw.toLowerCase().includes(q)) return 500;
-    if (excerptRaw.includes(q)) return 400;
-    if (tagsRaw.toLowerCase().includes(q)) return 450;
+    // Single words require a word boundary so "gum" won't match "arguments".
+    // Multi-word phrases use plain substring (e.g. "ring fit adventure").
+    const escapedQ = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const phraseRe = qWords.length === 1
+      ? new RegExp(`\\b${escapedQ}\\b`)
+      : null;
+    const exactHit = (text: string) => phraseRe ? phraseRe.test(text.toLowerCase()) : text.toLowerCase().includes(q);
+
+    if (exactHit(titleRaw))   return 1000;
+    if (exactHit(bodyRaw))    return 500;
+    if (exactHit(tagsRaw))    return 450;
+    if (exactHit(excerptRaw)) return 400;
 
     const titleWords   = tokenize(titleRaw);
     const excerptWords = tokenize(excerptRaw);
