@@ -43,7 +43,7 @@ Obsidian HAS a well defined structure and an extensive "means to approach certai
 
 ## What is Habsiad?
 
-Habsiad is my Obsidian plugin. It's a bridge between Obsidian and [Habitica](https://habitica.com/), the gamified habit tracker. But calling it just a bridge sells it short. It's really a full productivity suite that sits inside Obsidian and gives structure to daily journaling.
+[Habsiad](https://github.com/dotMavriQ/Habsiad) is my Obsidian plugin. It's a bridge between Obsidian and [Habitica](https://habitica.com/), the gamified habit tracker. But calling it just a bridge sells it short. It's really a full productivity suite that sits inside Obsidian and gives structure to daily journaling.
 
 The core idea is simple: Habitica is great at tracking habits, dailies, and to-dos. But it doesn't store your progress over time. You check things off and they vanish. Habsiad fixes that by pulling your completed habits and dailies from Habitica into your Obsidian journal entries, where they become permanent records you can actually look back on and visualize.
 
