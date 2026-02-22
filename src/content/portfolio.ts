@@ -4,7 +4,7 @@ export interface PortfolioItem {
   description: string;
   image: string | ImageMetadata; // can be imported asset or remote path
   tags: string[];
-  links: { type: 'github' | 'live' | 'chrome' | 'firefox' | 'wordpress' | 'npm'; url: string }[];
+  links: { type: 'github' | 'live' | 'chrome' | 'firefox' | 'wordpress' | 'npm' | 'lexaloffle' | 'itch'; url: string }[];
   featured?: boolean;
   year?: number;
 }
@@ -20,6 +20,7 @@ import lineawebLogo from '../assets/portfolio/lineaweb.png';
 import lineatuiLogo from '../assets/portfolio/lineatui.png';
 import tealScreenshot from '../assets/portfolio/tealscreenshot.png';
 import foodtrotterScreenshot from '../assets/portfolio/foodtrotter.png';
+import zombialScreenshot from '../assets/portfolio/zombial.png';
 export const portfolio: PortfolioItem[] = [
   {
     slug: 'habsiad',
@@ -112,6 +113,19 @@ export const portfolio: PortfolioItem[] = [
       { type: 'live', url: 'https://dotmavriq.github.io/foodtrotter/' }
     ],
     year: 2024
+  },
+  {
+    slug: 'zombial',
+    title: 'Zombial',
+    description: 'Top-down action game set on Praia do Zavial, Portugal. Fight zombies on a cursed beach. Built for PICO-8.',
+    image: zombialScreenshot,
+    tags: ['Lua', 'PICO-8', 'Gamedev'],
+    links: [
+      { type: 'github', url: 'https://github.com/dotMavriQ/zombial' },
+      { type: 'lexaloffle', url: 'https://www.lexaloffle.com/bbs/?pid=184408#p' },
+      { type: 'itch', url: 'https://dotmavriq.itch.io/zombial' }
+    ],
+    year: 2026
   },
   {
     slug: 'buflo',
