@@ -29,14 +29,6 @@ In my day-to-day work with Claude Code, I have access to a bunch of MCP servers.
 
 The Figma MCP is genuinely useful. When someone shares a Figma URL, Claude can pull the design context, grab screenshots, read component metadata, and even generate code from the design. That said, it's not *there* yet. You're not going to prompt your way to a pixel-perfect 1:1 reproduction, sometimes not even close. Your mileage depends heavily on how the designer set up their file. The more their layout, naming, and component structure adheres to patterns that AI can actually parse, the better the output. A messy Figma file in, a messy component out. But when the stars align it does save a real step in the design-to-code workflow.
 
-### Linear
-
-This one is one of my favorites. Instead of diving between menus and all the various views that any given org puts up, you can just have AI sift through the API and fetch whatever is assigned to you or that has a specific label. Huge timesave. You can then have it read the `Issue` and actively help you resolve it, and that `Issue` becomes the context until it's done. Sometimes I'll have several tabs open with Linear `Issues` sitting in Claude until people get back to me and confirm that my work is good to close.
-
-### Slack
-
-This one almost makes Slack bearable. *Almost.* Searching inside of Slack is a notorious pain. Even if you have a set order and structure, other people will deviate from that, which is precisely why I created the [Slactac](https://github.com/dotMavriQ/slactac) browser extension... but I digress. Having an AI that can read channel history and threads without you leaving the terminal is handy for catching up on what was discussed about a ticket or deployment without opening yet another Electron app. I've used it to send messages too, though I'll admit there's something slightly unnerving about an AI composing messages on your behalf in a work chat.
-
 ### Google Tag Manager
 
 I ended up using this for opening up my GTM containers and creating tags, all without having to poke around in the menus. And it actually pulled off what I wanted. Niche, sure, but for whatever it's worth I could definitely see this being a productivity booster if you let it be. Just practice a hefty amount of caution. This is your analytics infrastructure.
@@ -44,6 +36,18 @@ I ended up using this for opening up my GTM containers and creating tags, all wi
 ### HubSpot
 
 Yeah, no. I wanted to leverage this to verify that the things I'd set up in GTM were actually bringing data in the right way. Turns out there's no support for that. What it *can* do is search and manage CRM objects, look up contacts, deals, owners, and properties. Basically the bread and butter of navigating HubSpot without having to navigate HubSpot. I haven't found a real use for it yet, but if you spend a lot of time in the CRM it might click for you.
+
+### Linear
+
+This one is one of my favorites. Instead of diving between menus and all the various views that any given org puts up, you can just have AI sift through the API and fetch whatever is assigned to you or that has a specific label. Huge timesave. You can then have it read the `Issue` and actively help you resolve it, and that `Issue` becomes the context until it's done. Sometimes I'll have several tabs open with Linear `Issues` sitting in Claude until people get back to me and confirm that my work is good to close.
+
+### Notion
+
+I've used this to update databases with data from places I've asked Claude to non-destructively SSH into and gain insights about. And that's about as impressive as it gets as far as I'm concerned. I use it to bounce insights and data from various areas into readable documentation. It proves really useful on occasion.
+
+### Slack
+
+This one almost makes Slack bearable. *Almost.* Searching inside of Slack is a notorious pain. Even if you have a set order and structure, other people will deviate from that, which is precisely why I created the [Slactac](https://github.com/dotMavriQ/slactac) browser extension... but I digress. Having an AI that can read channel history and threads without you leaving the terminal is handy for catching up on what was discussed about a ticket or deployment without opening yet another Electron app. I've used it to send messages too, though I'll admit there's something slightly unnerving about an AI composing messages on your behalf in a work chat.
 
 ### Webflow
 
