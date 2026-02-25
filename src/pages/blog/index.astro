@@ -7,6 +7,24 @@ const posts = (await getCollection("blog"))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
+
+const tagColorMap: Record<string, string> = {
+  'Slice of Life': '#b8bb26',
+  'Travel': '#8ec07c',
+  'Developer': '#83a598',
+  'PHP': '#83a598',
+  'MCP': '#83a598',
+  'Laravel': '#83a598',
+  'WordPress': '#83a598',
+  'AI': '#83a598',
+  'Productivity': '#d3869b',
+  'Concert': '#fe8019',
+  'Health': '#689d6a',
+  'Switching To': '#d5c4a1',
+  'Digital Freedom': '#d5c4a1',
+  'Consumer Rights': '#d5c4a1',
+};
+function tagColor(tag: string) { return tagColorMap[tag] || '#bdae93'; }
 ---
 
 <BaseLayout title="Blog · dotMavriQ" description="Articles, notes & deep dives by dotMavriQ">
@@ -30,19 +48,28 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
         </div>
       </div>
 
-      <!-- Search -->
-      <div class="mt-6 relative max-w-md">
-        <label for="blog-search" class="sr-only">Search posts</label>
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gruv-muted pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <input
-          id="blog-search"
-          type="search"
-          autocomplete="off"
-          placeholder="Search posts..."
-          class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gruv-surface2/70 bg-[#1d2021] text-gruv-fg text-sm font-mono placeholder:text-gruv-muted/60 focus:outline-none focus:ring-2 focus:ring-gruv-yellow/50 focus:border-gruv-yellow/50"
-        />
+      <!-- Search + exact toggle -->
+      <div class="mt-6 flex items-center gap-3 max-w-md">
+        <div class="relative flex-1">
+          <label for="blog-search" class="sr-only">Search posts</label>
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gruv-muted pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            id="blog-search"
+            type="search"
+            autocomplete="off"
+            placeholder="Search posts..."
+            class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gruv-surface2/70 bg-[#1d2021] text-gruv-fg text-sm font-mono placeholder:text-gruv-muted/60 focus:outline-none focus:ring-2 focus:ring-gruv-yellow/50 focus:border-gruv-yellow/50"
+          />
+        </div>
+        <label
+          class="exact-toggle group relative flex items-center justify-center w-10 h-10 rounded-lg border border-gruv-surface2/50 bg-[#1d2021] cursor-pointer select-none shrink-0 hover:border-gruv-yellow/40 transition-colors"
+          title="Exact match — show only posts with these tags and no others"
+        >
+          <input type="checkbox" id="exact-filter" class="sr-only peer" />
+          <span class="text-lg font-serif text-gruv-muted peer-checked:text-gruv-yellow transition-colors" aria-hidden="true">&Omega;</span>
+        </label>
       </div>
 
       <!-- Tag filter -->
@@ -61,6 +88,7 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
             data-tag={tag}
             data-active="false"
             aria-pressed="false"
+            style={`--tag-clr: ${tagColor(tag)};`}
           >{tag}</button>
         ))}
         <span id="filter-count" class="text-[11px] text-gruv-muted ml-1 hidden" aria-live="polite"></span>
@@ -101,8 +129,11 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
               <p class="text-sm leading-relaxed text-gruv-fg/90 line-clamp-3">{post.data.excerpt}</p>
             )}
             <div class="flex flex-wrap gap-1.5 mt-auto pt-2">
-              {post.data.tags.map((tag) => (
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#504945]/80 border border-[#bdae93]/30 text-[#ebdbb2] shadow-[0_0_0_1px_rgba(0,0,0,0.25)] tracking-wide">
+              {[...post.data.tags].sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })).map((tag) => (
+                <span
+                  class="card-tag text-[10px] font-mono px-2 py-0.5 rounded-md shadow-[0_0_0_1px_rgba(0,0,0,0.25)] tracking-wide"
+                  style={`--tag-clr: ${tagColor(tag)};`}
+                >
                   {tag}
                 </span>
               ))}
@@ -145,6 +176,7 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
   const loadMoreBtn = document.getElementById('load-more-btn');
   const loadMoreWrap = document.getElementById('load-more-wrap');
   const activeTags = new Set<string>();
+  const exactCheckbox = document.getElementById('exact-filter') as HTMLInputElement;
   let searchQuery = '';
   let visibleLimit = PAGE_SIZE;
   let debounceTimer: ReturnType<typeof setTimeout>;
@@ -284,7 +316,11 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
     const scored: { el: HTMLElement; score: number }[] = [];
     cards.forEach(c => {
       const tags = c.dataset.tags?.split(',') ?? [];
-      const tagMatch = showAll || [...activeTags].every(a => tags.includes(a));
+      const exact = exactCheckbox?.checked;
+      const tagMatch = showAll
+        || (exact
+          ? tags.length === activeTags.size && [...activeTags].every(a => tags.includes(a))
+          : [...activeTags].every(a => tags.includes(a)));
       scored.push({ el: c, score: tagMatch ? scoreCard(c) : 0 });
     });
 
@@ -352,6 +388,7 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
     }, 150);
   });
 
+  exactCheckbox?.addEventListener('change', () => updateCards());
   loadMoreBtn?.addEventListener('click', () => { visibleLimit += PAGE_SIZE; updateCards(); });
 
   // ─── Restore from URL ────────────────────────────────────────────────────
@@ -375,26 +412,45 @@ const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
 
 <style>
   .tag-btn {
-    border-color: rgba(189,174,147,0.25);
-    background: rgba(60,56,54,0.7);
-    color: #ebdbb2;
+    border-color: color-mix(in srgb, var(--tag-clr, #bdae93) 35%, transparent);
+    background: color-mix(in srgb, var(--tag-clr, #3c3836) 12%, rgba(60,56,54,0.7));
+    color: color-mix(in srgb, var(--tag-clr, #ebdbb2) 60%, #ebdbb2);
     box-shadow: 0 0 0 1px rgba(0,0,0,0.35);
     transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
   }
   .tag-btn:hover {
-    background: rgba(80,73,69,0.8);
-    border-color: rgba(189,174,147,0.5);
+    background: color-mix(in srgb, var(--tag-clr, #504945) 22%, rgba(80,73,69,0.8));
+    border-color: color-mix(in srgb, var(--tag-clr, #bdae93) 55%, transparent);
     box-shadow: 0 0 0 1px rgba(0,0,0,0.55);
   }
+  /* "All" button keeps Gruvbox yellow */
+  .tag-btn[data-tag="__all__"] { --tag-clr: #fabd2f; }
   .tag-btn[data-active="true"] {
-    background: #fabd2f;
-    border-color: #fabd2f;
+    background: var(--tag-clr, #fabd2f);
+    border-color: var(--tag-clr, #fabd2f);
     color: #1d2021;
     box-shadow: 0 1px 4px rgba(0,0,0,0.4);
   }
+  /* Brighter text for darker active backgrounds */
+  .tag-btn[data-active="true"][style*="689d6a"] {
+    color: #ebdbb2;
+  }
   .tag-btn[data-active="true"]:hover {
-    background: #d79921;
-    border-color: #d79921;
+    background: color-mix(in srgb, var(--tag-clr, #d79921) 85%, #1d2021);
+    border-color: color-mix(in srgb, var(--tag-clr, #d79921) 85%, #1d2021);
+  }
+  /* Card tag badges — match active filter button style */
+  .card-tag {
+    background: var(--tag-clr, #504945);
+    border: 1px solid var(--tag-clr, #504945);
+    color: #1d2021;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  }
+  /* Brighter text for darker tag backgrounds */
+  /* Exact-match toggle */
+  .exact-toggle:has(:checked) {
+    border-color: rgba(250,189,47,0.4);
+    background: rgba(250,189,47,0.08);
   }
   .card-hidden {
     display: none !important;

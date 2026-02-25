@@ -2,7 +2,7 @@
 title: "MCP, Yeah, You Know Me"
 pubDate: 2026-02-24
 excerpt: "What even is an MCP? A breakdown of the Model Context Protocol and an honest look at whether these integrations are worth the security trade-offs."
-tags: [MCP, Developer]
+tags: [MCP, Developer, AI]
 heroImage: "/blog/dotBlog_MCPyeahyouknowme.png"
 draft: false
 ---

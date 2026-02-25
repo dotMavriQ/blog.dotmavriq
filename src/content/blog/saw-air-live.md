@@ -2,7 +2,7 @@
 title: "Saw AIR live in Cascais"
 pubDate: 2024-07-09
 excerpt: "AIR played a show in Cascais and I was there."
-tags: [Slice of Life]
+tags: [Slice of Life, Concert]
 heroImage: "/blog/dotBlog_AIRlive.png"
 draft: false
 ---

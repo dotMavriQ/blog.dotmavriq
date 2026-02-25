@@ -2,7 +2,7 @@
 title: "Ghost 2025 (MEO Arena)"
 pubDate: 2025-04-29
 excerpt: "Ghost at MEO Arena, Lisbon. The Skeletour."
-tags: [Slice of Life]
+tags: [Slice of Life, Concert]
 heroImage: "/blog/dotBlog_Ghost2025.png"
 draft: false
 ---

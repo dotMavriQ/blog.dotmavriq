@@ -13,6 +13,24 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content, headings } = await post.render();
 
+const tagColorMap: Record<string, string> = {
+  'Slice of Life': '#b8bb26',
+  'Travel': '#8ec07c',
+  'Developer': '#83a598',
+  'PHP': '#83a598',
+  'MCP': '#83a598',
+  'Laravel': '#83a598',
+  'WordPress': '#83a598',
+  'AI': '#83a598',
+  'Productivity': '#d3869b',
+  'Concert': '#fe8019',
+  'Health': '#689d6a',
+  'Switching To': '#d5c4a1',
+  'Digital Freedom': '#d5c4a1',
+  'Consumer Rights': '#d5c4a1',
+};
+function tagColor(tag: string) { return tagColorMap[tag] || '#bdae93'; }
+
 // Prev/next by date (non-draft only)
 const allPosts = (await getCollection("blog"))
   .filter((p) => !p.data.draft)
@@ -83,10 +101,11 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
               <>
                 <span aria-hidden="true">·</span>
                 <div class="flex flex-wrap gap-1.5">
-                  {post.data.tags.map((tag) => (
+                  {[...post.data.tags].sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })).map((tag) => (
                     <a
                       href={`/blog/?tags=${encodeURIComponent(tag)}`}
-                      class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#504945]/80 border border-[#bdae93]/30 text-[#ebdbb2] shadow-[0_0_0_1px_rgba(0,0,0,0.25)] tracking-wide hover:bg-gruv-yellow hover:text-gruv-bg hover:border-gruv-yellow transition-colors"
+                      class="card-tag text-[10px] font-mono px-2 py-0.5 rounded-md shadow-[0_0_0_1px_rgba(0,0,0,0.25)] tracking-wide hover:!bg-gruv-yellow hover:!text-gruv-bg hover:!border-gruv-yellow transition-colors"
+                      style={`--tag-clr: ${tagColor(tag)};`}
                     >
                       {tag}
                     </a>
@@ -252,6 +271,14 @@ const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
     color: #fabd2f !important;
     font-weight: 600;
     border-left-color: #fabd2f !important;
+  }
+
+  /* Card tag badges — match active filter button style */
+  .card-tag {
+    background: var(--tag-clr, #504945);
+    border: 1px solid var(--tag-clr, #504945);
+    color: #1d2021;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35);
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -2,7 +2,7 @@
 title: "NOS Alive '25 (Muse & Nine Inch Nails)"
 pubDate: 2025-07-12
 excerpt: "Muse and Nine Inch Nails at NOS Alive. One of the best nights."
-tags: [Slice of Life]
+tags: [Slice of Life, Concert]
 heroImage: "/blog/dotBlog_NosAlive2025.png"
 draft: false
 ---

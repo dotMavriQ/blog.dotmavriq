@@ -3,6 +3,32 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { portfolio } from "../content/portfolio";
 
 const allTags = Array.from(new Set(portfolio.flatMap(p => p.tags))).sort();
+
+const tagColorMap: Record<string, string> = {
+  'TypeScript': '#83a598',
+  'JavaScript': '#83a598',
+  'PHP': '#d3869b',
+  'Laravel': '#d3869b',
+  'Livewire': '#d3869b',
+  'Lua': '#b8bb26',
+  'PICO-8': '#b8bb26',
+  'AI': '#fe8019',
+  'Gemini': '#fe8019',
+  'Astro': '#8ec07c',
+  'Tailwind': '#8ec07c',
+  'CSS': '#8ec07c',
+  'HTML': '#8ec07c',
+  'Obsidian': '#689d6a',
+  'Linear': '#689d6a',
+  'TUI': '#689d6a',
+  'API': '#d5c4a1',
+  'Extension': '#d5c4a1',
+  'Billing': '#d5c4a1',
+  'WordPress': '#fabd2f',
+  'Game': '#fabd2f',
+};
+function tagColor(tag: string) { return tagColorMap[tag] || '#bdae93'; }
+
 // Keep featured items first, then list remaining items alphabetically by title
 const orderedPortfolio = [
   ...portfolio.filter(p => p.featured),
@@ -32,8 +58,16 @@ const orderedPortfolio = [
             data-tag={tag}
             data-active="false"
             aria-pressed="false"
+            style={`--tag-clr: ${tagColor(tag)};`}
           >{tag}</button>
         ))}
+        <label
+          class="exact-toggle group relative flex items-center justify-center w-7 h-7 rounded-md border border-gruv-surface2/50 bg-[#1d2021] cursor-pointer select-none shrink-0 hover:border-gruv-yellow/40 transition-colors"
+          title="Exact match — show only projects with these tags and no others"
+        >
+          <input type="checkbox" id="exact-filter" class="sr-only peer" />
+          <span class="text-sm font-serif text-gruv-muted peer-checked:text-gruv-yellow transition-colors" aria-hidden="true">&Omega;</span>
+        </label>
         <span id="filter-count" class="text-[11px] text-gruv-muted ml-1 hidden"></span>
       </div>
     </header>
@@ -51,7 +85,10 @@ const orderedPortfolio = [
             <p class="text-sm leading-relaxed text-gruv-fg/90 flex-1 line-clamp-4">{item.description}</p>
             <div class="flex flex-wrap gap-1.5 mt-1 max-w-[70%]">
               {item.tags.map(tag => (
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#504945]/80 border border-[#bdae93]/30 text-[#ebdbb2] shadow-[0_0_0_1px_rgba(0,0,0,0.25)] tracking-wide backdrop-blur-[2px]">
+                <span
+                  class="card-tag text-[10px] font-mono px-2 py-0.5 rounded-md shadow-[0_0_0_1px_rgba(0,0,0,0.25)] tracking-wide backdrop-blur-[2px]"
+                  style={`--tag-clr: ${tagColor(tag)};`}
+                >
                   {tag}
                 </span>
               ))}
@@ -59,7 +96,7 @@ const orderedPortfolio = [
           </div>
           <!-- badges -->
           <div class="absolute bottom-2 right-2 flex flex-wrap justify-end gap-2 max-w-[5rem]">
-            {item.links.map(link => (
+            {[...item.links].sort((a, b) => (a.type === 'github' ? 1 : 0) - (b.type === 'github' ? 1 : 0)).map(link => (
               <a href={link.url} target="_blank" rel="noopener noreferrer" class="badge-link relative inline-flex items-center justify-center w-9 h-9 rounded-full bg-[#262b2d] text-gruv-fg border border-[#343b3e] shadow shadow-black/50 hover:bg-gruv-yellow hover:text-[#1d2021] hover:scale-105 hover:-translate-y-0.5 active:scale-95" aria-label={`Open ${item.title} ${link.type}`} title={link.type}>
                 {link.type === 'github' && <img src="/icons/github.svg" alt="GitHub" width="20" height="20" class="w-5 h-5 opacity-90" />}
                 {link.type === 'live' && <img src="/site_icons/globe.svg" alt="Live" width="20" height="20" class="w-5 h-5 opacity-90" />}
@@ -67,6 +104,8 @@ const orderedPortfolio = [
                 {link.type === 'firefox' && <img src="/icons/firefox.svg" alt="Firefox Add-ons" width="20" height="20" class="w-5 h-5 opacity-90" />}
                 {link.type === 'wordpress' && <img src="/icons/wordpress.svg" alt="WordPress" width="20" height="20" class="w-5 h-5 opacity-90" />}
                 {link.type === 'npm' && <span class="text-[11px] font-bold">npm</span>}
+                {link.type === 'itchio' && <span class="text-base leading-none" aria-hidden="true">🎮</span>}
+                {link.type === 'lexaloffle' && <span class="text-base leading-none" aria-hidden="true">💾</span>}
               </a>
             ))}
           </div>
@@ -189,6 +228,7 @@ const orderedPortfolio = [
   const cards = document.querySelectorAll('[data-js="portfolio-grid"] > div');
   const countEl = document.getElementById('filter-count');
   const allBtn = document.querySelector('[data-tag="__all__"]');
+  const exactCheckbox = document.getElementById('exact-filter');
   const active = new Set();
 
   function syncURL() {
@@ -207,7 +247,11 @@ const orderedPortfolio = [
 
     cards.forEach(c => {
       const tags = c.getAttribute('data-tags')?.split(',') || [];
-      const match = showAll || [...active].every(a => tags.includes(a));
+      const exact = exactCheckbox?.checked;
+      const match = showAll
+        || (exact
+          ? tags.length === active.size && [...active].every(a => tags.includes(a))
+          : [...active].every(a => tags.includes(a)));
       if (match) {
         c.classList.remove('card-hidden');
         visible++;
@@ -266,6 +310,8 @@ const orderedPortfolio = [
     });
   });
 
+  exactCheckbox?.addEventListener('change', () => updateCards());
+
   // Restore filter state from URL on page load
   const initTags = new URL(window.location.href).searchParams.get('tags');
   if (initTags) {
@@ -285,26 +331,42 @@ const orderedPortfolio = [
 <style>
   /* Tag filter buttons */
   .tag-btn {
-    border-color: rgba(189,174,147,0.25);
-    background: rgba(60,56,54,0.7);
-    color: #ebdbb2;
+    border-color: color-mix(in srgb, var(--tag-clr, #bdae93) 35%, transparent);
+    background: color-mix(in srgb, var(--tag-clr, #3c3836) 12%, rgba(60,56,54,0.7));
+    color: color-mix(in srgb, var(--tag-clr, #ebdbb2) 60%, #ebdbb2);
     box-shadow: 0 0 0 1px rgba(0,0,0,0.35);
     transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
   }
   .tag-btn:hover {
-    background: rgba(80,73,69,0.8);
-    border-color: rgba(189,174,147,0.5);
+    background: color-mix(in srgb, var(--tag-clr, #504945) 22%, rgba(80,73,69,0.8));
+    border-color: color-mix(in srgb, var(--tag-clr, #bdae93) 55%, transparent);
     box-shadow: 0 0 0 1px rgba(0,0,0,0.55);
   }
+  .tag-btn[data-tag="__all__"] { --tag-clr: #fabd2f; }
   .tag-btn[data-active="true"] {
-    background: #fabd2f;
-    border-color: #fabd2f;
+    background: var(--tag-clr, #fabd2f);
+    border-color: var(--tag-clr, #fabd2f);
     color: #1d2021;
     box-shadow: 0 1px 4px rgba(0,0,0,0.4);
   }
+  .tag-btn[data-active="true"][style*="689d6a"] {
+    color: #ebdbb2;
+  }
   .tag-btn[data-active="true"]:hover {
-    background: #d79921;
-    border-color: #d79921;
+    background: color-mix(in srgb, var(--tag-clr, #d79921) 85%, #1d2021);
+    border-color: color-mix(in srgb, var(--tag-clr, #d79921) 85%, #1d2021);
+  }
+  /* Card tag badges — match active filter button style */
+  .card-tag {
+    background: var(--tag-clr, #504945);
+    border: 1px solid var(--tag-clr, #504945);
+    color: #1d2021;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  }
+  /* Exact-match toggle */
+  .exact-toggle:has(:checked) {
+    border-color: rgba(250,189,47,0.4);
+    background: rgba(250,189,47,0.08);
   }
 
   /* Card show/hide & transitions */
