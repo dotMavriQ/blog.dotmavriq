@@ -31,7 +31,7 @@ But then I sort of found myself with some podcasts, like a lot of people do, whi
 
 I started with [Headspace](https://en.wikipedia.org/wiki/Headspace_(company)). It was this app with a calm male British voice. Back then it had quite a lot of recordings that it provided for free before it decided to pull tighter to make more revenue.
 
-For a while I used his [Waking Up](https://en.wikipedia.org/wiki/Waking_Up_(app)) app after getting "a scholarship". That's what Sam Harris calls the free trial he gives out to people who can't justify dropping 90€ on meditation recordings. I'm no longer pursuing that route, but it served its purpose at the time.
+After a while I used Sam Harris's [Waking Up](https://en.wikipedia.org/wiki/Waking_Up_(app)) app after getting "a scholarship". That's what Sam Harris calls the free trial he gives out to people who can't justify dropping 90€ on meditation recordings. I'm no longer pursuing that route, but it served its purpose at the time.
 
 ## What it actually does for me
 
