@@ -343,30 +343,37 @@ const breadcrumbLd = JSON.stringify(breadcrumbJsonLd);
       updateTocScrollState();
     }
 
-    // Reading progress bar
+    // Reading progress bar. The site uses an inner-scroll shell
+    // (.page-scroll carries the scrollbar, body is viewport-locked),
+    // so we listen to that element's scroll instead of window. Falls
+    // back to window for any environment that doesn't use the shell.
     const progressBar = document.getElementById('reading-progress');
     if (progressBar) {
-      const article = document.querySelector('.post-article');
+      const article = document.querySelector('.post-article') as HTMLElement | null;
+      const scroller = (document.querySelector('.page-scroll') as HTMLElement | null) ?? null;
       let ticking = false;
 
       const updateProgress = () => {
         if (!article) return;
-        const articleTop = (article as HTMLElement).offsetTop;
-        const articleHeight = (article as HTMLElement).offsetHeight;
-        const windowHeight = window.innerHeight;
-        const scrolled = window.scrollY - articleTop;
-        const total = articleHeight - windowHeight;
-        const progress = Math.min(Math.max(scrolled / total, 0), 1);
+        const scrollTop = scroller ? scroller.scrollTop : window.scrollY;
+        const viewportH = scroller ? scroller.clientHeight : window.innerHeight;
+        const articleTop = article.offsetTop;
+        const articleHeight = article.offsetHeight;
+        const scrolled = scrollTop - articleTop;
+        const total = articleHeight - viewportH;
+        const progress = total > 0 ? Math.min(Math.max(scrolled / total, 0), 1) : 0;
         progressBar.style.transform = `scaleX(${progress})`;
         ticking = false;
       };
 
-      window.addEventListener('scroll', () => {
+      const onScroll = () => {
         if (!ticking) {
           requestAnimationFrame(updateProgress);
           ticking = true;
         }
-      }, { passive: true, signal });
+      };
+
+      (scroller ?? window).addEventListener('scroll', onScroll, { passive: true, signal });
 
       updateProgress();
     }
