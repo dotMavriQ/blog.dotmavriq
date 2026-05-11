@@ -219,13 +219,25 @@ const csp = [
       }
 
       .nav {
-        width: 100%;
+        /* 100vw includes the scrollbar gutter, so the nav and marquee
+           span the physical viewport edge-to-edge instead of stopping
+           at body's right edge. position: fixed lets the nav escape
+           body's overflow context too. */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
         background: var(--bg);
         transition: background 0.3s;
-        position: sticky;
-        top: 0;
         z-index: 100;
         border-bottom: 1px solid var(--cloud);
+      }
+      /* Reserve space at the top of every page so content doesn't slide
+         under the fixed nav. The same custom property the nav script
+         already writes (`--nav-total-height`) drives this, so it stays
+         in sync as the marquee or nav-bar height changes. */
+      body {
+        padding-top: var(--nav-total-height, 110px);
       }
       .nav-bar {
         display: flex;
