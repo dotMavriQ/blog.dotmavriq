@@ -140,19 +140,21 @@ const csp = [
       <slot name="marquee" />
     </nav>
 
-    <main class="page-content container" id="main">
-      <slot />
-    </main>
+    <div class="page-scroll" id="page-scroll" transition:animate="none">
+      <main class="page-content container" id="main">
+        <slot />
+      </main>
 
-    <footer class="footer container" transition:animate="none">
-      <pre
-        class="ascii-divider" aria-hidden="true">|:::|=======|:::|_______|:::|=======|:::|_______|:::|</pre>
-      <p>
-        &copy; {new Date().getFullYear()} dotmavriq. <span class="slash"
-          >//</span
-        > crafted with intent.
-      </p>
-    </footer>
+      <footer class="footer container" transition:animate="none">
+        <pre
+          class="ascii-divider" aria-hidden="true">|:::|=======|:::|_______|:::|=======|:::|_______|:::|</pre>
+        <p>
+          &copy; {new Date().getFullYear()} dotmavriq. <span class="slash"
+            >//</span
+          > crafted with intent.
+        </p>
+      </footer>
+    </div>
 
     <DotBlogAI />
 
@@ -219,25 +221,11 @@ const csp = [
       }
 
       .nav {
-        /* 100vw includes the scrollbar gutter, so the nav and marquee
-           span the physical viewport edge-to-edge instead of stopping
-           at body's right edge. position: fixed lets the nav escape
-           body's overflow context too. */
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
+        width: 100%;
         background: var(--bg);
         transition: background 0.3s;
         z-index: 100;
         border-bottom: 1px solid var(--cloud);
-      }
-      /* Reserve space at the top of every page so content doesn't slide
-         under the fixed nav. The same custom property the nav script
-         already writes (`--nav-total-height`) drives this, so it stays
-         in sync as the marquee or nav-bar height changes. */
-      body {
-        padding-top: var(--nav-total-height, 110px);
       }
       .nav-bar {
         display: flex;
