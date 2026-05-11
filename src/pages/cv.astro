@@ -1,0 +1,1504 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CloudMarquee from "../components/CloudMarquee.astro";
+
+const siteUrl = "https://blog.dotmavriq.life";
+const jsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "mainEntity": {
+    "@type": "Person",
+    "name": "Jonatan Jansson",
+    "alternateName": "dotMavriQ",
+    "jobTitle": "Experienced Full-Stack Developer",
+    "url": `${siteUrl}/cv`,
+    "sameAs": [
+      "https://github.com/dotMavriQ",
+      "https://www.linkedin.com/in/janssonjonatan/"
+    ],
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Nordhealth"
+    },
+    "knowsAbout": [
+      "JavaScript", "TypeScript", "PHP", "Python", "React", "Next.js",
+      "Astro", "Laravel", "WordPress", "Node.js", "Docker",
+      "GitHub Actions", "CI/CD", "PostgreSQL", "GraphQL", "REST APIs",
+      "Playwright", "HubSpot", "SEO", "GEO", "WCAG", "GDPR",
+      "Core Web Vitals", "AI workflows"
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Lisbon",
+      "addressCountry": "PT"
+    },
+    "knowsLanguage": ["Swedish", "English", "Portuguese"]
+  }
+});
+---
+
+<BaseLayout
+  title="cv // dotmavriq"
+  description="CV: Jonatan Jansson, Experienced Full-Stack Developer based in Lisbon. 10+ years, 70+ clients, currently at Nordhealth. JavaScript/TypeScript, React, PHP, Python, CI/CD, AI workflows."
+  ogType="profile"
+>
+  <Fragment slot="head">
+    <meta property="profile:first_name" content="Jonatan" />
+    <meta property="profile:last_name" content="Jansson" />
+    <meta property="profile:username" content="dotMavriQ" />
+    <script is:inline type="application/ld+json" set:html={jsonLd} />
+  </Fragment>
+  <CloudMarquee slot="marquee" />
+
+  <section class="cv">
+    <!-- ═══════════════════════════════════════════════
+         HEADER — hero-grade intro card
+    ═══════════════════════════════════════════════ -->
+    <div class="cv-hero">
+      <div class="cv-hero-grain" aria-hidden="true"></div>
+      <div class="cv-hero-inner">
+        <div class="cv-hero-left">
+          <span class="cv-label-tag">CURRICULUM VITAE</span>
+          <h1>Jonatan Jansson</h1>
+          <p class="cv-title">Experienced Full-Stack Developer</p>
+        </div>
+        <div class="cv-hero-right">
+          <p>Lisbon Area, Portugal</p>
+          <p>
+            <a
+              href="#"
+              id="cv-email"
+              data-m="==QZmlGbuEXayZXYtR3bkBkbhRXYu9ma"
+              aria-label="Email me"
+            >
+              <span class="cv-email-icon" aria-hidden="true">✉</span>
+              <span class="cv-email-copy">email me</span>
+              <span class="cv-email-print" aria-hidden="true"></span>
+            </a>
+          </p>
+          <p>
+            <a
+              href="https://www.linkedin.com/in/janssonjonatan/"
+              target="_blank"
+              rel="noopener">linkedin.com/in/janssonjonatan</a
+            >
+          </p>
+          <p>
+            <a
+              href="https://github.com/dotMavriQ"
+              target="_blank"
+              rel="noopener">github.com/dotMavriQ</a
+            >
+          </p>
+          <p><a href="/contact">blog.dotmavriq.life/contact</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Actions bar ─── -->
+    <div class="cv-actions">
+      <button class="cv-download-btn neu-box neu-pressed" id="cv-print-btn">
+        <span class="btn-arrow" aria-hidden="true">&darr;</span> Download PDF
+      </button>
+      <span class="cv-updated">Updated Apr 2026</span>
+      <pre
+        class="cv-actions-rule"
+        aria-hidden="true">───────────────────────</pre>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SUMMARY
+    ═══════════════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════════
+         SUMMARY — Editorial block
+    ═══════════════════════════════════════════════ -->
+    <div class="cv-summary">
+        <span class="cv-summary-label">// summary</span>
+        <p>
+          Experienced full-stack developer with <strong>10+ years</strong> in the
+          industry and a track record of owning digital products end to end,
+          from Linux provisioning through to production deployment. Currently
+          sole owner of <strong>11 multi-market web properties</strong> at
+          Nordhealth, where I've consolidated legacy platforms onto a unified
+          stack, built GitHub&nbsp;Actions CI/CD pipelines for
+          zero&#8209;downtime deployments, and shipped
+          <strong>AI&#8209;assisted workflows</strong> using Claude and
+          MCP&nbsp;servers to auto&#8209;generate and roll out CMS components
+          with Playwright&#8209;validated test suites.
+        </p>
+        <p>
+          Before that: <strong>70+ clients</strong> served across
+          e&#8209;commerce, public sector, and enterprise. Custom PHP/Node.js
+          builds, headless front&#8209;ends in React, Next.js, Vue, and Svelte,
+          and a real&#8209;time platform serving thousands of concurrent
+          sessions with 25 active stakeholders. I work across
+          <strong>JavaScript/TypeScript</strong>, PHP, Python, and SQL, and I've
+          led development teams, advised senior leadership on platform strategy,
+          and run client&#8209;facing delivery from scoping through invoicing.
+        </p>
+        <p>
+          I specialise in <strong>MarTech and CMS platform engineering</strong>:
+          building, owning, and scaling WordPress&#8209;based web properties for
+          enterprise clients, with e&#8209;commerce depth across WooCommerce and
+          Magento. I care about <strong>performance</strong>,
+          <strong>accessibility</strong>, and writing code that the next person
+          can actually maintain. Technical skill without communication is
+          incomplete. I've always done both.
+        </p>
+        <p class="cv-summary-coda">
+          Based in Lisbon. Open to remote roles in UK/EU core hours.
+        </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SKILLS — tag-pill layout
+    ═══════════════════════════════════════════════ -->
+    <div class="cv-skills-block neu-box">
+      <h2 class="cv-section-label">KEY SKILLS</h2>
+      <div class="cv-skills-rows">
+        <div class="cv-skill-row">
+          <span class="cv-skill-cat">Languages &amp; Tech</span>
+          <div class="cv-skill-tags">
+            <span class="cv-tag">JavaScript / TypeScript</span>
+            <span class="cv-tag">PHP</span>
+            <span class="cv-tag">Python</span>
+            <span class="cv-tag">SQL</span>
+            <span class="cv-tag">Bash</span>
+            <span class="cv-tag">HTML5</span>
+            <span class="cv-tag">CSS3 / SCSS</span>
+          </div>
+        </div>
+        <div class="cv-skill-row">
+          <span class="cv-skill-cat">Frameworks &amp; CMS</span>
+          <div class="cv-skill-tags">
+            <span class="cv-tag cv-tag-accent">WordPress</span>
+            <span class="cv-tag">React</span>
+            <span class="cv-tag">Next.js</span>
+            <span class="cv-tag">Node.js</span>
+            <span class="cv-tag">Laravel</span>
+            <span class="cv-tag">Vue</span>
+            <span class="cv-tag">WooCommerce</span>
+          </div>
+        </div>
+        <div class="cv-skill-row">
+          <span class="cv-skill-cat">Infrastructure &amp; Ops</span>
+          <div class="cv-skill-tags">
+            <span class="cv-tag">CI/CD</span>
+            <span class="cv-tag">GitHub Actions</span>
+            <span class="cv-tag">Linux</span>
+            <span class="cv-tag">Docker</span>
+            <span class="cv-tag">PostgreSQL</span>
+            <span class="cv-tag">MySQL</span>
+            <span class="cv-tag">REST APIs</span>
+            <span class="cv-tag">GraphQL</span>
+          </div>
+        </div>
+        <div class="cv-skill-row">
+          <span class="cv-skill-cat">Design &amp; Tools</span>
+          <div class="cv-skill-tags">
+            <span class="cv-tag">Git</span>
+            <span class="cv-tag">Claude AI</span>
+            <span class="cv-tag">Playwright</span>
+            <span class="cv-tag">Figma</span>
+            <span class="cv-tag">Google Analytics (GA4)</span>
+            <span class="cv-tag">Google Tag Manager (GTM)</span>
+            <span class="cv-tag">HubSpot</span>
+            <span class="cv-tag">Jira</span>
+          </div>
+        </div>
+        <div class="cv-skill-row">
+          <span class="cv-skill-cat">Practices</span>
+          <div class="cv-skill-tags">
+            <span class="cv-tag">Agile / Scrum</span>
+            <span class="cv-tag">Code Review</span>
+            <span class="cv-tag">Performance Optimization</span>
+            <span class="cv-tag">A/B Testing</span>
+            <span class="cv-tag">Technical Documentation</span>
+            <span class="cv-tag">Accessibility</span>
+            <span class="cv-tag">WCAG</span>
+            <span class="cv-tag">SEO</span>
+            <span class="cv-tag">GEO</span>
+            <span class="cv-tag">UI/UX</span>
+            <span class="cv-tag">Core Web Vitals</span>
+            <span class="cv-tag">GDPR</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         EXPERIENCE — timeline
+    ═══════════════════════════════════════════════ -->
+    <h2 class="cv-section-heading neu-border-bottom">
+      <span class="cv-heading-prefix" aria-hidden="true">//</span> experience
+    </h2>
+
+    <div class="cv-timeline">
+      <article class="cv-job">
+        <div class="cv-timeline-marker" aria-hidden="true">
+          <span class="cv-dot cv-dot-active"></span>
+          <span class="cv-timeline-line"></span>
+        </div>
+        <div class="cv-job-body neu-box-sm neu-shadow-sm">
+          <div class="cv-job-header">
+            <h3>
+              <span class="cv-org">Nordhealth</span>
+              <span class="cv-role">Full-Stack Developer, Marketing Team</span>
+            </h3>
+            <span class="cv-dates">2025 &ndash; Present</span>
+          </div>
+          <ul>
+            <li>
+              Sole owner of 11 multi-market web properties (WordPress, Eleventy,
+              Astro.js) across several business units, responsible for
+              architecture, delivery, and uptime.
+            </li>
+            <li>
+              Built AI-assisted deployment pipelines (Claude &amp; MCP servers)
+              to auto-generate and roll out CMS components across all
+              environments, with Playwright test suites for validation and
+              automated reporting to Linear, Slack, and Notion.
+            </li>
+            <li>
+              Migrated and consolidated legacy sites into a unified platform with
+              a shared design system using React components and TypeScript.
+            </li>
+            <li>
+              Built and maintain CI/CD pipelines (GitHub Actions) for automated
+              testing and zero-downtime deployments, replacing a previously
+              fragile manual process.
+            </li>
+            <li>
+              Tune Core Web Vitals, run A/B tests, and optimize caching and
+              asset delivery to improve conversion rates.
+            </li>
+            <li>
+              Audit and improve AI search visibility (GEO) across web properties
+              and brief marketing teams on emerging AI search strategies.
+            </li>
+            <li>
+              Maintain GDPR compliance, security hardening, Google Analytics
+              (GA4), Google Tag Manager (GTM), and HubSpot CRM integrations across all
+              properties.
+            </li>
+            <li>
+              Write technical documentation and run hands-on training sessions
+              so non-technical teams can self-serve.
+            </li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="cv-job">
+        <div class="cv-timeline-marker" aria-hidden="true">
+          <span class="cv-dot"></span>
+          <span class="cv-timeline-line"></span>
+        </div>
+        <div class="cv-job-body neu-box-sm neu-shadow-sm">
+          <div class="cv-job-header">
+            <h3>
+              <span class="cv-org">Block Labs LTD, Lisbon</span>
+              <span class="cv-role">Developer &amp; Team Lead</span>
+            </h3>
+            <span class="cv-dates">2024 &ndash; 2025</span>
+          </div>
+          <ul>
+            <li>
+              Led a development team of three on coinpoker.com, a real-time
+              poker platform with thousands of concurrent sessions and 25 active
+              stakeholders.
+            </li>
+            <li>
+              Consulted with senior leadership on CMS strategy and platform
+              direction, advising on performance, scalability, and technology
+              choices.
+            </li>
+            <li>
+              Worked directly with the Product Manager on sprint planning,
+              backlog refinement, and release coordination. Maintained technical
+              documentation in Confluence.
+            </li>
+            <li>
+              Built custom themes and plugins, designed system architecture, and
+              managed advanced CMS configurations.
+            </li>
+            <li>
+              Streamlined the design-to-deploy workflow from Figma handoff
+              through to production, reducing turnaround on feature delivery.
+            </li>
+            <li>
+              Handled database and server integrations for enterprise clients.
+              Ran performance testing, troubleshooting, and continuous
+              optimization.
+            </li>
+            <li>Led enterprise server migrations and platform hardening.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="cv-job">
+        <div class="cv-timeline-marker" aria-hidden="true">
+          <span class="cv-dot"></span>
+          <span class="cv-timeline-line"></span>
+        </div>
+        <div class="cv-job-body neu-box-sm neu-shadow-sm">
+          <div class="cv-job-header">
+            <h3>
+              <span class="cv-org">IPTOR (GENII Software Group), Lisbon</span>
+              <span class="cv-role">Senior Developer</span>
+            </h3>
+            <span class="cv-dates">2023 &ndash; 2024</span>
+          </div>
+          <ul>
+            <li>
+              Owned 20+ web properties across GENII subsidiaries (Iptor, GUS,
+              Dorner, Nexiga, fimox, and others), handling maintenance, updates,
+              security, and feature development.
+            </li>
+            <li>
+              Built a multi-tenant WordPress plugin integrating the TeamTailor
+              API to dynamically generate job listings across organizationally
+              distinct entities with separate recruitment workflows under the
+              GENII umbrella.
+            </li>
+            <li>
+              Implemented HubSpot SSO integration and expanded MarTech
+              capabilities supporting inbound marketing.
+            </li>
+            <li>
+              Handled site migrations between environments, including database
+              transfers and media/file restructuring.
+            </li>
+            <li>
+              Conducted a GDPR and cookie compliance audit across the full
+              portfolio of domains.
+            </li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="cv-job">
+        <div class="cv-timeline-marker" aria-hidden="true">
+          <span class="cv-dot"></span>
+          <span class="cv-timeline-line"></span>
+        </div>
+        <div class="cv-job-body neu-box-sm neu-shadow-sm">
+          <div class="cv-job-header">
+            <h3>
+              <span class="cv-org">Duva (Carrier Pigeon), Lidk&ouml;ping</span>
+              <span class="cv-role">Web Developer</span>
+            </h3>
+            <span class="cv-dates">2018 &ndash; 2023</span>
+          </div>
+          <ul>
+            <li>
+              Owned the full project lifecycle end to end (scoping,
+              development, code review, testing, deployment, and invoicing)
+              across 50+ clients at the leading web consultancy in
+              Lidk&ouml;ping.
+            </li>
+            <li>
+              Progressed from frontend CMS work to full-stack PHP development,
+              with production work in React, Vue, Next.js, Svelte, Ember.js, and
+              Node.js, including headless front-end builds consuming
+              GraphQL and REST APIs.
+            </li>
+            <li>
+              Built and maintained e-commerce storefronts with custom modules,
+              payment gateway integrations, and platform upgrades for multiple
+              clients.
+            </li>
+            <li>
+              Built a Python middleware service aggregating geospatial data
+              across multiple third-party APIs for a map-point integration.
+            </li>
+            <li>
+              Delivered SEO and performance optimization for enterprise clients
+              including Academedia, Sweden's largest private education company.
+            </li>
+            <li>
+              Managed Linux hosting environments, CMS security and hardening,
+              GDPR compliance, accessibility (WCAG), and payment/e-commerce
+              integrations.
+            </li>
+          </ul>
+          <p class="cv-key-clients">
+            <strong>Key clients:</strong> Academedia, Helsingborg / Ulricehamn /
+            Tranemo / Lidk&ouml;ping municipalities, Assemblin, Absolent Group,
+            Viacon, McKonsult, Monokel, Uhip, WisbyTankers, TruckTrust.
+          </p>
+        </div>
+      </article>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         ADDITIONAL EXPERIENCE
+    ═══════════════════════════════════════════════ -->
+    <h2 class="cv-section-heading neu-border-bottom">
+      <span class="cv-heading-prefix" aria-hidden="true">//</span> additional experience
+    </h2>
+
+    <div class="cv-additional-grid">
+      <article class="cv-additional-card neu-box-sm neu-shadow-sm">
+        <div class="cv-job-header">
+          <h3>
+            <span class="cv-org">Lidk&ouml;ping Makerspace</span>
+            <span class="cv-role">Founder</span>
+          </h3>
+          <span class="cv-dates">2017 &ndash; 2019</span>
+        </div>
+        <ul>
+          <li>
+            Founded and ran a community technology space from scratch:
+            negotiated premises, sourced equipment, and built partnerships with
+            local government bodies, NGOs, and national think tanks.
+          </li>
+          <li>
+            Grew the NGO chapter to 20+ members and led a team of eight
+            co-organizers. Built the web presence for the national Makerspace
+            network.
+          </li>
+        </ul>
+      </article>
+
+      <article class="cv-additional-card neu-box-sm neu-shadow-sm">
+        <div class="cv-job-header">
+          <h3>
+            <span class="cv-org">Ember, Lidk&ouml;ping</span>
+            <span class="cv-role">IT Support &amp; Systems</span>
+          </h3>
+          <span class="cv-dates">2017</span>
+        </div>
+        <ul>
+          <li>
+            Inbound support, malware remediation, and security hardening for
+            local client systems.
+          </li>
+          <li>
+            Remote desktop administration for 50+ client environments.
+            PowerShell automation for commercial vehicle data auditing.
+          </li>
+        </ul>
+      </article>
+
+      <article class="cv-additional-card neu-box-sm neu-shadow-sm">
+        <div class="cv-job-header">
+          <h3>
+            <span class="cv-org">Nordic Goods AB</span>
+            <span class="cv-role">Developer / SysAdmin</span>
+          </h3>
+          <span class="cv-dates">2016</span>
+        </div>
+        <ul>
+          <li>
+            Owned the full technical stack. Provisioned Ubuntu servers,
+            configured nginx, built Magento and WordPress/WooCommerce
+            storefronts from scratch.
+          </li>
+          <li>
+            Drove initial marketing campaigns and brought in the company's first
+            paying customers.
+          </li>
+        </ul>
+      </article>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         EDUCATION
+    ═══════════════════════════════════════════════ -->
+    <h2 class="cv-section-heading neu-border-bottom">
+      <span class="cv-heading-prefix" aria-hidden="true">//</span> education
+    </h2>
+
+    <div class="cv-edu-grid">
+      <article class="cv-edu-card neu-box-sm neu-shadow-sm">
+        <div class="cv-edu-year" aria-hidden="true">2015</div>
+        <div class="cv-edu-body">
+          <h3>
+            <span class="cv-org">Lexicon, Sk&ouml;vde</span>
+            <span class="cv-role">Certificate of Achievement</span>
+          </h3>
+          <p>
+            Web Application Development with C# (.NET / Visual Studio): ASP.NET,
+            database management, MVC architecture, testing practices.
+          </p>
+        </div>
+      </article>
+
+      <article class="cv-edu-card neu-box-sm neu-shadow-sm">
+        <div class="cv-edu-year" aria-hidden="true">2008</div>
+        <div class="cv-edu-body">
+          <h3>
+            <span class="cv-org">De La Gardie, Lidk&ouml;ping</span>
+            <span class="cv-role">Technical Program (IT)</span>
+          </h3>
+          <p>
+            Web design and development, database management, Active Directory,
+            CAD, and applied programming.
+          </p>
+        </div>
+      </article>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         FOOTER — languages + references
+    ═══════════════════════════════════════════════ -->
+    <h2 class="cv-section-heading neu-border-bottom">
+      <span class="cv-heading-prefix" aria-hidden="true">//</span> languages &amp; references
+    </h2>
+
+    <div class="cv-footer-strip neu-box-sm">
+      <div class="cv-footer-col">
+        <h2 class="cv-section-label">LANGUAGES</h2>
+        <p>
+          Swedish <span class="cv-lang-level">(native)</span> &middot; English <span
+            class="cv-lang-level">(native)</span
+          > &middot; Portuguese, PT-pt <span class="cv-lang-level">(A2)</span>
+        </p>
+      </div>
+      <div class="cv-footer-col cv-footer-right">
+        <h2 class="cv-section-label">REFERENCES</h2>
+        <p>Available on request for all listed positions.</p>
+      </div>
+    </div>
+
+  </section>
+</BaseLayout>
+
+<script>
+  import { initEmailLink } from '../lib/email-obfuscation';
+
+  function initCV() {
+    initEmailLink('cv-email');
+    const cvEmail = document.getElementById("cv-email");
+    const cvEmailPrint = document.querySelector(".cv-email-print");
+    if (cvEmail instanceof HTMLAnchorElement && cvEmailPrint instanceof HTMLElement) {
+      const href = cvEmail.getAttribute("href") || "";
+      if (href.startsWith("mailto:")) {
+        cvEmailPrint.setAttribute("data-email", href.slice("mailto:".length));
+      }
+    }
+    const printButton = document.getElementById("cv-print-btn");
+    if (!printButton || printButton.dataset.printBound === "true") return;
+
+    printButton.dataset.printBound = "true";
+    printButton.addEventListener("click", () => {
+      window.print();
+    });
+  }
+
+  document.addEventListener("astro:page-load", initCV);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initCV, { once: true });
+  } else {
+    initCV();
+  }
+</script>
+
+<style>
+  /* ══════════════════════════════════════════════════
+     LAYOUT
+  ══════════════════════════════════════════════════ */
+  .cv {
+    padding: 3rem 0 4rem;
+    width: min(1200px, 100vw);
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-inline: 20px;
+    box-sizing: border-box;
+    font-family: var(--font-commit-mono), ui-monospace, "SFMono-Regular", Menlo, Monaco,
+      Consolas, monospace;
+  }
+
+
+  /* ══════════════════════════════════════════════════
+     HERO HEADER
+  ══════════════════════════════════════════════════ */
+  .cv-hero {
+    position: relative;
+    border: 3px solid var(--fg);
+    box-shadow: 6px 6px 0 var(--fg);
+    padding: 2.5rem 3rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .cv-hero-grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  .cv-hero-inner {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    z-index: 1;
+  }
+
+  .cv-label-tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    padding: 0.2rem 0.65rem;
+    background: var(--bg);
+    color: var(--fg);
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .cv-hero h1 {
+    font-size: 2.2rem;
+    color: var(--bg);
+    margin-bottom: 0.25rem;
+    text-transform: none;
+    letter-spacing: -0.03em;
+  }
+
+  .cv-title {
+    font-size: 1rem;
+    color: var(--bg);
+    opacity: 0.7;
+    margin-bottom: 1rem;
+  }
+
+
+  .cv-hero-right {
+    text-align: right;
+    font-size: 0.82rem;
+    line-height: 1.8;
+    flex-shrink: 0;
+    color: var(--bg);
+    opacity: 0.85;
+  }
+
+  .cv-hero-right a {
+    color: var(--bg);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+
+  .cv-email-icon {
+    margin-right: 0.35em;
+  }
+
+  .cv-email-print {
+    display: none;
+  }
+
+  .cv-hero-right a:hover {
+    border-bottom-color: var(--bg);
+    color: var(--bg);
+  }
+
+  /* ══════════════════════════════════════════════════
+     ACTIONS BAR
+  ══════════════════════════════════════════════════ */
+  .cv-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .cv-download-btn {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 0.7rem 1.6rem;
+    background: var(--bg);
+    color: var(--fg);
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    letter-spacing: 0.03em;
+  }
+
+  .cv-download-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--fg);
+  }
+
+  .cv-download-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--fg);
+  }
+
+  .btn-arrow {
+    display: inline-block;
+    margin-right: 0.4rem;
+    font-weight: 400;
+  }
+
+  .cv-updated {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .cv-actions-rule {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--cloud);
+    margin: 0;
+    text-align: right;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* ══════════════════════════════════════════════════
+     SUMMARY — Editorial accent bar
+  ══════════════════════════════════════════════════ */
+  .cv-summary {
+    margin: 2.5rem 0;
+    border-left: 4px solid var(--fg);
+    padding: 2rem 2.5rem;
+  }
+
+  .cv-summary-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    text-transform: lowercase;
+    margin-bottom: 1.25rem;
+  }
+
+  .cv-summary p {
+    font-size: 0.88rem;
+    line-height: 1.75;
+    color: var(--muted);
+    margin-bottom: 0.9rem;
+  }
+
+  .cv-summary p:last-child {
+    margin-bottom: 0;
+  }
+
+  .cv-summary strong {
+    color: var(--fg);
+    font-weight: 700;
+  }
+
+  .cv-summary-coda {
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--cloud);
+    font-size: 0.82rem !important;
+    color: var(--fg) !important;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  /* ══════════════════════════════════════════════════
+     SKILLS — tag pills
+  ══════════════════════════════════════════════════ */
+  .cv-skills-block {
+    padding: 1.75rem 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .cv-section-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .cv-skills-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .cv-skill-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .cv-skill-cat {
+    font-size: 0.75rem;
+    font-weight: 700;
+    min-width: 150px;
+    padding-top: 0.2rem;
+    color: var(--fg);
+    flex-shrink: 0;
+  }
+
+  .cv-skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .cv-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.18rem 0.55rem;
+    border: 1.5px solid var(--fg);
+    color: var(--fg);
+    letter-spacing: 0.02em;
+    transition: background 0.1s, color 0.1s;
+  }
+
+  .cv-tag:hover {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .cv-tag-accent {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .cv-tag-accent:hover {
+    background: var(--bg);
+    color: var(--fg);
+  }
+
+  /* ══════════════════════════════════════════════════
+     SECTION HEADINGS
+  ══════════════════════════════════════════════════ */
+  .cv-section-heading {
+    font-size: 1.1rem;
+    text-transform: lowercase;
+    letter-spacing: 0.06em;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.75rem;
+    margin-top: 3rem;
+  }
+
+  .cv-heading-prefix {
+    color: var(--muted);
+    font-weight: 400;
+    margin-right: 0.3rem;
+  }
+
+  /* ══════════════════════════════════════════════════
+     TIMELINE — vertical line with dots
+  ══════════════════════════════════════════════════ */
+  .cv-timeline {
+    position: relative;
+    padding-left: 2.5rem;
+  }
+
+  .cv-job {
+    position: relative;
+    display: flex;
+    gap: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .cv-timeline-marker {
+    position: absolute;
+    left: -2.5rem;
+    top: 0;
+    bottom: -1.5rem;
+    width: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cv-dot {
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--fg);
+    background: var(--bg);
+    flex-shrink: 0;
+    margin-top: 0.6rem;
+  }
+
+  .cv-dot-active {
+    background: var(--fg);
+  }
+
+  .cv-timeline-line {
+    width: 2px;
+    flex: 1;
+    background: var(--cloud);
+    margin-top: 0.3rem;
+  }
+
+  .cv-job-body {
+    padding: 1.5rem 2rem;
+    background: var(--bg);
+    flex: 1;
+  }
+
+  .cv-job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+    gap: 1rem;
+  }
+
+  .cv-job-header h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: -0.02em;
+    margin-bottom: 0;
+  }
+
+  /* Two-line h3: organisation on top, role/credential below.
+     Replaces the previous `Org — Role` em-dash separator. */
+  .cv-org {
+    display: block;
+  }
+  .cv-role {
+    display: block;
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0;
+    margin-top: 0.2rem;
+  }
+
+  .cv-dates {
+    font-size: 0.75rem;
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .cv-job-body ul {
+    margin-left: 1rem;
+  }
+
+  .cv-job-body li {
+    font-size: 0.84rem;
+    line-height: 1.6;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .cv-job-body li::marker {
+    color: var(--fg);
+    font-weight: 700;
+  }
+
+  .cv-key-clients {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.55;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--cloud);
+  }
+
+  .cv-key-clients strong {
+    color: var(--fg);
+  }
+
+
+  /* ══════════════════════════════════════════════════
+     ADDITIONAL EXPERIENCE — 3-col grid
+  ══════════════════════════════════════════════════ */
+  .cv-additional-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .cv-additional-card {
+    padding: 1.25rem 1.5rem;
+    background: var(--bg);
+  }
+
+  .cv-additional-card .cv-job-header {
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .cv-additional-card h3 {
+    font-size: 0.85rem;
+    text-transform: none;
+    letter-spacing: -0.02em;
+    margin-bottom: 0;
+  }
+
+  .cv-additional-card ul {
+    margin-left: 1rem;
+  }
+
+  .cv-additional-card li {
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: var(--muted);
+    margin-bottom: 0.2rem;
+  }
+
+  .cv-additional-card li::marker {
+    color: var(--fg);
+  }
+
+  /* ══════════════════════════════════════════════════
+     EDUCATION — year badge layout
+  ══════════════════════════════════════════════════ */
+  .cv-edu-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .cv-edu-card {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.25rem 1.75rem;
+    background: var(--bg);
+    align-items: flex-start;
+  }
+
+  .cv-edu-year {
+    font-family: var(--font-mono);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--muted);
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 4ch;
+    padding-top: 0.15rem;
+  }
+
+  .cv-edu-body h3 {
+    font-size: 0.88rem;
+    text-transform: none;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.35rem;
+  }
+
+  .cv-edu-body p {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* ══════════════════════════════════════════════════
+     FOOTER STRIP
+  ══════════════════════════════════════════════════ */
+  .cv-footer-strip {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .cv-footer-col p {
+    font-size: 0.84rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .cv-footer-right {
+    text-align: right;
+  }
+
+  .cv-lang-level {
+    opacity: 0.6;
+  }
+
+  /* ══════════════════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════════════════ */
+  @media (max-width: 900px) {
+    .cv-additional-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .cv-hero-inner {
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .cv-hero-right {
+      text-align: left;
+    }
+    .cv-hero {
+      padding: 2rem;
+    }
+    .cv-job-header {
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .cv-skill-row {
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .cv-skill-cat {
+      min-width: auto;
+    }
+    .cv-footer-strip {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .cv-footer-right {
+      text-align: left;
+    }
+    .cv-actions-rule {
+      display: none;
+    }
+    .cv-actions {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--cloud);
+    }
+    .cv-hero-right {
+      padding-top: 1rem;
+      border-top: 1px solid var(--bg);
+      opacity: 1;
+    }
+    .cv-summary {
+      padding: 1.5rem 1.25rem;
+    }
+    .cv-edu-card {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .cv-edu-year {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .cv-timeline {
+      padding-left: 0;
+    }
+    .cv-timeline-marker {
+      display: none;
+    }
+    .cv-summary {
+      padding: 1.25rem 1rem;
+      border-left-width: 3px;
+    }
+  }
+
+  /* ══════════════════════════════════════════════════
+     PRINT — ATS-optimized, clean A4
+  ══════════════════════════════════════════════════ */
+  @media print {
+    :global(body) {
+      font-family: Arial, Helvetica, sans-serif !important;
+      font-size: 9.35pt !important;
+      line-height: 1.42 !important;
+      color: #1a1a1a !important;
+      background: white !important;
+      display: block !important;
+    }
+
+    :global(.nav),
+    :global(.footer),
+    :global(.oliv-chat),
+    .cv-actions,
+    .cv-hero-grain,
+    .cv-timeline-marker {
+      display: none !important;
+    }
+
+    :global(.page-content) {
+      padding: 0 !important;
+      max-width: none !important;
+    }
+
+    .cv {
+      width: 100% !important;
+      left: auto !important;
+      transform: none !important;
+      padding: 0 !important;
+      max-width: 210mm;
+      margin: 0 auto;
+    }
+
+    /* Strip neubrutalist chrome */
+    .cv-hero,
+    .cv-summary,
+    .cv-skills-block,
+    .cv-job-body,
+    .cv-additional-card,
+    .cv-edu-card,
+    .cv-footer-strip {
+      border: none !important;
+      box-shadow: none !important;
+      background: white !important;
+      transform: none !important;
+      padding: 0 !important;
+      margin-bottom: 7pt !important;
+    }
+
+    .cv-timeline {
+      padding-left: 0 !important;
+    }
+
+    /* Hero → clean header */
+    .cv-hero {
+      background: white !important;
+      color: #1a1a1a !important;
+      padding-bottom: 8pt !important;
+      border-bottom: 2pt solid #1a1a1a !important;
+    }
+
+    .cv-label-tag,
+    .cv-summary-label {
+      display: none !important;
+    }
+
+    .cv-hero h1 {
+      font-size: 20pt !important;
+      color: #1a1a1a !important;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif !important;
+    }
+
+    .cv-title {
+      font-size: 10.5pt !important;
+      color: #444 !important;
+      opacity: 1 !important;
+    }
+
+    .cv-hero-right {
+      font-size: 8.5pt !important;
+      color: #333 !important;
+      line-height: 1.55 !important;
+      opacity: 1 !important;
+    }
+
+    .cv-hero-right a {
+      color: #333 !important;
+    }
+
+    .cv-email-icon,
+    .cv-email-copy {
+      display: none !important;
+    }
+
+    .cv-email-print {
+      display: inline !important;
+      color: #333 !important;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif !important;
+    }
+
+    .cv-email-print::before {
+      content: attr(data-email);
+    }
+
+    /* Summary */
+    .cv-summary-block {
+      margin-bottom: 8pt !important;
+    }
+    .cv-summary {
+      font-size: 9.1pt !important;
+      line-height: 1.45 !important;
+      color: #222 !important;
+      padding: 0 !important;
+    }
+
+    /* Skills — flatten tags to text */
+    .cv-skills-block {
+      padding: 6pt 8pt !important;
+      background: #f5f5f5 !important;
+    }
+
+    .cv-section-label {
+      font-size: 8pt !important;
+      color: #555 !important;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif !important;
+    }
+
+    .cv-tag {
+      border: none !important;
+      padding: 0 !important;
+      font-size: 8.5pt !important;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif !important;
+      background: none !important;
+      color: #222 !important;
+    }
+
+    .cv-tag::after {
+      content: ", ";
+    }
+
+    .cv-tag:last-child::after {
+      content: "";
+    }
+
+    .cv-tag-accent {
+      background: none !important;
+      color: #222 !important;
+    }
+
+    .cv-skill-cat {
+      font-size: 8.5pt !important;
+      color: #1a1a1a !important;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif !important;
+    }
+
+    .cv-skill-tags {
+      gap: 0 !important;
+    }
+
+    /* Section headings */
+    .cv-section-heading {
+      font-size: 9pt !important;
+      text-transform: uppercase !important;
+      letter-spacing: 1.2pt !important;
+      color: #1a1a1a !important;
+      border-bottom: 0.75pt solid #ccc !important;
+      padding-bottom: 3pt !important;
+      margin-bottom: 7pt !important;
+      margin-top: 9pt !important;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif !important;
+    }
+
+    .cv-heading-prefix {
+      display: none !important;
+    }
+
+    /* Jobs */
+    .cv-job {
+      break-inside: avoid;
+      margin-bottom: 8pt !important;
+    }
+
+    .cv-job-header h3 {
+      font-size: 10pt !important;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif !important;
+      color: #1a1a1a !important;
+    }
+
+    .cv-role {
+      font-size: 9pt !important;
+      color: #555 !important;
+      font-weight: 400 !important;
+      margin-top: 1pt !important;
+    }
+
+    .cv-dates {
+      font-size: 8.5pt !important;
+      color: #555 !important;
+    }
+
+    .cv-job-body ul {
+      margin-left: 14pt !important;
+    }
+
+    .cv-job-body li,
+    .cv-additional-card li {
+      font-size: 9.2pt !important;
+      line-height: 1.42 !important;
+      color: #1a1a1a !important;
+      margin-bottom: 1.5pt !important;
+    }
+
+    .cv-key-clients {
+      font-size: 8.5pt !important;
+      color: #333 !important;
+      border-top: none !important;
+      padding-top: 3pt !important;
+    }
+
+    .cv-key-clients strong {
+      color: #1a1a1a !important;
+    }
+
+    /* Additional */
+    .cv-additional-grid {
+      display: block !important;
+    }
+
+    .cv-additional-card {
+      break-inside: avoid;
+      margin-bottom: 5pt !important;
+    }
+
+    .cv-additional-card h3 {
+      font-size: 9.5pt !important;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif !important;
+      color: #1a1a1a !important;
+    }
+
+    .cv-additional-card .cv-job-header {
+      flex-direction: row !important;
+      gap: 1rem !important;
+    }
+
+    .cv-additional-card li {
+      font-size: 8.8pt !important;
+    }
+
+    .cv-additional-card ul {
+      margin-left: 14pt !important;
+    }
+
+    /* Education */
+    .cv-edu-year {
+      display: none !important;
+    }
+
+    .cv-edu-card {
+      break-inside: avoid;
+      margin-bottom: 4pt !important;
+    }
+
+    .cv-edu-body h3 {
+      font-size: 9.5pt !important;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif !important;
+      color: #1a1a1a !important;
+    }
+
+    .cv-edu-body p {
+      font-size: 8.8pt !important;
+      color: #333 !important;
+    }
+
+    /* Footer */
+    .cv-footer-strip {
+      border: none !important;
+      padding-top: 0 !important;
+      margin-top: 0 !important;
+    }
+
+    .cv-footer-col p {
+      font-size: 8.8pt !important;
+      color: #333 !important;
+    }
+
+    .cv-lang-level {
+      opacity: 1 !important;
+    }
+
+    .cv,
+    .cv * {
+      font-family: Arial, Helvetica, sans-serif !important;
+      letter-spacing: normal !important;
+    }
+
+    @page {
+      size: A4;
+      margin: 1.25cm 1.45cm;
+    }
+  }
+</style>

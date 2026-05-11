@@ -1,0 +1,734 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CloudMarquee from "../components/CloudMarquee.astro";
+
+const siteUrl = "https://blog.dotmavriq.life";
+const pageTitle = "about // dotmavriq";
+const description =
+  "Jonatan Jansson — Senior Full-Stack Developer in the Lisbon area. 15+ years building across the full web stack, currently at Nordhealth.";
+const ogImage = `${siteUrl}/cool.webp`;
+
+const jsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  dateModified: "2026-04-13",
+  mainEntity: {
+    "@type": "Person",
+    name: "Jonatan Jansson",
+    alternateName: "dotMavriQ",
+    jobTitle: "Senior Full-Stack Developer",
+    url: `${siteUrl}/about`,
+    image: ogImage,
+    sameAs: [
+      "https://github.com/dotMavriQ",
+      "https://www.linkedin.com/in/janssonjonatan/",
+      "https://social.dotmavriq.life/users/dotmavriq",
+    ],
+    worksFor: {
+      "@type": "Organization",
+      name: "Nordhealth",
+      url: "https://nordhealth.com",
+    },
+    knowsAbout: [
+      "JavaScript", "TypeScript", "PHP", "Python", "SQL",
+      "React", "Vue.js", "Svelte", "Next.js", "Astro", "Node.js", "Laravel",
+      "WordPress", "Magento", "WooCommerce",
+      "Linux", "Docker", "nginx", "GitHub Actions", "CI/CD",
+      "PostgreSQL", "MySQL", "GraphQL", "REST APIs",
+      "GDPR", "WCAG", "Core Web Vitals", "SEO", "Tailwind CSS",
+      "OAuth", "SSO", "Sentry", "Grafana", "Agile", "Scrum",
+      "Figma", "Playwright", "HubSpot",
+    ],
+  },
+});
+---
+
+<BaseLayout title={pageTitle} description={description}>
+  <Fragment slot="head">
+    <meta property="profile:first_name" content="Jonatan" />
+    <meta property="profile:last_name" content="Jansson" />
+    <meta property="profile:username" content="dotMavriQ" />
+    <script is:inline type="application/ld+json" set:html={jsonLd} />
+  </Fragment>
+
+  <CloudMarquee slot="marquee" />
+
+  <article class="about">
+
+    <!-- ═══════ Hero ═══════ -->
+    <header class="about-hero">
+      <div class="about-hero__text">
+        <h1 class="about-hero__heading">
+          <span class="slash" aria-hidden="true">//</span> about
+        </h1>
+        <p class="about-hero__name">Jonatan Jansson</p>
+        <p class="about-hero__role">
+          <span class="sr-only">Senior Full-Stack Developer</span>
+          <span class="typewriter" aria-hidden="true">Senior Full-Stack Developer</span>
+        </p>
+        <p class="about-hero__meta">Lisbon Area &middot; EU&nbsp;Time&nbsp;Zones &middot; Open to&nbsp;opportunities</p>
+      </div>
+      <div class="about-hero__photo">
+        <img
+          src="/cool.webp"
+          alt="Jonatan looking towards ten o'clock"
+          width="565"
+          height="753"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    </header>
+
+    <!-- ═══════ Highlight Strip ═══════ -->
+    <div class="highlights" data-reveal>
+      <div class="highlight neu-box-sm">
+        <span class="highlight__number">70+</span>
+        <span class="highlight__label">clients served</span>
+      </div>
+      <div class="highlight highlight--inv neu-box-sm">
+        <span class="highlight__number">10+</span>
+        <span class="highlight__label">years in the industry</span>
+      </div>
+      <div class="highlight neu-box-sm">
+        <span class="highlight__number">17</span>
+        <span class="highlight__label">years on Linux</span>
+      </div>
+      <div class="highlight highlight--inv neu-box-sm">
+        <span class="highlight__number highlight__heart" aria-label="love"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+        <span class="highlight__label">cross-functional teams</span>
+      </div>
+    </div>
+
+    <!-- ═══════ Career Journey ═══════ -->
+    <section class="journey" aria-labelledby="journey-heading">
+      <h2 id="journey-heading" class="section-heading prefix-slash">journey</h2>
+
+      <div class="journey__grid">
+        <div class="journey__card neu-box" data-reveal>
+          <h3 class="journey__label">// origin</h3>
+          <p>I got a CD from a Swedish PC magazine when I was eight. It had a copy of Game Maker on it. That was enough. By twelve I was building websites for friends and family. By sixteen I was running Linux. In 2007 I touched WordPress for the first time, and around the same time I built a community site on a customized PHPBB installation for a youth startup competition — earned a silver medal for it, working entirely on my own.</p>
+        </div>
+
+        <div class="journey__card neu-box" data-reveal>
+          <h3 class="journey__label">// early career</h3>
+          <p>I co-founded a web bureau with three friends. We could build the product but couldn't sell it — a full-stack restaurant platform, priced at a fraction of market rate, got turned down as "too expensive." That's when I internalized something I still carry: technical skill without communication is incomplete. Nordic Goods was where I proved I could do both. They needed one person to launch an international e-commerce operation — I provisioned the servers, built the storefronts, ran the initial marketing, and brought in their first paying customers. In between, I founded the Lidkoping Makerspace — an NGO built on the belief that technology should be as accessible as a public library. My generation learned networking through LAN parties and programming through curiosity. I wanted to keep that door open. Ran it for two years with eight co-organizers before the founding team scattered to other ventures.</p>
+        </div>
+
+        <div class="journey__card neu-box" data-reveal>
+          <h3 class="journey__label">// pigeon years</h3>
+          <p>Over half a decade, 50+ clients, full ownership from scoping to invoicing. Duva was where I became a proper full-stack developer. Client-facing from day one — translating business needs into technical scope, then building and shipping it myself. The client list ranged from Academedia, Sweden's largest private education group, to multiple municipalities and industrial groups like Assemblin and Absolent. I owned entire web properties end-to-end: Linux hosting, security hardening, GDPR compliance, accessibility, payment integrations, SEO. Toward the end I built a Python middleware service aggregating geospatial data across multiple third-party APIs — ingestion, transformation, and delivery across disparate sources. The biggest lesson from those years wasn't technical. It was learning to own the process when a delivery went sideways — not just fix the code, but fix the communication.</p>
+        </div>
+
+        <div class="journey__card neu-box" data-reveal>
+          <h3 class="journey__label">// international</h3>
+          <p>Moved to Portugal. Joined IPTOR as a Senior Developer, building enterprise plugins and managing a dozen web properties across their portfolio. Then Block Labs, where the work got sharper — I led a team of two developers on coinpoker.com, a real-time poker platform with thousands of concurrent sessions and 25 stakeholders pulling in different directions. The code was one thing. The harder part was triaging competing priorities under pressure and shipping on deadline without letting quality slide.</p>
+        </div>
+
+        <div class="journey__card journey__card--current neu-box" data-reveal>
+          <h3 class="journey__label">// today</h3>
+          <p>When I joined Nordhealth, the content managers couldn't publish to their own sites. That was the starting point. I built CI/CD pipelines with GitHub Actions, migrated five legacy properties onto a unified platform, and created AI-powered workflows using Claude Code and MCP servers to auto-generate WordPress Blocks that content teams could deploy across every property. Playwright test suites for validation. Standardizing all production WordPress sites into a shared monorepo with common tooling and deployment pipelines. I handle GDPR compliance, Core Web Vitals, A/B testing, analytics, and HubSpot integrations across all properties. Sole owner of eleven web environments spanning WordPress, Eleventy, and Astro.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ Tech Stack ═══════ -->
+    <section class="stack" aria-labelledby="stack-heading">
+      <h2 id="stack-heading" class="section-heading prefix-slash">stack</h2>
+      <div class="stack__grid" data-reveal>
+        <div class="stack__group">
+          <h3 class="stack__title">languages</h3>
+          <div class="stack__tags" role="list">
+            <span class="stack__tag" role="listitem">JavaScript / TypeScript</span>
+            <span class="stack__tag" role="listitem">PHP</span>
+            <span class="stack__tag" role="listitem">Python</span>
+            <span class="stack__tag" role="listitem">Bash</span>
+            <span class="stack__tag" role="listitem">Tailwind CSS</span>
+          </div>
+        </div>
+        <div class="stack__group">
+          <h3 class="stack__title">frameworks &amp; cms</h3>
+          <div class="stack__tags" role="list">
+            <span class="stack__tag" role="listitem">WordPress</span>
+            <span class="stack__tag" role="listitem">React</span>
+            <span class="stack__tag" role="listitem">Next.js</span>
+            <span class="stack__tag" role="listitem">Node.js</span>
+            <span class="stack__tag" role="listitem">Astro</span>
+            <span class="stack__tag" role="listitem">Svelte</span>
+            <span class="stack__tag" role="listitem">Laravel</span>
+          </div>
+        </div>
+        <div class="stack__group">
+          <h3 class="stack__title">infrastructure &amp; data</h3>
+          <div class="stack__tags" role="list">
+            <span class="stack__tag" role="listitem">CI/CD</span>
+            <span class="stack__tag" role="listitem">GitHub Actions</span>
+            <span class="stack__tag" role="listitem">Linux</span>
+            <span class="stack__tag" role="listitem">Docker</span>
+            <span class="stack__tag" role="listitem">PostgreSQL</span>
+            <span class="stack__tag" role="listitem">MySQL</span>
+            <span class="stack__tag" role="listitem">REST APIs</span>
+            <span class="stack__tag" role="listitem">GraphQL</span>
+            <span class="stack__tag" role="listitem">OAuth / SSO</span>
+            <span class="stack__tag" role="listitem">Sentry</span>
+            <span class="stack__tag" role="listitem">Grafana</span>
+          </div>
+        </div>
+        <div class="stack__group">
+          <h3 class="stack__title">tools &amp; analytics</h3>
+          <div class="stack__tags" role="list">
+            <span class="stack__tag" role="listitem">Git</span>
+            <span class="stack__tag" role="listitem">Claude AI</span>
+            <span class="stack__tag" role="listitem">Playwright</span>
+            <span class="stack__tag" role="listitem">Figma</span>
+            <span class="stack__tag" role="listitem">Google Analytics (GA4)</span>
+            <span class="stack__tag" role="listitem">Google Tag Manager (GTM)</span>
+            <span class="stack__tag" role="listitem">HubSpot</span>
+          </div>
+        </div>
+        <div class="stack__group stack__group--wide">
+          <h3 class="stack__title">practices</h3>
+          <div class="stack__tags" role="list">
+            <span class="stack__tag" role="listitem">Agile / Scrum</span>
+            <span class="stack__tag" role="listitem">SEO</span>
+            <span class="stack__tag" role="listitem">GEO</span>
+            <span class="stack__tag" role="listitem">WCAG</span>
+            <span class="stack__tag" role="listitem">GDPR</span>
+            <span class="stack__tag" role="listitem">Core Web Vitals</span>
+            <span class="stack__tag" role="listitem">A/B Testing</span>
+            <span class="stack__tag" role="listitem">UI/UX</span>
+            <span class="stack__tag" role="listitem">SSR</span>
+            <span class="stack__tag" role="listitem">SSG</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ Philosophy ═══════ -->
+    <section class="philosophy" data-reveal>
+      <h2 class="section-heading prefix-slash">what this site is</h2>
+      <p class="philosophy__text">A place to write about the things I'm working through — tools, systems, approaches. Not a portfolio in the traditional sense. More like public notes from someone who has been doing this long enough to have opinions, but not so long that they've stopped questioning them.</p>
+    </section>
+
+    <!-- ═══════ Off the Clock ═══════ -->
+    <section class="human" data-reveal>
+      <h2 class="section-heading prefix-slash">off the clock</h2>
+      <p class="human__list">Bass guitar. Cooking. Reading. Trekking. Time with my&nbsp;partner.</p>
+    </section>
+
+    <!-- ═══════ Explore ═══════ -->
+    <nav class="cta-row" aria-label="Explore more" data-reveal>
+      <a href="/cv" class="cta-card neu-box">
+        <span class="cta-card__arrow" aria-hidden="true">&rarr;</span>
+        <span class="cta-card__label">cv</span>
+      </a>
+      <a href="/portfolio" class="cta-card neu-box">
+        <span class="cta-card__arrow" aria-hidden="true">&rarr;</span>
+        <span class="cta-card__label">portfolio</span>
+      </a>
+      <a href="/contact" class="cta-card neu-box">
+        <span class="cta-card__arrow" aria-hidden="true">&rarr;</span>
+        <span class="cta-card__label">contact</span>
+      </a>
+    </nav>
+
+  </article>
+
+  <!-- No-JS fallback: reveal hidden elements immediately -->
+  <noscript>
+    <style>
+      [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+    </style>
+  </noscript>
+</BaseLayout>
+
+<script>
+  function initAboutReveals() {
+    // ── Scroll Reveal via IntersectionObserver ──
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            (entry.target as HTMLElement).classList.add('revealed');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    // Stagger journey card reveals
+    document.querySelectorAll('.journey__card').forEach((card, i) => {
+      (card as HTMLElement).style.transitionDelay = `${i * 100}ms`;
+    });
+
+    // Reset and observe all reveal targets
+    document.querySelectorAll('[data-reveal]').forEach((el) => {
+      el.classList.remove('revealed');
+      revealObserver.observe(el);
+    });
+  }
+
+  document.addEventListener("astro:page-load", initAboutReveals);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAboutReveals, { once: true });
+  } else {
+    initAboutReveals();
+  }
+</script>
+
+<style>
+  /* ═══════════════════════════════════════════════
+     About page — 2026 Neubrutalist Edition
+     Kinetic typography · Scroll reveals · WCAG AA
+     ═══════════════════════════════════════════════ */
+
+  /* ── Wide container (matches other full-width pages) ── */
+  .about {
+    padding: 3rem 0 4rem;
+    width: min(1200px, 100vw);
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-inline: 20px;
+    box-sizing: border-box;
+  }
+
+  /* ── Hero ── */
+  .about-hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: center;
+    padding-bottom: 1rem;
+  }
+
+  .about-hero__heading {
+    font-size: clamp(3rem, 8vw, 5rem);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.04em;
+  }
+
+  .about-hero__heading .slash {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .about-hero__name {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.75rem;
+    line-height: 1.1;
+  }
+
+  .about-hero__role {
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    height: 1.5em;
+  }
+
+  /* ── Typewriter animation ── */
+  .typewriter {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid var(--muted);
+    width: 0;
+    animation:
+      typewriter 2.2s steps(27, end) 0.8s forwards,
+      blink-caret 0.75s step-end 3s,
+      fade-caret 0.6s ease 5.5s forwards;
+  }
+
+  @keyframes typewriter {
+    to { width: 27ch; }
+  }
+
+  @keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: var(--muted); }
+  }
+
+  @keyframes fade-caret {
+    to { border-color: transparent; }
+  }
+
+  .about-hero__meta {
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--muted);
+    opacity: 0;
+    animation: fade-up 0.5s ease 3s forwards;
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .typewriter {
+      width: 27ch;
+      border-right: none;
+      animation: none;
+    }
+    .about-hero__meta {
+      opacity: 1;
+      animation: none;
+    }
+  }
+
+  /* ── Hero Photo — neubrutalist frame ── */
+  .about-hero__photo {
+    width: clamp(180px, 22vw, 280px);
+    border: 3px solid var(--fg);
+    box-shadow: 6px 6px 0 var(--fg);
+    background: var(--bg);
+    padding: 6px;
+    transform: rotate(1.5deg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .about-hero__photo:hover {
+    transform: rotate(0deg) translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--fg);
+  }
+
+  .about-hero__photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: grayscale(20%);
+  }
+
+  /* ── Highlight Strip ── */
+  .highlights {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 2rem 0 3.5rem;
+  }
+
+  .highlight {
+    padding: 1.25rem 1rem;
+    text-align: center;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .highlight:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--fg);
+  }
+
+  .highlight__number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1;
+    height: 1.2em;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.03em;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .highlight__label {
+    display: block;
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+
+  .highlight--inv {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .highlight--inv .highlight__label {
+    color: var(--cloud);
+  }
+
+
+  .highlight__heart svg {
+    width: 1em;
+    height: 1em;
+    transform: translateY(-2px);
+  }
+
+  /* ── Section Headings ── */
+  .section-heading {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── Journey ── */
+  .journey {
+    margin-bottom: 3.5rem;
+  }
+
+  .journey__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .journey__card {
+    padding: 1.75rem 2rem;
+    border-left: 5px solid var(--accent);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .journey__card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--fg);
+  }
+
+  .journey__label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+    text-transform: lowercase;
+  }
+
+  .journey__card p {
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--fg);
+  }
+
+  /* "today" card — inverted to signal current role */
+  .journey__card--current {
+    background: var(--fg);
+    border-left-color: var(--muted);
+  }
+
+  .journey__card--current .journey__label {
+    color: var(--cloud);
+  }
+
+  .journey__card--current p {
+    color: var(--bg);
+  }
+
+  .journey__card--current:hover {
+    box-shadow: 6px 6px 0 var(--muted);
+  }
+
+  /* ── Stack ── */
+  .stack {
+    margin-bottom: 3.5rem;
+  }
+
+  .stack__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .stack__title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+
+  .stack__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .stack__tag {
+    display: inline-block;
+    padding: 0.3rem 0.7rem;
+    border: 2px solid var(--fg);
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    cursor: default;
+  }
+
+  .stack__group--wide {
+    grid-column: 1 / -1;
+  }
+
+  .stack__tag:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0 var(--fg);
+  }
+
+  /* ── Philosophy — inverted block ── */
+  .philosophy {
+    margin-bottom: 3.5rem;
+    padding: 2.5rem;
+    background: var(--fg);
+    border: 3px solid var(--fg);
+    box-shadow: 4px 4px 0 var(--muted);
+  }
+
+  .philosophy :global(.section-heading) {
+    color: var(--bg);
+  }
+
+  .philosophy :global(.prefix-slash::before) {
+    color: var(--cloud);
+  }
+
+  .philosophy__text {
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    line-height: 1.7;
+    font-style: italic;
+    color: var(--bg);
+  }
+
+  /* ── Human ── */
+  .human {
+    margin-bottom: 3.5rem;
+  }
+
+  .human__list {
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── CTA Row ── */
+  .cta-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .cta-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    text-decoration: none;
+    color: var(--fg);
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .cta-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--fg);
+    color: var(--fg);
+  }
+
+  .cta-card:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--fg);
+  }
+
+  .cta-card:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .cta-card__arrow {
+    font-size: 1.3rem;
+    transition: transform 0.15s ease;
+  }
+
+  .cta-card:hover .cta-card__arrow {
+    transform: translateX(4px);
+  }
+
+  .cta-card__label {
+    text-transform: lowercase;
+  }
+
+  /* ── Scroll Reveal ── */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  :global([data-reveal].revealed) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Responsive — Tablet ── */
+  @media (max-width: 768px) {
+    .about-hero {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .about-hero__photo {
+      margin: 0 auto;
+      width: 200px;
+      order: -1;
+      transform: rotate(-1deg);
+    }
+
+    .highlights {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stack__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Responsive — Small ── */
+  @media (max-width: 500px) {
+    .about {
+      padding: 2rem 0 3rem;
+    }
+
+    .about-hero__heading {
+      font-size: 2.5rem;
+    }
+
+    .about-hero__photo {
+      width: 160px;
+    }
+
+    .journey__card {
+      padding: 1.25rem 1.5rem;
+    }
+
+    .philosophy {
+      padding: 1.75rem;
+    }
+
+    .cta-card {
+      padding: 1rem 1.25rem;
+    }
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CloudMarquee from "../../components/CloudMarquee.astro";
+
+const title = "blog // dotmavriq";
+const description = "Articles, notes, and deep dives from Jonatan Jansson.";
+---
+
+<BaseLayout title={title} description={description}>
+  <CloudMarquee slot="marquee" />
+  <section class="blog-index">
+    <header class="blog-header">
+      <h1>blog</h1>
+      <p class="standfirst">
+        The 2026 archive is being prepared for publication. New posts will be available by the end of the month.
+      </p>
+      <p class="meta">
+        In the meantime, you can read about the work behind this site on the
+        <a href="/about">about</a> page, or browse selected projects in the
+        <a href="/portfolio">portfolio</a>.
+      </p>
+    </header>
+  </section>
+</BaseLayout>
+
+<style>
+  .blog-index {
+    max-width: 64ch;
+    margin: 0 auto;
+    padding: 4rem 1.25rem 6rem;
+  }
+  .blog-header h1 {
+    font-family: var(--font-jgs), monospace;
+    font-size: clamp(2rem, 6vw, 3.25rem);
+    margin: 0 0 1.5rem;
+    letter-spacing: 0.02em;
+  }
+  .standfirst {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin: 0 0 1.25rem;
+  }
+  .meta {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    opacity: 0.85;
+    margin: 0;
+  }
+  .meta a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

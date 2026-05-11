@@ -1,0 +1,508 @@
+---
+const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
+---
+
+<aside class="oliv-chat" id="oliv-chat" data-endpoint={endpoint}>
+  <button
+    class="oliv-launch"
+    id="oliv-launch"
+    type="button"
+    aria-expanded="false"
+    aria-controls="oliv-panel"
+  >
+    <span class="oliv-stars" aria-hidden="true">✦</span>
+    <span>ask</span>
+  </button>
+
+  <section
+    class="oliv-panel"
+    id="oliv-panel"
+    role="dialog"
+    aria-labelledby="oliv-title"
+    hidden
+  >
+    <header class="oliv-header">
+      <div class="oliv-identity">
+        <img
+          class="oliv-avatar"
+          src="/img/oliv-bot-face.webp"
+          alt=""
+          width="64"
+          height="64"
+          loading="lazy"
+        />
+        <div>
+          <h2 id="oliv-title">oliv</h2>
+          <p>portfolio chatbot</p>
+        </div>
+      </div>
+      <button class="oliv-close" id="oliv-close" type="button" aria-label="Close OLIV chat">
+        ×
+      </button>
+    </header>
+
+    <div class="oliv-log" id="oliv-log" role="log" aria-label="Conversation" aria-live="polite">
+      <div class="oliv-message oliv-message--bot">
+        <img src="/img/oliv-bot-face.webp" alt="" width="32" height="32" loading="lazy" />
+        <p>I'm OLIV. Ask me about Jonatan's work, career, projects, or background.</p>
+      </div>
+    </div>
+
+    <form class="oliv-form" id="oliv-form">
+      <label class="sr-only" for="oliv-input">Ask OLIV a question</label>
+      <textarea
+        id="oliv-input"
+        name="message"
+        rows="2"
+        maxlength="500"
+        placeholder="Ask about Jonatan..."
+        required
+      ></textarea>
+      <button class="oliv-send" type="submit" id="oliv-send">
+        <span aria-hidden="true">✧</span>
+        <span>send</span>
+      </button>
+    </form>
+  </section>
+</aside>
+
+<script>
+  type ChatPayload = {
+    detail?: string;
+    error?: string;
+    reply?: string;
+  };
+
+  let olivAbortController: AbortController | null = null;
+
+  function initOliviaChat() {
+    olivAbortController?.abort();
+    olivAbortController = new AbortController();
+    const { signal } = olivAbortController;
+
+    const root = document.getElementById("oliv-chat");
+    const launch = document.getElementById("oliv-launch") as HTMLButtonElement | null;
+    const panel = document.getElementById("oliv-panel") as HTMLElement | null;
+    const close = document.getElementById("oliv-close") as HTMLButtonElement | null;
+    const form = document.getElementById("oliv-form") as HTMLFormElement | null;
+    const input = document.getElementById("oliv-input") as HTMLTextAreaElement | null;
+    const log = document.getElementById("oliv-log");
+    const send = document.getElementById("oliv-send") as HTMLButtonElement | null;
+    const endpoint = root?.getAttribute("data-endpoint");
+
+    if (!root || !launch || !panel || !close || !form || !input || !log || !send || !endpoint) return;
+
+    const setOpen = (open: boolean) => {
+      panel.hidden = !open;
+      launch.setAttribute("aria-expanded", String(open));
+      root.classList.toggle("is-open", open);
+      if (open) input.focus();
+    };
+
+    const isQuotaError = (value: unknown) => {
+      const text = String(value ?? '').toLowerCase();
+      return text.includes('4006') || text.includes('daily free allocation') || text.includes('free allocation');
+    };
+
+    const getFallbackReply = (payload: ChatPayload | null, status: number) => {
+      const detail = payload?.detail || payload?.error || '';
+      if (isQuotaError(detail) || status === 429) {
+        return "I've been working a lot today it seems... I'm tired. Get a hold of Jonatan if you need to know anything immediately, otherwise I might be able to answer you tomorrow.";
+      }
+
+      return `I couldn't reach the worker: ${detail || `Request failed (${status})`}`;
+    };
+
+    const appendMessage = (kind: "bot" | "user", text: string) => {
+      const message = document.createElement("div");
+      message.className = `oliv-message oliv-message--${kind}`;
+
+      if (kind === "bot") {
+        const avatar = document.createElement("img");
+        avatar.src = "/img/oliv-bot-face.webp";
+        avatar.alt = "";
+        avatar.width = 32;
+        avatar.height = 32;
+        message.appendChild(avatar);
+      }
+
+      const paragraph = document.createElement("p");
+      paragraph.textContent = text;
+      message.appendChild(paragraph);
+      log.appendChild(message);
+      log.scrollTop = log.scrollHeight;
+      return message;
+    };
+
+    launch.addEventListener("click", () => setOpen(panel.hidden), { signal });
+    close.addEventListener("click", () => setOpen(false), { signal });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !panel.hidden) {
+        setOpen(false);
+        launch.focus();
+      }
+    }, { signal });
+
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    }, { signal });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage("user", text);
+      input.value = "";
+      input.disabled = true;
+      send.disabled = true;
+      const pending = appendMessage("bot", "Thinking.");
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text }),
+        });
+        const payload = await response.json().catch(() => null) as ChatPayload | null;
+        if (!response.ok) {
+          throw new Error(getFallbackReply(payload, response.status));
+        }
+        const pendingText = pending.querySelector("p");
+        if (pendingText) {
+          pendingText.textContent = payload?.reply || "I don't have a useful answer for that.";
+        }
+      } catch (error) {
+        const pendingText = pending.querySelector("p");
+        if (pendingText) {
+          pendingText.textContent =
+            error instanceof Error
+              ? error.message
+              : "I couldn't reach the worker.";
+        }
+      } finally {
+        input.disabled = false;
+        send.disabled = false;
+        input.focus();
+        log.scrollTop = log.scrollHeight;
+      }
+    }, { signal });
+  }
+
+  document.addEventListener("astro:page-load", initOliviaChat);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initOliviaChat, { once: true });
+  } else {
+    initOliviaChat();
+  }
+</script>
+
+<style>
+  .oliv-chat {
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+    z-index: 250;
+    font-family: var(--font-mono);
+    max-width: calc(100vw - 2rem);
+  }
+
+  .oliv-launch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 48px;
+    padding: 0.75rem 1.35rem;
+    border: 3px solid var(--fg);
+    background: var(--fg);
+    color: var(--bg);
+    box-shadow: 4px 4px 0 var(--fg);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+
+  .oliv-launch:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--fg);
+  }
+
+  .oliv-launch:focus-visible,
+  .oliv-close:focus-visible,
+  .oliv-send:focus-visible,
+  .oliv-form textarea:focus-visible {
+    outline: 3px solid var(--muted);
+    outline-offset: 3px;
+  }
+
+  .oliv-launch:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--fg);
+  }
+
+  :global([data-theme="dark"]) .oliv-launch {
+    box-shadow: 4px 4px 0 var(--muted);
+  }
+
+  :global([data-theme="dark"]) .oliv-launch:hover {
+    box-shadow: 6px 6px 0 var(--muted);
+  }
+
+  .oliv-stars {
+    font-size: 1.05rem;
+    line-height: 1;
+  }
+
+  .oliv-panel {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 1rem);
+    width: min(380px, calc(100vw - 2rem));
+    height: min(640px, calc(100dvh - 7rem));
+    max-height: calc(100dvh - 7rem);
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    border: 3px solid var(--fg);
+    background: var(--bg);
+    color: var(--fg);
+    box-shadow: 8px 8px 0 var(--fg);
+  }
+
+  .oliv-panel[hidden] {
+    display: none;
+  }
+
+  :global([data-theme="dark"]) .oliv-panel {
+    box-shadow: 8px 8px 0 var(--muted);
+  }
+
+  .oliv-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem;
+    border-bottom: 3px solid var(--fg);
+  }
+
+  .oliv-identity {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .oliv-avatar {
+    width: 58px;
+    height: 58px;
+    border: 3px solid var(--fg);
+    border-radius: 999px;
+    background: #fff;
+    object-fit: cover;
+    flex: 0 0 auto;
+    display: block;
+  }
+
+  .oliv-header h2 {
+    margin: 0;
+    font-size: 1rem;
+    letter-spacing: 0;
+    line-height: 1.1;
+  }
+
+  .oliv-header h2::before {
+    content: "// ";
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .oliv-header p {
+    margin: 0.2rem 0 0;
+    color: var(--muted);
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .oliv-close {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 1.45rem;
+    line-height: 1;
+    padding: 0.1rem 0.2rem;
+  }
+
+  .oliv-close:hover {
+    color: var(--fg);
+  }
+
+  .oliv-log {
+    overflow-y: auto;
+    min-height: 0;
+    padding: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .oliv-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    max-width: 100%;
+  }
+
+  .oliv-message img {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--fg);
+    border-radius: 999px;
+    background: #fff;
+    flex: 0 0 auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  .oliv-message p {
+    margin: 0;
+    padding: 0.55rem 0.65rem;
+    border: 2px solid var(--fg);
+    background: var(--bg);
+    color: var(--fg);
+    box-shadow: 3px 3px 0 var(--fg);
+    font-size: 0.82rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .oliv-message--user {
+    justify-content: flex-end;
+  }
+
+  .oliv-message--user p {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .oliv-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.6rem;
+    padding: 0.75rem;
+    border-top: 3px solid var(--fg);
+    background: var(--bg);
+  }
+
+  .oliv-form textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 56px;
+    max-height: 120px;
+    resize: none;
+    border: 2px solid var(--fg);
+    background: var(--bg);
+    color: var(--fg);
+    box-shadow: 3px 3px 0 var(--fg);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.35;
+    padding: 0.65rem;
+  }
+
+  .oliv-form textarea::placeholder {
+    color: var(--muted);
+  }
+
+  .oliv-send {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    min-width: 88px;
+    border: 2px solid var(--fg);
+    background: var(--fg);
+    color: var(--bg);
+    box-shadow: 3px 3px 0 var(--fg);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .oliv-send:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--fg);
+  }
+
+  .oliv-send:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--fg);
+  }
+
+  .oliv-send:disabled,
+  .oliv-form textarea:disabled {
+    cursor: wait;
+    opacity: 0.65;
+  }
+
+  @media (max-width: 600px) {
+    .oliv-chat {
+      right: 1rem;
+      bottom: 1rem;
+      max-width: calc(100vw - 2rem);
+    }
+
+    .oliv-launch {
+      min-height: 44px;
+      padding: 0.65rem 1rem;
+      font-size: 0.8rem;
+    }
+
+    .oliv-panel {
+      width: calc(100vw - 2rem);
+      height: min(560px, calc(100dvh - 5.75rem));
+      max-height: calc(100dvh - 5.75rem);
+    }
+
+    .oliv-send {
+      min-width: 74px;
+    }
+  }
+
+  @media (max-width: 420px), (max-height: 520px) {
+    .oliv-header {
+      padding: 0.65rem;
+    }
+
+    .oliv-avatar {
+      width: 46px;
+      height: 46px;
+    }
+
+    .oliv-log {
+      padding: 0.7rem;
+      gap: 0.65rem;
+    }
+
+    .oliv-form {
+      grid-template-columns: 1fr;
+    }
+
+    .oliv-send {
+      min-height: 44px;
+      width: 100%;
+    }
+  }
+</style>

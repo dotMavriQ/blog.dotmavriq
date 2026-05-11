@@ -1,0 +1,248 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CloudMarquee from "../components/CloudMarquee.astro";
+---
+
+<BaseLayout title="contact // dotmavriq" description="Get in touch.">
+  <CloudMarquee slot="marquee" />
+
+  <section class="contact">
+
+    <!-- Intro card — houses the 5 channel links inline -->
+    <div class="intro-card neu-box">
+      <h1 class="prefix-slash">contact</h1>
+      <p class="tagline">Let's connect</p>
+      <p class="sub">Prefer async? Ping me on any channel below. I read all DMs and reply when I&nbsp;can.</p>
+
+      <nav class="channel-row" aria-label="Contact channels">
+        <a href="https://github.com/dotMavriQ" class="channel" target="_blank" rel="noopener">
+          <svg class="channel__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+        <a href="https://www.linkedin.com/in/janssonjonatan/" class="channel" target="_blank" rel="noopener">
+          <svg class="channel__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+            <rect x="2" y="9" width="4" height="12"/>
+            <circle cx="4" cy="4" r="2"/>
+          </svg>
+          <span>LinkedIn</span>
+        </a>
+        <a href="#" class="channel" id="email-card" data-m="lZWas5ScpJndh1GdvRGQxlmc2FWb09GZ">
+          <svg class="channel__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <polyline points="22,4 12,13 2,4"/>
+          </svg>
+          <span>Email</span>
+        </a>
+        <a href="/social" class="channel">
+          <span class="channel__icon channel__icon--glyph" aria-hidden="true">⁂</span>
+          <span>Fediverse</span>
+        </a>
+        <a href="https://matrix.to/#/@dotmavriq:chat.dotmavriq.life" class="channel" target="_blank" rel="noopener">
+          <svg class="channel__icon" viewBox="0 0 27.9 32" fill="currentColor" aria-hidden="true">
+            <path d="m27.1 31.2v-30.5h-2.19v-0.732h3.04v32h-3.04v-0.732z"/>
+            <path d="m8.23 10.4v1.54h0.044c0.385-0.564 0.893-1.03 1.49-1.37 0.58-0.323 1.25-0.485 1.99-0.485 0.72 0 1.38 0.14 1.97 0.42 0.595 0.279 1.05 0.771 1.36 1.48 0.338-0.5 0.796-0.941 1.38-1.32 0.58-0.383 1.27-0.574 2.06-0.574 0.602 0 1.16 0.074 1.67 0.22 0.514 0.148 0.954 0.383 1.32 0.707 0.366 0.323 0.653 0.746 0.859 1.27 0.205 0.522 0.308 1.15 0.308 1.89v7.63h-3.13v-6.46c0-0.383-0.015-0.743-0.044-1.08-0.0209-0.307-0.103-0.607-0.242-0.882-0.133-0.251-0.336-0.458-0.584-0.596-0.257-0.146-0.606-0.22-1.05-0.22-0.44 0-0.796 0.085-1.07 0.253-0.272 0.17-0.485 0.39-0.639 0.662-0.159 0.287-0.264 0.602-0.308 0.927-0.052 0.347-0.078 0.697-0.078 1.05v6.35h-3.13v-6.4c0-0.338-7e-3 -0.673-0.021-1-0.0114-0.314-0.0749-0.623-0.188-0.916-0.108-0.277-0.3-0.512-0.55-0.673-0.258-0.168-0.636-0.253-1.14-0.253-0.198 0.0083-0.394 0.042-0.584 0.1-0.258 0.0745-0.498 0.202-0.705 0.374-0.228 0.184-0.422 0.449-0.584 0.794-0.161 0.346-0.242 0.798-0.242 1.36v6.62h-3.13v-11.4z"/>
+            <path d="m0.936 0.732v30.5h2.19v0.732h-3.04v-32h3.03v0.732z"/>
+          </svg>
+          <span>Matrix</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Support & scheduling — two side-by-side neubrutalist blocks -->
+    <div class="action-row">
+
+      <div class="action-card neu-box">
+        <h2 class="prefix-slash">book a meeting</h2>
+        <p>Pick a time that works for you. You'll receive a calendar invite with a secure video&nbsp;link.</p>
+        <button class="action-btn" id="cal-btn" type="button">
+          Book a call&nbsp;→
+        </button>
+        <noscript><a href="https://cal.com/dotmavriq" class="action-btn">cal.com/dotmavriq&nbsp;→</a></noscript>
+      </div>
+
+      <div class="action-card neu-box">
+        <h2 class="prefix-slash">donate</h2>
+        <p>If you want to support my Open Source projects or contributions to open collaboration, you can do so via Liberapay.</p>
+        <a href="https://liberapay.com/dotmavriq" class="action-btn" target="_blank" rel="noopener">
+          Liberapay&nbsp;→
+        </a>
+      </div>
+
+    </div>
+
+  </section>
+</BaseLayout>
+
+<script>
+  import { initEmailLink } from '../lib/email-obfuscation';
+  import { initCalEmbed } from '../lib/cal-embed';
+
+  function initContact() {
+    initEmailLink('email-card');
+    initCalEmbed('cal-btn', 'dotmavriq');
+  }
+
+  document.addEventListener("astro:page-load", initContact);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initContact, { once: true });
+  } else {
+    initContact();
+  }
+</script>
+
+<style>
+  /* ── Contact page — full nav-width (1200px) ── */
+  .contact {
+    padding: 2rem 0 1.5rem;
+    width: min(1200px, 100vw);
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-inline: 20px;
+    box-sizing: border-box;
+  }
+
+  /* ── Intro card — houses heading + inline channel links ── */
+  .intro-card {
+    padding: 2rem 2.5rem 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-card h1 {
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+  }
+
+  .tagline {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .sub {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── Channel row — 5 links in a single line ── */
+  .channel-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2.5rem;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--cloud);
+  }
+
+  .channel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--fg);
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+
+  .channel:hover {
+    color: var(--muted);
+  }
+
+  .channel__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex: 0 0 1.25rem;
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .channel__icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .channel__icon--glyph {
+    font-size: 1rem;
+    font-weight: 700;
+    transform: translateY(-3px);
+  }
+
+  /* ── Action row — donate + booking ── */
+  .action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .action-card {
+    padding: 2rem;
+  }
+
+  .action-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .action-card p {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+  }
+
+  .action-btn {
+    display: inline-block;
+    border: 2px solid var(--fg);
+    padding: 0.6rem 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--fg);
+    background: var(--bg);
+    text-decoration: none;
+    box-shadow: 2px 2px 0 var(--fg);
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  .action-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--fg);
+  }
+
+  .action-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--fg);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .action-row {
+      grid-template-columns: 1fr;
+    }
+
+    .intro-card {
+      text-align: center;
+    }
+
+    .channel-row {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .channel-row {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+  }
+</style>

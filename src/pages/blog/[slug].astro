@@ -1,0 +1,1365 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CloudMarquee from "../../components/CloudMarquee.astro";
+import { getCollection, render } from "astro:content";
+import { Image, Picture } from "astro:assets";
+import { getBlogHeroImage } from "../../lib/blog-hero-images";
+import { AUTHOR, SITE } from "../../lib/author";
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog")).filter((post) => !post.data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+// Prev/next: inside a series, follow part order (I → II → III).
+// Outside a series, fall back to reverse-chron across non-series posts.
+const allPosts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+let prevPost: (typeof allPosts)[number] | null = null;
+let nextPost: (typeof allPosts)[number] | null = null;
+
+if (post.data.series) {
+  const siblings = allPosts
+    .filter((p) => p.data.series === post.data.series)
+    .sort((a, b) => (a.data.part ?? 0) - (b.data.part ?? 0));
+  const idx = siblings.findIndex((p) => p.id === post.id);
+  prevPost = idx > 0 ? siblings[idx - 1] : null;
+  nextPost = idx < siblings.length - 1 ? siblings[idx + 1] : null;
+} else {
+  const standalone = allPosts.filter((p) => !p.data.series);
+  const idx = standalone.findIndex((p) => p.id === post.id);
+  prevPost = idx < standalone.length - 1 ? standalone[idx + 1] : null;
+  nextPost = idx > 0 ? standalone[idx - 1] : null;
+}
+
+// Reading time
+const wordCount = post.body?.split(/\s+/).length || 0;
+const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
+// Filter to h2/h3/h4 for ToC (exclude the sr-only footnote label).
+// Convention: a trailing "(…)" in a heading is treated as supplementary
+// context (dates, subtitles) and stripped from the ToC label so sidebar
+// entries stay short. The in-body heading still renders with the parens.
+const stripTrailingParens = (text: string) => text.replace(/\s*\([^()]*\)\s*$/, '').trim();
+const tocHeadings = headings
+  .filter((h) => (h.depth === 2 || h.depth === 3 || h.depth === 4) && h.slug !== 'footnote-label')
+  .map((h) => ({ ...h, text: stripTrailingParens(h.text) }));
+
+// Build a nested tree grouping h3/h4 under their nearest preceding h2 so
+// the ToC can progressively disclose sub-headings only when the parent is
+// active (scrolled into view) or hovered.
+type TocNode = { depth: number; slug: string; text: string; children: TocNode[] };
+const tocTree: TocNode[] = [];
+let tocCurrentGroup: TocNode | null = null;
+for (const h of tocHeadings) {
+  if (h.depth === 2) {
+    tocCurrentGroup = { ...h, children: [] };
+    tocTree.push(tocCurrentGroup);
+  } else if (tocCurrentGroup) {
+    tocCurrentGroup.children.push({ ...h, children: [] });
+  } else {
+    tocTree.push({ ...h, children: [] });
+  }
+}
+const tocTotalEntries = tocTree.reduce((n, g) => n + 1 + g.children.length, 0);
+
+const siteUrl = SITE.url;
+const postUrl = `${siteUrl}/blog/${post.id}/`;
+const postDescription = post.data.excerpt || `Blog post: ${post.data.title}`;
+const prevUrl = prevPost ? `${siteUrl}/blog/${prevPost.id}/` : null;
+const nextUrl = nextPost ? `${siteUrl}/blog/${nextPost.id}/` : null;
+const heroImage = getBlogHeroImage(post.data.heroImage);
+const heroImageUrl = post.data.heroImage ? `${siteUrl}${post.data.heroImage}` : undefined;
+
+const seriesJsonLd = post.data.series
+  ? {
+      isPartOf: {
+        "@type": "CreativeWorkSeries",
+        name: post.data.seriesTitle || post.data.series,
+        numberOfItems: post.data.partsTotal,
+      },
+      position: post.data.part,
+    }
+  : {};
+
+const authorJsonLd = {
+  "@type": "Person",
+  name: AUTHOR.name,
+  alternateName: AUTHOR.alternateName,
+  url: AUTHOR.url,
+  sameAs: AUTHOR.sameAs,
+};
+
+const blogPostingJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: postDescription,
+  datePublished: post.data.pubDate.toISOString(),
+  ...(post.data.updatedDate && { dateModified: post.data.updatedDate.toISOString() }),
+  url: postUrl,
+  author: authorJsonLd,
+  publisher: authorJsonLd,
+  ...(heroImageUrl && { image: heroImageUrl }),
+  mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
+  wordCount: wordCount,
+  inLanguage: SITE.language,
+  ...seriesJsonLd,
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${siteUrl}/` },
+    { "@type": "ListItem", position: 2, name: "Blog", item: `${siteUrl}/blog/` },
+    { "@type": "ListItem", position: 3, name: post.data.title, item: postUrl },
+  ],
+};
+
+const jsonLd = JSON.stringify(blogPostingJsonLd);
+const breadcrumbLd = JSON.stringify(breadcrumbJsonLd);
+---
+
+<BaseLayout
+  title={`${post.data.title} // dotmavriq`}
+  description={postDescription}
+  ogType="article"
+  ogImage={heroImageUrl}
+>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={jsonLd} />
+    <script is:inline type="application/ld+json" set:html={breadcrumbLd} />
+    {prevUrl && <link rel="prev" href={prevUrl} />}
+    {nextUrl && <link rel="next" href={nextUrl} />}
+  </Fragment>
+  <CloudMarquee slot="marquee" />
+  <div class="reading-progress" aria-hidden="true"><div class="reading-progress-fill" id="reading-progress"></div></div>
+  <article class="post-article">
+    <!-- Post header -->
+    <header class={`post-header neu-border-bottom ${post.data.heroImage ? "has-illus" : ""}`}>
+      {(heroImage || post.data.heroImage) && (
+        <div class="post-illus">
+          {heroImage ? (
+            heroImage.isSvg ? (
+              <Image
+                src={heroImage.asset}
+                alt={`Illustration for ${post.data.title}`}
+                loading="eager"
+                decoding="async"
+              />
+            ) : (
+              <Picture
+                src={heroImage.asset}
+                alt={`Illustration for ${post.data.title}`}
+                formats={["avif", "webp"]}
+                fallbackFormat={heroImage.fallbackFormat}
+                widths={[220, 320, 640]}
+                sizes="(min-width: 900px) min(26vw, 320px), min(25vw, 320px)"
+                loading="eager"
+                decoding="async"
+              />
+            )
+          ) : (
+            <img
+              src={post.data.heroImage}
+              alt={`Illustration for ${post.data.title}`}
+              width="320"
+              height="240"
+              loading="eager"
+              decoding="async"
+            />
+          )}
+        </div>
+      )}
+      <h1 class="post-title-main prefix-slash">{post.data.title}</h1>
+      <div class="post-meta">
+        <time datetime={post.data.pubDate.toISOString()}>{new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(post.data.pubDate)}</time>
+        <span class="meta-sep" aria-hidden="true">·</span>
+        <span>{readingTime} min read</span>
+        {post.data.tags.length > 0 && (
+          <>
+            <span class="meta-sep" aria-hidden="true">·</span>
+            <div class="post-tags">
+              {post.data.tags.map((tag) => (
+                <a href={`/blog/?tags=${encodeURIComponent(tag)}`} class="tag-link">{tag}</a>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </header>
+
+    <!-- Mobile ToC -->
+    {tocTotalEntries > 1 && (
+      <details class="mobile-toc neu-box-sm">
+        <summary class="toc-summary">Table of Contents</summary>
+        <nav class="toc-nav" aria-label="Table of contents">
+          <ul>
+            {tocTree.map((group) => (
+              <li class="toc-group">
+                <a href={`#${group.slug}`} class="toc-link" data-heading={group.slug}>{group.text}</a>
+                {group.children.length > 0 && (
+                  <ul class="toc-children">
+                    {group.children.map((child) => (
+                      <li class={child.depth === 4 ? "toc-h4" : "toc-h3"}>
+                        <a href={`#${child.slug}`} class="toc-link" data-heading={child.slug}>{child.text}</a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </details>
+    )}
+
+    <!-- Post body -->
+    <div class="post-content">
+      <Content />
+    </div>
+
+    <!-- Post navigation -->
+    <nav class="post-nav neu-border-top" aria-label={post.data.series ? "Series navigation" : "Post navigation"}>
+      {prevPost ? (
+        <a href={`/blog/${prevPost.id}/`} class="nav-prev" rel="prev">
+          <span class="nav-label">{post.data.series ? `← part ${prevPost.data.part ?? ""}` : "← prev"}</span>
+          <span class="nav-title">{prevPost.data.title}</span>
+        </a>
+      ) : <div />}
+      {nextPost ? (
+        <a href={`/blog/${nextPost.id}/`} class="nav-next" rel="next">
+          <span class="nav-label">{post.data.series ? `part ${nextPost.data.part ?? ""} →` : "next →"}</span>
+          <span class="nav-title">{nextPost.data.title}</span>
+        </a>
+      ) : <div />}
+    </nav>
+
+    <a href="/blog/" class="back-to-blog">← back to blog</a>
+
+    <!-- Desktop ToC sidebar -->
+    {tocTotalEntries > 1 && (
+      <aside class="toc-sidebar neu-border-left-sm" id="toc-sidebar">
+        <h2 class="toc-heading sr-only">Contents</h2>
+        <span class="toc-scroll-hint toc-scroll-hint-top" aria-hidden="true">▴</span>
+        <ul class="toc-list" data-scroll="none">
+          {tocTree.map((group) => (
+            <li class="toc-group">
+              <a href={`#${group.slug}`} class="toc-link" data-heading={group.slug}>
+                {group.text}
+              </a>
+              {group.children.length > 0 && (
+                <ul class="toc-children">
+                  {group.children.map((child) => (
+                    <li class={child.depth === 4 ? "toc-h4" : "toc-h3"}>
+                      <a href={`#${child.slug}`} class="toc-link" data-heading={child.slug}>
+                        {child.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+        <span class="toc-scroll-hint toc-scroll-hint-bottom" aria-hidden="true">▾</span>
+      </aside>
+    )}
+  </article>
+</BaseLayout>
+
+<script>
+  let blogPostAc: AbortController | null = null;
+
+  function initBlogPost() {
+    blogPostAc?.abort();
+    blogPostAc = new AbortController();
+    const { signal } = blogPostAc;
+
+    // Scroll-spy for desktop ToC
+    const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
+    if (tocLinks.length) {
+      const headingEls = Array.from(tocLinks).map((link) =>
+        document.getElementById(link.dataset.heading || '')
+      ).filter(Boolean) as HTMLElement[];
+
+      let currentId = '';
+
+      const allGroups = document.querySelectorAll<HTMLElement>('.toc-group');
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              currentId = entry.target.id;
+              break;
+            }
+          }
+          tocLinks.forEach((link) => {
+            link.classList.toggle('toc-active', link.dataset.heading === currentId);
+          });
+          // Expand only the group containing the active link; collapse others.
+          const activeGroups = new Set<Element>();
+          document.querySelectorAll('.toc-link.toc-active').forEach((link) => {
+            const group = link.closest('.toc-group');
+            if (group) activeGroups.add(group);
+          });
+          allGroups.forEach((g) => {
+            g.classList.toggle('expanded', activeGroups.has(g));
+          });
+        },
+        { rootMargin: '-80px 0px -70% 0px', threshold: 0 }
+      );
+
+      headingEls.forEach((el) => observer.observe(el));
+    }
+
+    // ToC scroll-state indicator (top/middle/bottom/none) — drives fade masks
+    // and chevron affordances so users know the list is scrollable.
+    const tocList = document.querySelector<HTMLElement>('.toc-list');
+    if (tocList) {
+      const updateTocScrollState = () => {
+        const { scrollTop, scrollHeight, clientHeight } = tocList;
+        const overflow = scrollHeight - clientHeight;
+        if (overflow <= 1) {
+          tocList.dataset.scroll = 'none';
+          return;
+        }
+        const atTop = scrollTop <= 2;
+        const atBottom = scrollTop >= overflow - 2;
+        tocList.dataset.scroll = atTop ? 'top' : atBottom ? 'bottom' : 'middle';
+      };
+      tocList.addEventListener('scroll', updateTocScrollState, { passive: true, signal });
+      window.addEventListener('resize', updateTocScrollState, { passive: true, signal });
+      updateTocScrollState();
+    }
+
+    // Reading progress bar
+    const progressBar = document.getElementById('reading-progress');
+    if (progressBar) {
+      const article = document.querySelector('.post-article');
+      let ticking = false;
+
+      const updateProgress = () => {
+        if (!article) return;
+        const articleTop = (article as HTMLElement).offsetTop;
+        const articleHeight = (article as HTMLElement).offsetHeight;
+        const windowHeight = window.innerHeight;
+        const scrolled = window.scrollY - articleTop;
+        const total = articleHeight - windowHeight;
+        const progress = Math.min(Math.max(scrolled / total, 0), 1);
+        progressBar.style.transform = `scaleX(${progress})`;
+        ticking = false;
+      };
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(updateProgress);
+          ticking = true;
+        }
+      }, { passive: true, signal });
+
+      updateProgress();
+    }
+
+    // External links inside the post body → new tab (skips footnote anchors, which start with "#")
+    document.querySelectorAll<HTMLAnchorElement>('.post-content a[href^="http"]').forEach((a) => {
+      try {
+        if (new URL(a.href).origin === location.origin) return;
+      } catch { return; }
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+    });
+
+    // Smooth scroll for ToC clicks
+    document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href')?.slice(1);
+        if (!id) return;
+        const target = document.getElementById(id);
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', `#${id}`);
+      }, { signal });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initBlogPost);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initBlogPost, { once: true });
+  } else {
+    initBlogPost();
+  }
+</script>
+
+<style>
+  /* ── Reading progress bar ── */
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 9999;
+    background: transparent;
+    pointer-events: none;
+  }
+
+  .reading-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transform-origin: left;
+    transform: scaleX(0);
+    will-change: transform;
+  }
+
+  /* ── Widen blog container to match nav (1200px) ── */
+  :global(.page-content.container) {
+    max-width: 1200px;
+  }
+
+  .post-article {
+    padding: clamp(2rem, 4vw, 3rem) 0 5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .post-illus {
+    float: right;
+    width: clamp(200px, 25vw, 320px);
+    max-height: 280px;
+    margin: 0 0 1rem 1.5rem;
+    mix-blend-mode: multiply;
+    filter: contrast(1.1);
+    opacity: 0.85;
+  }
+
+  .post-illus :global(picture),
+  .post-illus :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 280px;
+    object-fit: contain;
+  }
+
+  :global([data-theme="dark"]) .post-illus {
+    mix-blend-mode: screen;
+    filter: invert(1) contrast(1.1);
+    opacity: 0.9;
+  }
+
+  .post-header {
+    margin-bottom: 1.7rem;
+    padding: 0 0 1.4rem;
+  }
+
+  .post-title-main {
+    font-size: clamp(1.4rem, 3vw, 1.75rem);
+    margin-bottom: 0.5rem;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    max-width: 26ch;
+    text-transform: none;
+    text-wrap: balance;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  .post-meta time {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .meta-sep {
+    color: var(--cloud);
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .tag-link {
+    font-size: 0.6rem;
+    font-family: var(--font-commit-mono), var(--font-mono);
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--cloud);
+    color: var(--muted);
+    transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .tag-link:hover {
+    border-color: var(--accent);
+    color: var(--fg);
+  }
+
+  /* Mobile ToC */
+  .mobile-toc {
+    margin-bottom: 2rem;
+    border: 2px solid var(--fg);
+    box-shadow: 4px 4px 0 var(--fg);
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--cloud) 24%, transparent), transparent 42%),
+      var(--bg);
+  }
+
+  .toc-summary {
+    padding: 0.85rem 1rem 0.8rem;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--fg);
+    cursor: pointer;
+    user-select: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    list-style: none;
+  }
+
+  .toc-summary:hover {
+    color: var(--fg);
+  }
+
+  .toc-summary::marker,
+  .toc-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .toc-summary::after {
+    content: "+";
+    float: right;
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .mobile-toc[open] .toc-summary::after {
+    content: "−";
+  }
+
+  .toc-nav {
+    padding: 0 1rem 1rem;
+    border-top: 1px solid var(--cloud);
+  }
+
+  .toc-nav ul {
+    list-style: none;
+  }
+
+  .toc-nav li {
+    margin-bottom: 0.3rem;
+  }
+
+  /* Mobile: collapse sub-headings by default; expand on active scroll-spy
+     group or when the parent <li> is tapped (via .toc-group.open). */
+  .toc-nav .toc-children {
+    max-height: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .toc-nav .toc-group.expanded > .toc-children,
+  .toc-nav .toc-group.open > .toc-children {
+    max-height: 40rem;
+  }
+
+  .toc-nav a {
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.75rem;
+    color: color-mix(in srgb, var(--fg) 78%, var(--muted));
+    padding: 0.3rem 0;
+    display: block;
+    transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .toc-nav a:hover {
+    color: var(--fg);
+  }
+
+  .toc-h3 a {
+    padding-left: 1rem;
+    font-size: 0.7rem;
+  }
+
+  .toc-h4 a {
+    padding-left: 2rem;
+    font-size: 0.68rem;
+    opacity: 0.8;
+  }
+
+  /* ── Post content — the reading experience ── */
+  .post-content {
+    font-family: var(--font-reading);
+    font-size: clamp(1rem, 1.34vw, 1.08rem);
+    line-height: 1.68;
+    color: var(--fg);
+    letter-spacing: 0.001em;
+    word-spacing: 0.01em;
+    max-width: 82ch;
+    font-variation-settings: "MONO" 0, "CASL" 0.18, "wght" 435, "slnt" -6;
+    font-variant-numeric: oldstyle-nums proportional-nums;
+    hanging-punctuation: first allow-end;
+  }
+
+  :global(.post-content .series-intro) {
+    margin: 0 0 2.8rem;
+    padding: 1rem 1.15rem 1.2rem;
+    border: 2px solid var(--fg);
+    box-shadow: 5px 5px 0 var(--fg);
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--cloud) 26%, transparent), transparent 38%),
+      var(--bg);
+  }
+
+  :global(.post-content .series-kicker) {
+    margin: 0 0 0.3rem;
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg);
+  }
+
+  :global(.post-content .series-label) {
+    margin: 0 0 0.55rem;
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.63rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+
+  :global(.post-content .series-links) {
+    margin: 0 0 1rem;
+    padding-left: 1.25rem;
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  :global(.post-content .series-links li) {
+    margin-bottom: 0.25rem;
+  }
+
+  :global(.post-content .series-links [aria-current="page"]) {
+    font-weight: 700;
+  }
+
+  :global(.post-content .standfirst) {
+    font-size: 1.06em;
+    line-height: 1.74;
+    max-width: 62ch;
+    margin-bottom: 0.9rem;
+    font-variation-settings: "MONO" 0, "CASL" 0.22, "wght" 450, "slnt" -7;
+  }
+
+  :global(.post-content .standfirst:last-child) {
+    margin-bottom: 0;
+  }
+
+  /* Widows & orphans — keep paragraphs from leaving lonely lines */
+  .post-content p,
+  .post-content li,
+  .post-content blockquote p {
+    orphans: 3;
+    widows: 3;
+    text-wrap: pretty;
+  }
+
+  /* Drop cap on the first paragraph after the header */
+  .post-content > p:first-of-type::first-letter,
+  :global(.post-content .series-intro + h2 + p)::first-letter {
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 3.2em;
+    float: left;
+    line-height: 0.8;
+    padding-right: 0.08em;
+    margin-top: 0.05em;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* Headings — clear hierarchy with generous breathing room */
+  :global(.post-content h2) {
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: clamp(1.18rem, 1.4vw, 1.36rem);
+    margin-top: 4rem;
+    margin-bottom: 1.35rem;
+    scroll-margin-top: calc(var(--nav-total-height, 116px) + 1.5rem);
+    padding-top: 1.35rem;
+    border-top: 2px solid color-mix(in srgb, var(--fg) 55%, var(--cloud));
+    letter-spacing: -0.03em;
+    text-transform: none;
+    line-height: 1.12;
+    position: relative;
+  }
+
+  :global(.post-content h2)::before {
+    content: "// ";
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  :global(.post-content h2)::after {
+    content: "";
+    display: block;
+    width: 3.25rem;
+    height: 0.22rem;
+    margin-top: 0.7rem;
+    background: var(--fg);
+  }
+
+  :global(.post-content h2:first-of-type) {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  :global(.post-content h2:first-of-type)::after {
+    margin-top: 0.55rem;
+  }
+
+  :global(.post-content h3) {
+    font-family: var(--font-reading);
+    font-size: clamp(1.1rem, 1.05rem + 0.28vw, 1.2rem);
+    margin-top: 2.45rem;
+    margin-bottom: 0.72rem;
+    scroll-margin-top: calc(var(--nav-total-height, 116px) + 1.5rem);
+    color: var(--fg);
+    letter-spacing: -0.015em;
+    text-transform: none;
+    line-height: 1.2;
+    font-variation-settings: "MONO" 0, "CASL" 0.2, "wght" 650, "slnt" -5;
+    padding-left: 0.9rem;
+    border-left: 2px solid color-mix(in srgb, var(--fg) 22%, transparent);
+  }
+
+  :global(.post-content h4) {
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.72rem;
+    margin-top: 1.8rem;
+    margin-bottom: 0.45rem;
+    scroll-margin-top: calc(var(--nav-total-height, 116px) + 1.5rem);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  /* Paragraphs — generous vertical rhythm */
+  .post-content p {
+    margin-bottom: 1.2rem;
+  }
+
+  .post-content > p:first-of-type,
+  :global(.post-content .series-intro + h2 + p) {
+    font-size: 1.08em;
+    line-height: 1.74;
+  }
+
+  /* Links — default blue highlighter, gold retained for footnote refs/citations */
+  .post-content {
+    --link-under: rgba(70, 140, 195, 0.6);
+    --link-under-hover: rgba(70, 140, 195, 0.95);
+    --link-bg-hover: rgba(70, 140, 195, 0.14);
+  }
+  :global([data-theme="dark"]) .post-content {
+    --link-under: rgba(130, 190, 235, 0.65);
+    --link-under-hover: rgba(130, 190, 235, 1);
+    --link-bg-hover: rgba(130, 190, 235, 0.16);
+  }
+
+  :global(.post-content a) {
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: 2.5px solid var(--link-under);
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0 0.1em 0.01em;
+    margin: 0 -0.05em;
+  }
+
+  :global(.post-content a:hover) {
+    background-color: var(--link-bg-hover);
+    border-color: var(--link-under-hover);
+  }
+
+  /* Footnote references, backrefs, and any link inside the footnote section
+     keep the warm gold highlighter — visually ties citations together. */
+  :global(.post-content a[data-footnote-ref]),
+  :global(.post-content a[data-footnote-backref]),
+  :global(.post-content [data-footnotes] a),
+  :global(.post-content .footnotes a) {
+    --link-under: rgba(195, 175, 80, 0.6);
+    --link-under-hover: rgba(195, 175, 80, 0.95);
+    --link-bg-hover: rgba(205, 185, 100, 0.3);
+  }
+
+  :global([data-theme="dark"]) :global(.post-content a[data-footnote-ref]),
+  :global([data-theme="dark"]) :global(.post-content a[data-footnote-backref]),
+  :global([data-theme="dark"]) :global(.post-content [data-footnotes] a),
+  :global([data-theme="dark"]) :global(.post-content .footnotes a) {
+    --link-under: rgba(220, 200, 100, 0.7);
+    --link-under-hover: rgba(220, 200, 100, 1);
+    --link-bg-hover: rgba(220, 200, 100, 0.14);
+  }
+
+  .post-content strong {
+    font-weight: 700;
+    font-variation-settings: "MONO" 0, "CASL" 0.18, "wght" 620, "slnt" -6;
+  }
+
+  .post-content em {
+    font-style: italic;
+    font-variation-settings: "MONO" 0, "CASL" 0.22, "wght" 435, "slnt" -12;
+  }
+
+  /* Blockquotes — inset and quiet */
+  .post-content blockquote {
+    border-left: 3px solid var(--fg);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--muted);
+    font-family: var(--font-reading);
+    font-variation-settings: "MONO" 0, "CASL" 0.3, "wght" 440, "slnt" -10;
+  }
+
+  .post-content blockquote p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Lists — proper indentation and spacing */
+  .post-content ul,
+  .post-content ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .post-content li {
+    margin-bottom: 0.4rem;
+    line-height: 1.52;
+  }
+
+  .post-content li::marker {
+    color: var(--muted);
+  }
+
+  /* Inline code */
+  .post-content code:not(pre code) {
+    background: var(--cloud);
+    padding: 0.15rem 0.45rem;
+    font-size: 0.85em;
+    font-family: var(--font-mono);
+    border: 1px solid var(--cloud);
+  }
+
+  /* Code blocks — neubrutalist treatment */
+  .post-content pre {
+    background: #1a1a17;
+    color: #e8e6df;
+    padding: 1.5rem 1.75rem;
+    overflow-x: auto;
+    margin: 2.5rem 0;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    tab-size: 2;
+    border: 3px solid var(--fg);
+    box-shadow: 4px 4px 0 var(--fg);
+    position: relative;
+  }
+
+  .post-content pre::before {
+    content: "code";
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #1a1a17;
+    background: var(--fg);
+    padding: 0.2rem 0.65rem;
+    line-height: 1.4;
+  }
+
+  :global([data-theme="dark"]) .post-content pre {
+    background: #0d0d0b;
+    border-color: var(--cloud);
+    box-shadow: 4px 4px 0 var(--cloud);
+  }
+
+  :global([data-theme="dark"]) .post-content pre::before {
+    background: var(--cloud);
+    color: var(--bg);
+  }
+
+  .post-content pre code {
+    font-family: var(--font-mono);
+    font-size: inherit;
+  }
+
+  /* Images — centered with breathing room */
+  .post-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 2rem 0;
+    display: block;
+  }
+
+  /* Horizontal rules — section breaks */
+  .post-content hr {
+    border: none;
+    border-top: 1px dashed var(--cloud);
+    margin: 3rem auto;
+    max-width: 8ch;
+  }
+
+  /* Tables — see .data-table utility in global.css */
+
+  /* Post navigation */
+  .post-nav {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  .nav-prev,
+  .nav-next {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-width: 45%;
+    padding: 0.75rem 0;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav-prev:hover {
+    transform: translateX(-4px);
+  }
+
+  .nav-next:hover {
+    transform: translateX(4px);
+  }
+
+  .nav-next {
+    text-align: right;
+    margin-left: auto;
+  }
+
+  .nav-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .nav-title {
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--fg);
+    transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    line-height: 1.4;
+  }
+
+  .nav-prev:hover .nav-title,
+  .nav-next:hover .nav-title {
+    color: var(--accent);
+  }
+
+  .back-to-blog {
+    display: inline-block;
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+    transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .back-to-blog:hover {
+    color: var(--accent);
+    transform: translateX(-4px);
+  }
+
+  /* Desktop ToC sidebar */
+  .toc-sidebar {
+    position: sticky;
+    top: calc(var(--nav-total-height, 116px) + 1.5rem);
+    padding: 0.9rem 0 1rem 1.15rem;
+    margin-top: 2rem;
+    max-width: 300px;
+    border-left-width: 2px;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--cloud) 22%, transparent), transparent 40%),
+      var(--bg);
+  }
+
+  /* Scroll-affordance chevrons (decorative; aria-hidden in markup).
+     Visible only when there is content to scroll in that direction.
+     Theme-agnostic: rendered in current text color via var(--fg). */
+  .toc-scroll-hint {
+    position: absolute;
+    left: 1.15rem;
+    right: 0;
+    text-align: center;
+    pointer-events: none;
+    font-size: 0.85rem;
+    line-height: 1;
+    color: var(--fg);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.25s ease;
+    z-index: 1;
+  }
+  .toc-scroll-hint-top { top: 0.1rem; }
+  .toc-scroll-hint-bottom { bottom: 0.25rem; }
+  .toc-sidebar:has(.toc-list[data-scroll="middle"]) .toc-scroll-hint,
+  .toc-sidebar:has(.toc-list[data-scroll="bottom"]) .toc-scroll-hint-top,
+  .toc-sidebar:has(.toc-list[data-scroll="top"]) .toc-scroll-hint-bottom {
+    opacity: 0.55;
+  }
+  .toc-sidebar:has(.toc-list[data-scroll="top"]) .toc-scroll-hint-bottom {
+    animation: toc-hint-bob 1.8s ease-in-out 0s 2;
+  }
+  @keyframes toc-hint-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(2px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .toc-scroll-hint { animation: none !important; transition: none; }
+  }
+
+  .toc-heading {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 0.35rem;
+    font-weight: 400;
+  }
+
+  .toc-sidebar::before {
+    content: "On this page";
+    display: block;
+    margin-bottom: 0.8rem;
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.63rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fg);
+  }
+
+  .toc-list {
+    list-style: none;
+    max-height: calc(100vh - var(--nav-total-height, 116px) - 6rem);
+    overflow-y: auto;
+    scroll-padding-block: 1.25rem;
+    /* Hide native scrollbar — visual scroll affordance is provided by
+       fade masks + chevrons. Keyboard scrolling and mouse wheel still work. */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 100%);
+            mask-image: linear-gradient(to bottom, #000 0, #000 100%);
+    transition: -webkit-mask-image 0.2s ease, mask-image 0.2s ease;
+  }
+  .toc-list::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+  /* Fade indicators: theme-agnostic (mask, not color). */
+  .toc-list[data-scroll="top"] {
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 1.5rem), transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 1.5rem), transparent 100%);
+  }
+  .toc-list[data-scroll="middle"] {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 1.5rem, #000 calc(100% - 1.5rem), transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 1.5rem, #000 calc(100% - 1.5rem), transparent 100%);
+  }
+  .toc-list[data-scroll="bottom"] {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 1.5rem, #000 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 1.5rem, #000 100%);
+  }
+
+  .toc-list li {
+    margin-bottom: 0.3rem;
+  }
+
+  /* Desktop: progressive disclosure for sub-headings. Collapsed by default;
+     expand when the group is active (scroll-spy), hovered, or focused. */
+  .toc-list .toc-children {
+    list-style: none;
+    max-height: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .toc-list .toc-group.expanded > .toc-children,
+  .toc-list .toc-group:hover > .toc-children,
+  .toc-list .toc-group:focus-within > .toc-children {
+    max-height: 40rem;
+  }
+
+  .toc-link {
+    font-family: var(--font-commit-mono), var(--font-mono);
+    font-size: 0.75rem;
+    color: color-mix(in srgb, var(--fg) 78%, var(--muted));
+    padding: 0.28rem 0;
+    display: block;
+    transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                padding-left 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.82;
+  }
+
+  .toc-link:hover {
+    color: var(--fg);
+    padding-left: 0.35rem;
+    opacity: 1;
+  }
+
+  .toc-link.toc-active {
+    color: var(--accent);
+    font-weight: 700;
+    padding-left: 0.35rem;
+    opacity: 1;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+  }
+
+  .toc-h3 .toc-link {
+    padding-left: 0.75rem;
+    font-size: 0.7rem;
+  }
+
+  .toc-h3 .toc-link:hover,
+  .toc-h3 .toc-link.toc-active {
+    padding-left: 1.1rem;
+  }
+
+  .toc-h4 .toc-link {
+    padding-left: 1.75rem;
+    font-size: 0.68rem;
+    opacity: 0.8;
+  }
+
+  .toc-h4 .toc-link:hover,
+  .toc-h4 .toc-link.toc-active {
+    padding-left: 2.1rem;
+    opacity: 1;
+  }
+
+  /* Desktop: show sidebar alongside content, hide inline ToC */
+  @media (min-width: 900px) {
+    .mobile-toc {
+      display: none;
+    }
+
+    .post-article {
+      display: grid;
+      grid-template-columns: minmax(0, 74ch) 16rem;
+      gap: clamp(2rem, 3vw, 2.75rem);
+      justify-content: center;
+    }
+
+    .post-header,
+    .post-content,
+    .post-nav,
+    .back-to-blog {
+      grid-column: 1;
+    }
+
+    .toc-sidebar {
+      grid-column: 2;
+      grid-row: 1;
+      margin-top: 0;
+      align-self: start;
+    }
+
+    .post-header.has-illus {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) clamp(220px, 26vw, 320px);
+      column-gap: 2.25rem;
+      row-gap: 0.5rem;
+      align-items: start;
+    }
+
+    .post-header.has-illus .post-title-main,
+    .post-header.has-illus .post-meta {
+      grid-column: 1;
+    }
+
+    .post-header.has-illus .post-illus {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      justify-self: end;
+      align-self: start;
+      float: none;
+      margin: 0;
+      width: clamp(220px, 26vw, 320px);
+    }
+  }
+
+  @media (max-width: 899px) {
+    .toc-sidebar {
+      display: none;
+    }
+
+    .post-content {
+      line-height: 1.72;
+    }
+
+    .post-content p {
+      margin-bottom: 1.1rem;
+    }
+
+    :global(.post-content h2) {
+      margin-top: 3.4rem;
+      padding-top: 1.15rem;
+    }
+
+    :global(.post-content h3) {
+      padding-left: 0.7rem;
+    }
+
+    :global(.post-content .series-intro) {
+      margin-bottom: 2.3rem;
+      padding: 0.95rem 0.95rem 1rem;
+      box-shadow: 3px 3px 0 var(--fg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-prev,
+    .nav-next,
+    .back-to-blog,
+    .toc-link,
+    .tag-link,
+    .post-content a {
+      transition: none !important;
+    }
+
+    .reading-progress-fill {
+      transition: none !important;
+    }
+  }
+
+  /* ── Footnotes — academic style ── */
+  :global(.post-content sup a[id]) {
+    scroll-margin-top: calc(var(--nav-total-height, 116px) + 1.5rem);
+  }
+
+  :global(.post-content sup a[data-footnote-ref]) {
+    font-size: 0.65em;
+    vertical-align: super;
+    line-height: 0;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 700;
+    margin-left: 0.1em;
+  }
+
+  :global(.post-content sup a[data-footnote-ref]:hover) {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  :global(.post-content section.footnotes) {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--cloud);
+    scroll-margin-top: calc(var(--nav-total-height, 116px) + 1.5rem);
+  }
+
+  :global(.post-content section.footnotes::before) {
+    content: "References";
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    font-weight: 400;
+  }
+
+  :global(.post-content section.footnotes ol) {
+    padding-left: 1.5rem;
+    margin-bottom: 0;
+  }
+
+  :global(.post-content section.footnotes li) {
+    font-family: var(--font-reading);
+    font-size: 0.7rem;
+    line-height: 1.5;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0;
+    scroll-margin-top: calc(var(--nav-total-height, 116px) + 1.5rem);
+    font-variation-settings: "MONO" 0, "CASL" 0.15, "wght" 420, "slnt" -5;
+  }
+
+  :global(.post-content section.footnotes li:last-child) {
+    margin-bottom: 0;
+  }
+
+  :global(.post-content section.footnotes li::marker) {
+    font-size: 0.65rem;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  :global(.post-content section.footnotes li p) {
+    margin-bottom: 0.25rem;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  :global(.post-content section.footnotes a) {
+    color: var(--muted);
+    text-decoration-color: var(--cloud);
+  }
+
+  :global(.post-content section.footnotes a:hover) {
+    color: var(--fg);
+    text-decoration-color: var(--accent);
+  }
+
+  :global(.post-content section.footnotes em) {
+    font-style: italic;
+  }
+
+  :global(.post-content section.footnotes code:not(pre code)) {
+    background: var(--cloud);
+    padding: 0.05rem 0.3rem;
+    font-size: 0.85em;
+    border: 1px solid var(--cloud);
+  }
+</style>

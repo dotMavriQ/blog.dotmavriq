@@ -1,0 +1,145 @@
+---
+/*
+  CloudMarquee.astro
+  Kinetic ASCII Art Component
+*/
+---
+
+<div class="nav-cloud-border" aria-hidden="true">
+  <div class="cloud-track" id="cloud-track"></div>
+</div>
+
+<script>
+  const TILE = [
+    "|:::|=======|:::|_______|:::|=======|:::|_______|:::|=======|:::|_______|:::|=======|:::|_______|:::|",
+    "|   |       |   |       |   |       |   |       |   |       |   |       |   |       |   |       |   |",
+    "|___|_______|___|_______|___|_______|___|_______|___|_______|___|_______|___|_______|___|_______|___|",
+  ].join("\n");
+
+  let prevRaf: number | null = null;
+  let prevObserver: ResizeObserver | null = null;
+  let prevReducedMotionMql: MediaQueryList | null = null;
+  let prevReducedMotionHandler: ((e: MediaQueryListEvent) => void) | null = null;
+
+  function initCloudMarquee() {
+    // Clean up previous instance
+    if (prevRaf) cancelAnimationFrame(prevRaf);
+    if (prevObserver) prevObserver.disconnect();
+    if (prevReducedMotionMql && prevReducedMotionHandler) {
+      prevReducedMotionMql.removeEventListener("change", prevReducedMotionHandler);
+    }
+
+    const borderEl = document.querySelector(".nav-cloud-border");
+    const trackEl = document.querySelector(".cloud-track");
+
+    if (borderEl && trackEl) {
+      const border = borderEl as HTMLElement;
+      const track = trackEl as HTMLElement;
+      const SPEED = 22;
+      const reducedMotionMql = window.matchMedia("(prefers-reduced-motion: reduce)");
+      let tileW = 0,
+        offset = 0,
+        lastTs: number | null = null,
+        raf: number | null = null;
+
+      // Use a hidden probe to measure tile width accurately
+      const probe = document.createElement("pre");
+      probe.className = "cloud-art";
+      probe.style.cssText = "position:fixed;top:-9999px;";
+      probe.textContent = TILE;
+      document.body.appendChild(probe);
+      tileW = probe.getBoundingClientRect().width;
+      document.body.removeChild(probe);
+
+      function buildTrack() {
+        if (raf) {
+          cancelAnimationFrame(raf);
+          raf = null;
+          prevRaf = null;
+        }
+        track.innerHTML = "";
+
+        const count = Math.ceil(border.clientWidth / tileW) + 2;
+        for (let i = 0; i < count; i++) {
+          const pre = document.createElement("pre");
+          pre.className = "cloud-art";
+          pre.textContent = TILE;
+          track.appendChild(pre);
+        }
+
+        offset = 0;
+        lastTs = null;
+        track.style.transform = "translateX(0px)";
+
+        // Honor prefers-reduced-motion: render the static border without
+        // starting the rAF translation loop.
+        if (reducedMotionMql.matches) return;
+
+        raf = requestAnimationFrame(tick);
+        prevRaf = raf;
+      }
+
+      function tick(ts: number) {
+        if (lastTs === null) lastTs = ts;
+        const dt = Math.min(ts - lastTs, 50) / 1000;
+        lastTs = ts;
+
+        offset -= SPEED * dt;
+        if (offset <= -tileW) offset += tileW;
+
+        track.style.transform = `translateX(${offset}px)`;
+        raf = requestAnimationFrame(tick);
+        prevRaf = raf;
+      }
+
+      // React to live changes (user toggling Reduce Motion in OS settings).
+      const reducedMotionHandler = () => buildTrack();
+      reducedMotionMql.addEventListener("change", reducedMotionHandler);
+      prevReducedMotionMql = reducedMotionMql;
+      prevReducedMotionHandler = reducedMotionHandler;
+
+      const observer = new ResizeObserver(() => {
+        buildTrack();
+      });
+      observer.observe(border);
+      prevObserver = observer;
+
+      buildTrack();
+    }
+  }
+
+  document.addEventListener("astro:page-load", initCloudMarquee);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initCloudMarquee, { once: true });
+  } else {
+    initCloudMarquee();
+  }
+</script>
+
+<style>
+  .nav-cloud-border {
+    overflow: hidden;
+    user-select: none;
+    margin-bottom: -1px;
+    height: calc(var(--ascii-line) * 3 + 4px);
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--cloud);
+  }
+
+  .cloud-track {
+    display: flex;
+    will-change: transform;
+  }
+
+  :global(.cloud-art) {
+    flex-shrink: 0;
+    white-space: pre;
+    font-family: var(--font-mono);
+    font-size: var(--ascii-size);
+    line-height: var(--ascii-line);
+    color: var(--fg);
+    padding: 0;
+    transition: color 0.3s;
+  }
+</style>

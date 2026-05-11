@@ -1,0 +1,42 @@
+{
+  "name": "blog.dotmavriq.life",
+  "version": "0.1.5",
+  "description": "blog.dotmavriq.life — ASCII-Core DevBlog",
+  "type": "module",
+  "scripts": {
+    "sync-posts": "node scripts/sync-posts.mjs",
+    "dev": "npm run sync-posts && astro dev",
+    "start": "npm run sync-posts && astro dev",
+    "build": "npm run sync-posts && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "archive": "node scripts/archive-links.mjs",
+    "archive:check": "node scripts/archive-links.mjs --check",
+    "archive:dry": "node scripts/archive-links.mjs --dry-run",
+    "text:audit": "node scripts/text-audit.mjs",
+    "text:audit:ai": "node scripts/text-audit.mjs src/content/blog/ai-a-retrospective.md src/content/blog/ai-a-retrospective-part-2.md src/content/blog/ai-a-retrospective-part-3.md"
+  },
+  "keywords": [],
+  "author": "dotmavriq",
+  "license": "ISC",
+  "dependencies": {
+    "@astrojs/check": "^0.9.8",
+    "@astrojs/mdx": "^5.0.3",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2",
+    "@chenglou/pretext": "^0.0.4",
+    "@fontsource-variable/recursive": "^5.2.8",
+    "astro": "^6.1.4",
+    "textlens": "^1.0.11",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "playwright": "^1.59.1"
+  },
+  "overrides": {
+    "vite": "^7"
+  }
+}

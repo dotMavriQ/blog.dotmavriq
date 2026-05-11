@@ -1,0 +1,1478 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CloudMarquee from "../components/CloudMarquee.astro";
+import StructuralArt from "../components/StructuralArt.astro";
+---
+
+<BaseLayout
+  title="social // dotmavriq.life"
+  description="Live feed of original posts from social.dotmavriq.life — fediverse home of dotMavriQ.">
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://social.dotmavriq.life" crossorigin />
+    <link rel="dns-prefetch" href="https://social.dotmavriq.life" />
+  </Fragment>
+  <CloudMarquee slot="marquee" />
+
+  <div class="social-backdrop" aria-hidden="true">
+    <StructuralArt />
+  </div>
+
+  <section class="social-page">
+    <div id="social-feed" class="social-feed">
+      <div class="social-loading">loading…</div>
+    </div>
+    <div id="social-load-more" class="social-load-more" style="display:none;">
+      <button class="social-load-more-btn" id="social-load-more-btn">// load more</button>
+    </div>
+  </section>
+
+  <div class="social-lightbox" id="social-lightbox" aria-hidden="true">
+    <span class="social-lightbox-counter" id="social-lb-counter"></span>
+    <button class="social-lightbox-close" id="social-lb-close" aria-label="Close">&times;</button>
+    <div class="social-lightbox-stage" id="social-lb-stage">
+      <button class="social-lightbox-prev" id="social-lb-prev" aria-label="Previous">
+        <span class="social-lightbox-arrow">&larr;</span>
+      </button>
+      <img id="social-lb-img" src="" alt="" />
+      <button class="social-lightbox-next" id="social-lb-next" aria-label="Next">
+        <span class="social-lightbox-arrow">&rarr;</span>
+      </button>
+    </div>
+    <button class="social-lightbox-cw" id="social-lb-cw" type="button">
+      <span class="social-lightbox-cw__inner">
+        <span class="social-lightbox-cw__title" id="social-lb-cw-title">// sensitive content</span>
+        <span class="social-lightbox-cw__hint">click to reveal</span>
+      </span>
+    </button>
+    <div class="social-lightbox-alt" id="social-lb-alt"></div>
+    <div class="social-lightbox-skip" id="social-lb-skip"></div>
+  </div>
+
+  <aside class="social-tag-panel" id="social-tag-panel" aria-hidden="true" aria-label="Posts tagged">
+    <header class="social-tag-panel__head">
+      <h2 class="social-tag-panel__title" id="social-tag-title">#</h2>
+      <button class="social-tag-panel__close" id="social-tag-close" type="button" aria-label="Close tag results">&times;</button>
+    </header>
+    <div class="social-tag-panel__body" id="social-tag-list"></div>
+  </aside>
+
+  <button class="social-follow-btn" id="social-follow-btn" type="button">⁂ follow</button>
+
+  <div class="social-profile-overlay" id="social-profile-overlay" role="dialog" aria-modal="true" aria-labelledby="social-profile-name">
+    <div class="social-profile-card">
+      <a class="social-profile-go" href="https://social.dotmavriq.life/users/dotmavriq"
+         target="_blank" rel="noopener" aria-label="Open profile on social.dotmavriq.life in a new tab">
+        <span aria-hidden="true">[ ↗ ]</span>
+      </a>
+      <button class="social-profile-close" id="social-profile-close" type="button" aria-label="Close">&times;</button>
+
+      <div class="social-profile-head">
+        <img class="social-profile-avatar" id="social-profile-avatar" src="" alt="" />
+        <div class="social-profile-ident">
+          <div class="social-profile-name" id="social-profile-name">…</div>
+          <div class="social-profile-handle" id="social-profile-handle">…</div>
+        </div>
+      </div>
+
+      <div class="social-profile-bio" id="social-profile-bio"></div>
+
+      <div class="social-profile-fields" id="social-profile-fields"></div>
+
+      <div class="social-profile-stats">
+        <div class="social-profile-stat">
+          <span class="social-profile-stat__num" id="social-profile-stat-posts">—</span>
+          <span class="social-profile-stat__label">posts</span>
+        </div>
+        <div class="social-profile-stat">
+          <span class="social-profile-stat__num" id="social-profile-stat-following">—</span>
+          <span class="social-profile-stat__label">following</span>
+        </div>
+        <div class="social-profile-stat">
+          <span class="social-profile-stat__num" id="social-profile-stat-followers">—</span>
+          <span class="social-profile-stat__label">followers</span>
+        </div>
+      </div>
+
+      <div class="social-profile-joined" id="social-profile-joined"></div>
+    </div>
+  </div>
+
+  <div class="social-follow-overlay" id="social-follow-overlay">
+    <div class="social-follow-modal">
+      <button class="social-follow-close" id="social-follow-close" aria-label="Close">&times;</button>
+      <h2>follow from your instance</h2>
+      <p>Enter your fediverse handle and you'll be redirected to your instance to confirm.</p>
+      <div class="social-follow-input-row">
+        <input class="social-follow-input" id="social-follow-handle" type="text"
+          placeholder="user@mastodon.social" autocomplete="off" spellcheck="false" />
+        <button class="social-follow-submit" id="social-follow-submit" type="button">go</button>
+      </div>
+      <div class="social-follow-error" id="social-follow-error"></div>
+      <p class="social-follow-rss">
+        or if you simply want to lurk, here's the
+        <a href="https://social.dotmavriq.life/users/dotmavriq/feed.atom" target="_blank" rel="noopener">atom rss feed</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- QR / "from social media" welcome modal — only triggered by ?from=qr -->
+  <div class="social-qr-overlay" id="social-qr-overlay" role="dialog" aria-modal="true" aria-labelledby="social-qr-title-en" aria-hidden="true">
+    <div class="social-qr-modal">
+      <button class="social-qr-close" id="social-qr-close" type="button" aria-label="Close">&times;</button>
+
+      <div class="social-qr-flags" role="tablist" aria-label="Language">
+        <button class="social-qr-flag" data-lang="sv" role="tab" aria-label="Svenska" type="button">🇸🇪</button>
+        <button class="social-qr-flag" data-lang="en" role="tab" aria-label="English" type="button">🇬🇧</button>
+        <button class="social-qr-flag" data-lang="pt" role="tab" aria-label="Português" type="button">🇵🇹</button>
+      </div>
+
+      <div class="social-qr-body">
+        <!-- ── Swedish ── -->
+        <article class="social-qr-content" data-lang="sv">
+          <h2 id="social-qr-title-sv" class="social-qr-h">En QR-kod ledde dig hit.</h2>
+          <p>Jag har valt att inte längre använda mina konton på de konventionella sociala medietjänsterna. Några skäl, kort:</p>
+          <p>Om du inte betalar för produkten är <strong>du</strong> produkten. Precis som AI idag stod dessa plattformar värd för oss i flera år på en optimism som mest bestod av VC-pengar. Nu måste de leverera siffror — det är den största anledningen till att tjänsterna blir sämre och att vi hela tiden hör om <a href="https://internetkunskap.se/artiklar/integritet/det-har-ar-integritet-och-darfor-behover-du-bry-dig/" target="_blank" rel="noopener">vad de gör med vår data</a>. De samhälleliga konsekvenserna kartläggs fortfarande.</p>
+          <p>En sak de gör, som jag vägrar stödja som konsument, är <a href="https://www.deceptive.design/" target="_blank" rel="noopener">dark patterns</a>: gränssnitt medvetet designade för att manipulera snarare än tjäna.</p>
+          <p>Här är några höjdpunkter från trovärdiga källor:</p>
+          <ul>
+            <li><strong>Meta</strong> (Facebook, Instagram, WhatsApp): <a href="https://www.wsj.com/articles/facebook-knows-instagram-is-toxic-for-teen-girls-company-documents-show-11631620739" target="_blank" rel="noopener">Instagrams skada på tonåringars mentala hälsa</a>, <a href="https://www.theguardian.com/technology/2018/mar/17/cambridge-analytica-facebook-influence-us-election" target="_blank" rel="noopener">valpåverkan</a>, <a href="https://www.amnesty.org/en/latest/news/2022/09/myanmar-facebooks-systems-promoted-violence-against-rohingya-meta-owes-reparations-new-report/" target="_blank" rel="noopener">medbrottslighet i Rohingya-folkmordet i Myanmar</a>, <a href="https://www.reuters.com/article/us-vietnam-facebook-exclusive-idUSKBN2270WV" target="_blank" rel="noopener">censur på begäran av auktoritära regimer</a>, och <a href="https://www.theguardian.com/technology/2021/oct/05/facebook-whistleblower-frances-haugen-calls-for-urgent-external-regulation" target="_blank" rel="noopener">nedtonande av sin egen interna forskning om samhällsskador</a>.</li>
+            <li><strong>TikTok</strong>: <a href="https://www.amnesty.org/en/latest/news/2023/11/tiktok-risks-pushing-children-towards-harmful-content/" target="_blank" rel="noopener">att styra tonåringar mot självskadeinnehåll inom minuter</a>.</li>
+            <li><strong>X</strong>: <a href="https://www.404media.co/taylor-swift-deepfakes-ai-generated-porn/" target="_blank" rel="noopener">att tolera spridningen av AI-genererat övergreppsbildmaterial riktat mot kvinnor</a>, och <a href="https://www.theguardian.com/technology/2023/oct/19/x-twitter-algorithm-favors-republican-elon-musk-study" target="_blank" rel="noopener">att medvetet förstärka högerinriktat innehåll till sina användare</a>.</li>
+          </ul>
+
+          <h3 class="social-qr-h3">Så vad är det här då?</h3>
+          <p>Jag bor utomlands och vill fortfarande dela mitt liv med de jag känner — och de jag kanske kommer att lära känna online; jag älskar fortfarande att nätverka — utan att lämna över det till en miljardärs algoritm. Jag tror på det fria och öppna internet, så jag finns på <strong>Fediversen</strong>: tusentals oberoende servrar (Mastodon, Pleroma…) som pratar med varandra, som e-post. Ingen enskild ägare, ingen muromgärdad trädgård, inga annonser.</p>
+          <p>Enklaste vägen in: <a href="https://joinmastodon.org/sv" target="_blank" rel="noopener">en kort förklaring</a>, gå med på <a href="https://mastodon.nu" target="_blank" rel="noopener">mastodon.nu</a>, tryck sedan på <code>⁂ follow</code> på sidan. Eller skippa kontot — <a href="https://social.dotmavriq.life/users/dotmavriq/feed.atom" target="_blank" rel="noopener">prenumerera via RSS</a>.</p>
+        </article>
+
+        <!-- ── English ── -->
+        <article class="social-qr-content" data-lang="en">
+          <h2 id="social-qr-title-en" class="social-qr-h">A QR got you here.</h2>
+          <p>I've chosen to stop using my accounts on the conventional social media services. A few reasons, briefly:</p>
+          <p>If you're not paying for the product, <strong>you</strong> are the product. Much like AI today, these platforms hosted us for years on optimism that was mostly VC funding. Now they need to make their numbers — that's the biggest reason the services keep getting worse, and the reason we keep hearing about <a href="https://myshadow.org/tracking-so-what" target="_blank" rel="noopener">what they do with our data</a>. The societal repercussions are still being mapped.</p>
+          <p>One thing they do, that I refuse to support as a consumer, is <a href="https://www.deceptive.design/" target="_blank" rel="noopener">dark patterns</a>: interfaces deliberately engineered to manipulate rather than serve.</p>
+          <p>Here are some highlights from reputable sources:</p>
+          <ul>
+            <li><strong>Meta</strong> (Facebook, Instagram, WhatsApp): <a href="https://www.wsj.com/articles/facebook-knows-instagram-is-toxic-for-teen-girls-company-documents-show-11631620739" target="_blank" rel="noopener">Instagram's harm to teenage mental health</a>, <a href="https://www.theguardian.com/technology/2018/mar/17/cambridge-analytica-facebook-influence-us-election" target="_blank" rel="noopener">election interference</a>, <a href="https://www.amnesty.org/en/latest/news/2022/09/myanmar-facebooks-systems-promoted-violence-against-rohingya-meta-owes-reparations-new-report/" target="_blank" rel="noopener">complicity in Myanmar's Rohingya genocide</a>, <a href="https://www.reuters.com/article/us-vietnam-facebook-exclusive-idUSKBN2270WV" target="_blank" rel="noopener">censoring posts at the request of authoritarian regimes</a>, and <a href="https://www.theguardian.com/technology/2021/oct/05/facebook-whistleblower-frances-haugen-calls-for-urgent-external-regulation" target="_blank" rel="noopener">downplaying its own internal research on societal harm</a>.</li>
+            <li><strong>TikTok</strong>: <a href="https://www.amnesty.org/en/latest/news/2023/11/tiktok-risks-pushing-children-towards-harmful-content/" target="_blank" rel="noopener">routing teens toward self-harm content within minutes</a>.</li>
+            <li><strong>X</strong>: <a href="https://www.404media.co/taylor-swift-deepfakes-ai-generated-porn/" target="_blank" rel="noopener">tolerating the spread of AI-generated abuse imagery targeting women</a>, and <a href="https://www.theguardian.com/technology/2023/oct/19/x-twitter-algorithm-favors-republican-elon-musk-study" target="_blank" rel="noopener">deliberately amplifying right-wing content to its users</a>.</li>
+          </ul>
+
+          <h3 class="social-qr-h3">So what is this?</h3>
+          <p>I live abroad and still want to share my life with the people I know — and the ones I might come to know online; I still love networking — without handing it over to a billionaire's algorithm. I believe in the free and open internet, so I'm on the <strong>Fediverse</strong>: thousands of independent servers (Mastodon, Pleroma…) that all talk to each other, like email. No single owner, no walled garden, no ads.</p>
+          <p>Easiest way in: <a href="https://joinmastodon.org/" target="_blank" rel="noopener">a short explainer</a>, join <a href="https://mastodon.social" target="_blank" rel="noopener">mastodon.social</a>, then hit <code>⁂ follow</code> on this page. Or skip the account — <a href="https://social.dotmavriq.life/users/dotmavriq/feed.atom" target="_blank" rel="noopener">subscribe via RSS</a>.</p>
+        </article>
+
+        <!-- ── Portuguese ── -->
+        <article class="social-qr-content" data-lang="pt">
+          <h2 id="social-qr-title-pt" class="social-qr-h">Um QR trouxe-te aqui.</h2>
+          <p>Escolhi deixar de usar as minhas contas nas redes sociais convencionais. Algumas razões, brevemente:</p>
+          <p>Se não pagas pelo produto, o produto és <strong>tu</strong>. Tal como a IA hoje, estas plataformas alojaram-nos durante anos com um otimismo que era sobretudo capital de risco. Agora precisam de gerar receita — é a maior razão pela qual os serviços continuam a piorar, e a razão pela qual ouvimos constantemente sobre <a href="https://myshadow.org/pt/tracking-so-what" target="_blank" rel="noopener">o que fazem com os nossos dados</a>. As repercussões sociais ainda estão a ser mapeadas.</p>
+          <p>Uma coisa que fazem, e que me recuso a apoiar enquanto consumidor, são os <a href="https://www.deceptive.design/" target="_blank" rel="noopener">dark patterns</a>: interfaces deliberadamente desenhadas para manipular em vez de servir.</p>
+          <p>Aqui estão alguns destaques de fontes credíveis:</p>
+          <ul>
+            <li><strong>Meta</strong> (Facebook, Instagram, WhatsApp): <a href="https://www.wsj.com/articles/facebook-knows-instagram-is-toxic-for-teen-girls-company-documents-show-11631620739" target="_blank" rel="noopener">o dano do Instagram à saúde mental dos adolescentes</a>, <a href="https://www.theguardian.com/technology/2018/mar/17/cambridge-analytica-facebook-influence-us-election" target="_blank" rel="noopener">interferência eleitoral</a>, <a href="https://www.amnesty.org/en/latest/news/2022/09/myanmar-facebooks-systems-promoted-violence-against-rohingya-meta-owes-reparations-new-report/" target="_blank" rel="noopener">cumplicidade no genocídio dos Rohingya em Myanmar</a>, <a href="https://www.reuters.com/article/us-vietnam-facebook-exclusive-idUSKBN2270WV" target="_blank" rel="noopener">censura a pedido de regimes autoritários</a>, e <a href="https://www.theguardian.com/technology/2021/oct/05/facebook-whistleblower-frances-haugen-calls-for-urgent-external-regulation" target="_blank" rel="noopener">minimização da sua própria investigação interna sobre danos sociais</a>.</li>
+            <li><strong>TikTok</strong>: <a href="https://www.amnesty.org/en/latest/news/2023/11/tiktok-risks-pushing-children-towards-harmful-content/" target="_blank" rel="noopener">encaminhar adolescentes para conteúdo de auto-mutilação em minutos</a>.</li>
+            <li><strong>X</strong>: <a href="https://www.404media.co/taylor-swift-deepfakes-ai-generated-porn/" target="_blank" rel="noopener">tolerar a propagação de imagens abusivas geradas por IA visando mulheres</a>, e <a href="https://www.theguardian.com/technology/2023/oct/19/x-twitter-algorithm-favors-republican-elon-musk-study" target="_blank" rel="noopener">amplificar deliberadamente conteúdo de direita junto dos seus utilizadores</a>.</li>
+          </ul>
+
+          <h3 class="social-qr-h3">Então o que é isto?</h3>
+          <p>Vivo no estrangeiro e ainda quero partilhar a minha vida com quem conheço — e com quem talvez venha a conhecer online; continuo a adorar fazer networking — sem entregá-la ao algoritmo de um bilionário. Acredito na internet livre e aberta, por isso estou no <strong>Fediverso</strong>: milhares de servidores independentes (Mastodon, Pleroma…) que comunicam entre si, como o email. Sem dono único, sem jardim murado, sem anúncios.</p>
+          <p>Caminho mais fácil: <a href="https://joinmastodon.org/pt" target="_blank" rel="noopener">uma breve explicação</a>, adere ao <a href="https://masto.pt" target="_blank" rel="noopener">masto.pt</a>, depois carrega no <code>⁂ follow</code> desta página. Ou ignora a conta — <a href="https://social.dotmavriq.life/users/dotmavriq/feed.atom" target="_blank" rel="noopener">subscreve via RSS</a>.</p>
+        </article>
+      </div>
+
+      <div class="social-qr-actions">
+        <button class="social-qr-confirm" id="social-qr-confirm" type="button">I understand</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // QR / "from social media" welcome modal trigger.
+    // Only fires when the URL carries ?from=qr. Persists dismissal in
+    // localStorage when the user hits the confirm button; the X button
+    // closes without persisting (so a refresh shows it again).
+    let qrAbort: AbortController | null = null;
+    const initQrWelcome = () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("from") !== "qr") return;
+
+      const overlay = document.getElementById("social-qr-overlay");
+      if (!overlay) return;
+      // Guard against double-init on the same overlay (e.g. astro:page-load
+      // firing alongside the initial-load fallback).
+      if (overlay.dataset.qrInit === "1") return;
+      overlay.dataset.qrInit = "1";
+      const STORAGE_KEY = "social-qr-welcome-seen";
+      try {
+        if (localStorage.getItem(STORAGE_KEY) === "1") return;
+      } catch {}
+
+      qrAbort?.abort();
+      qrAbort = new AbortController();
+      const { signal } = qrAbort;
+
+      const flags = overlay.querySelectorAll<HTMLButtonElement>(".social-qr-flag");
+      const contents = overlay.querySelectorAll<HTMLElement>(".social-qr-content");
+      const confirmBtn = document.getElementById("social-qr-confirm") as HTMLButtonElement | null;
+      const closeBtn = document.getElementById("social-qr-close") as HTMLButtonElement | null;
+
+      const confirmLabels: Record<string, string> = {
+        sv: "Jag förstår",
+        en: "I understand",
+        pt: "Eu compreendo",
+      };
+
+      // Auto-fit body text: shrink font-size until the content stops
+      // overflowing, with a legibility floor. Re-runs on language change
+      // and on resize.
+      const body = overlay.querySelector<HTMLElement>(".social-qr-body");
+      const FIT_MAX = 0.92; // rem
+      const FIT_MIN = 0.72; // rem
+      const FIT_STEP = 0.02;
+      const fitContent = () => {
+        if (!body) return;
+        let size = FIT_MAX;
+        body.style.fontSize = `${size}rem`;
+        // Allow the browser to apply the size before measuring.
+        let guard = 0;
+        while (body.scrollHeight > body.clientHeight + 1 && size > FIT_MIN && guard++ < 40) {
+          size -= FIT_STEP;
+          body.style.fontSize = `${size}rem`;
+        }
+      };
+
+      const setLang = (lang: string) => {
+        contents.forEach((c) => {
+          if (c.dataset.lang === lang) {
+            c.removeAttribute("hidden");
+          } else {
+            c.setAttribute("hidden", "");
+          }
+        });
+        flags.forEach((f) => {
+          const active = f.dataset.lang === lang;
+          f.classList.toggle("is-active", active);
+          f.setAttribute("aria-selected", String(active));
+        });
+        if (confirmBtn) confirmBtn.textContent = confirmLabels[lang] ?? confirmLabels.en;
+        overlay.setAttribute("aria-labelledby", `social-qr-title-${lang}`);
+        // Run fit after layout settles for the newly-shown article.
+        requestAnimationFrame(fitContent);
+      };
+
+      // Default to browser language; Swedish/Portuguese match by prefix.
+      const nav = (navigator.language || "en").toLowerCase();
+      const initial = nav.startsWith("sv") ? "sv" : nav.startsWith("pt") ? "pt" : "en";
+      setLang(initial);
+
+      flags.forEach((f) => {
+        f.addEventListener("click", () => f.dataset.lang && setLang(f.dataset.lang), { signal });
+      });
+
+      // Focus management: remember what was focused so we can restore on
+      // close, and trap Tab inside the modal while open. Visible flags are
+      // tab-stops too, but the close button is the predictable initial
+      // target — it's the universal escape hatch.
+      let previouslyFocused: HTMLElement | null = null;
+      const FOCUSABLE_SELECTOR = [
+        "a[href]",
+        "button:not([disabled])",
+        "input:not([disabled])",
+        "textarea:not([disabled])",
+        "select:not([disabled])",
+        '[tabindex]:not([tabindex="-1"])',
+      ].join(",");
+      const getFocusable = (): HTMLElement[] => {
+        const nodes = overlay.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+        return Array.from(nodes).filter((el) => {
+          if (el.hasAttribute("hidden")) return false;
+          if (el.closest("[hidden]")) return false;
+          // offsetParent === null catches display:none ancestors.
+          return el.offsetParent !== null || el === document.activeElement;
+        });
+      };
+
+      const open = () => {
+        previouslyFocused = document.activeElement as HTMLElement | null;
+        overlay.classList.add("open");
+        overlay.setAttribute("aria-hidden", "false");
+        document.body.classList.add("has-qr-modal-open");
+        // Modal was display:none until now; measure once layout is live.
+        requestAnimationFrame(() => {
+          fitContent();
+          (closeBtn ?? getFocusable()[0])?.focus();
+        });
+      };
+      const close = (persist: boolean) => {
+        overlay.classList.remove("open");
+        overlay.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("has-qr-modal-open");
+        if (persist) {
+          try { localStorage.setItem(STORAGE_KEY, "1"); } catch {}
+        }
+        if (previouslyFocused && document.contains(previouslyFocused)) {
+          previouslyFocused.focus();
+        }
+        previouslyFocused = null;
+      };
+
+      window.addEventListener("resize", () => requestAnimationFrame(fitContent), { passive: true, signal });
+      closeBtn?.addEventListener("click", () => close(false), { signal });
+      confirmBtn?.addEventListener("click", () => close(true), { signal });
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) close(false);
+      }, { signal });
+      document.addEventListener("keydown", (e) => {
+        if (!overlay.classList.contains("open")) return;
+        if (e.key === "Escape") {
+          close(false);
+          return;
+        }
+        if (e.key === "Tab") {
+          const focusable = getFocusable();
+          if (focusable.length === 0) {
+            e.preventDefault();
+            return;
+          }
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          const active = document.activeElement as HTMLElement | null;
+          if (e.shiftKey) {
+            if (active === first || !overlay.contains(active)) {
+              e.preventDefault();
+              last.focus();
+            }
+          } else {
+            if (active === last || !overlay.contains(active)) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }
+      }, { signal });
+
+      open();
+    };
+
+    // astro:page-load fires on initial load with View Transitions enabled and
+    // after every client-side navigation. Without it, fall back to a one-shot
+    // ready-state check. The overlay's data-qr-init flag prevents both paths
+    // from racing into a double init when both fire.
+    // Guard the bootstrap registration itself: this <script> re-executes on
+    // every Astro client-side navigation, so without a flag we'd stack a new
+    // astro:page-load listener on document on each revisit.
+    if (!(window as any).__qrWelcomeBootstrapped) {
+      (window as any).__qrWelcomeBootstrapped = true;
+      document.addEventListener("astro:page-load", initQrWelcome);
+      if (document.readyState !== "loading") {
+        initQrWelcome();
+      } else {
+        document.addEventListener("DOMContentLoaded", initQrWelcome, { once: true });
+      }
+    }
+  </script>
+
+  <script>
+    import { initSocialFeed } from "../lib/social-feed";
+    document.addEventListener("astro:page-load", initSocialFeed);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initSocialFeed, { once: true });
+    } else {
+      initSocialFeed();
+    }
+  </script>
+
+  <style>
+    /* Reset main padding so the backdrop fills viewport edge-to-edge */
+    :global(.page-content:has(.social-page)) {
+      padding: 0;
+    }
+    :global(body:has(.social-page) .footer) {
+      display: none;
+    }
+
+    /* ── Fixed ASCII backdrop ── */
+    .social-backdrop {
+      position: fixed;
+      inset: 0;
+      top: var(--nav-total-height, 110px);
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      opacity: 0.55;
+      transition: opacity 0.3s;
+    }
+    :global([data-theme="dark"]) .social-backdrop {
+      opacity: 0.3;
+    }
+
+    /* ── Feed column ── */
+    .social-page {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 20px 4rem;
+      width: 100%;
+    }
+
+    .social-loading,
+    .social-empty {
+      padding: 3rem 1.25rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-family: var(--font-commit-mono), var(--font-mono);
+      /* Match the post-card backing so the placeholder reads above the
+         StructuralArt backdrop instead of drowning in it. */
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border-bottom: 1px solid var(--cloud);
+    }
+
+    /* ── Post ── */
+    :global(.social-post) {
+      border-bottom: 1px solid var(--cloud);
+      padding: 1.5rem 1.25rem;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+    :global(.social-post:first-child) { padding-top: 1.25rem; }
+    :global(.social-post:last-child) { border-bottom: none; }
+
+    :global(.social-post-header) {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    :global(.social-post-avatar) {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      background: var(--cloud);
+      object-fit: cover;
+    }
+    :global(.social-post-meta) {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+    :global(.social-post-author) {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    :global(.social-post-date) {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    :global(.social-post-date a) { color: var(--muted); }
+    :global(.social-post-date a:hover) { color: var(--accent); }
+
+    :global(.social-post-content) {
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    :global(.social-post-content p) { margin-bottom: 0.5em; }
+    :global(.social-post-content p:last-child) { margin-bottom: 0; }
+    :global(.social-post-content a) {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    :global(.social-post-content .hashtag) { color: var(--muted); }
+    :global(.social-post-content .mention) { font-weight: 700; }
+
+    /* ── Media ── */
+    :global(.social-post-media) {
+      margin-top: 0.75rem;
+      display: grid;
+      gap: 0.5rem;
+    }
+    :global(.social-post-media.media-1) { grid-template-columns: 1fr; }
+    :global(.social-post-media.media-2) { grid-template-columns: 1fr 1fr; }
+    :global(.social-post-media.media-3),
+    :global(.social-post-media.media-4) { grid-template-columns: 1fr 1fr; }
+    :global(.social-post-media img),
+    :global(.social-post-media video) {
+      width: 100%;
+      border-radius: 4px;
+      border: 1px solid var(--cloud);
+      display: block;
+      max-height: 400px;
+      object-fit: cover;
+      cursor: zoom-in;
+    }
+
+    /* ── Sensitive content cover (in-feed) ── */
+    :global(.social-post-media-item) {
+      position: relative;
+      width: 100%;
+      min-height: 140px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    :global(.social-post-media-item--cw img),
+    :global(.social-post-media-item--cw video) {
+      cursor: default;
+    }
+    :global(.social-post-media-item--revealed img),
+    :global(.social-post-media-item--revealed video) {
+      cursor: zoom-in;
+    }
+    :global(.social-cw) {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      background: var(--fg);
+      color: var(--bg);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      font-family: var(--font-commit-mono), var(--font-mono);
+      transition: background 0.18s, color 0.18s, transform 0.12s;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    :global(.social-cw)::before {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border: 2px solid var(--bg);
+      pointer-events: none;
+      opacity: 0.4;
+      transition: opacity 0.18s;
+    }
+    :global(.social-cw:hover)::before { opacity: 0.7; }
+    :global(.social-cw:hover) {
+      background: color-mix(in srgb, var(--fg) 88%, var(--accent) 12%);
+    }
+    :global(.social-cw:active) { transform: scale(0.985); }
+    :global(.social-cw__inner) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.45rem;
+      text-align: center;
+      max-width: 90%;
+    }
+    :global(.social-cw__title) {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+    :global(.social-cw__hint) {
+      font-size: 0.65rem;
+      color: var(--cloud);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+    :global(.social-post-media-item--revealed .social-cw) {
+      display: none;
+    }
+
+    /* ── Load more ── */
+    .social-load-more {
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+    .social-load-more-btn {
+      background: var(--bg);
+      border: 1px solid var(--cloud);
+      color: var(--muted);
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.85rem;
+      padding: 0.5rem 1.5rem;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      text-transform: lowercase;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .social-load-more-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+    .social-load-more-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    /* ── Lightbox ── */
+    .social-lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0, 0, 0, 0.92);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .social-lightbox.open { display: flex; }
+
+    .social-lightbox-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 2rem;
+      cursor: pointer;
+      font-family: var(--font-commit-mono), var(--font-mono);
+      z-index: 510;
+      padding: 0.25rem 0.5rem;
+      line-height: 1;
+    }
+    .social-lightbox-close:hover { color: #fff; }
+
+    .social-lightbox-counter {
+      position: absolute;
+      top: 1.25rem;
+      left: 1.5rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.8rem;
+      z-index: 510;
+    }
+
+    .social-lightbox-stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      max-width: 100vw;
+      max-height: calc(100vh - 4rem);
+      padding: 2rem;
+    }
+    .social-lightbox-stage img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 4px;
+      transition: opacity 0.15s ease;
+    }
+
+    .social-lightbox-prev,
+    .social-lightbox-next {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 40%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      z-index: 505;
+      border: none;
+      background: none;
+      padding: 0 1.5rem;
+    }
+    .social-lightbox-prev { left: 0; justify-content: flex-start; }
+    .social-lightbox-next { right: 0; justify-content: flex-end; }
+    .social-lightbox-arrow {
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 2rem;
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-weight: 700;
+      transition: color 0.15s, transform 0.15s;
+      pointer-events: none;
+    }
+    .social-lightbox-prev:hover .social-lightbox-arrow,
+    .social-lightbox-next:hover .social-lightbox-arrow {
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .social-lightbox-prev:hover .social-lightbox-arrow { transform: translateX(-3px); }
+    .social-lightbox-next:hover .social-lightbox-arrow { transform: translateX(3px); }
+    .social-lightbox-prev[disabled],
+    .social-lightbox-next[disabled] { cursor: default; }
+    .social-lightbox-prev[disabled] .social-lightbox-arrow,
+    .social-lightbox-next[disabled] .social-lightbox-arrow {
+      color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* ── Sensitive content cover (lightbox) ──
+       Full-bleed solid fill so any image size is fully obscured.
+       Inner styled box is just the visual callout for the click target. */
+    .social-lightbox-cw {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 504;
+      background: var(--fg);
+      color: var(--bg);
+      border: none;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-commit-mono), var(--font-mono);
+      padding: 2rem;
+    }
+    .social-lightbox.is-cw .social-lightbox-cw { display: flex; }
+
+    .social-lightbox-cw__inner {
+      border: 3px solid var(--bg);
+      box-shadow: 8px 8px 0 var(--bg);
+      padding: 1.75rem 2.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.7rem;
+      text-align: center;
+      max-width: min(560px, calc(100vw - 5rem));
+      transition: transform 0.12s, box-shadow 0.12s;
+    }
+    .social-lightbox-cw:hover .social-lightbox-cw__inner {
+      transform: translate(-2px, -2px);
+      box-shadow: 10px 10px 0 var(--bg);
+    }
+    .social-lightbox-cw:active .social-lightbox-cw__inner {
+      transform: translate(2px, 2px);
+      box-shadow: 4px 4px 0 var(--bg);
+    }
+    .social-lightbox-cw__title {
+      font-size: clamp(1.15rem, 2.4vw, 1.55rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      line-height: 1.2;
+    }
+    .social-lightbox-cw__hint {
+      font-size: 0.78rem;
+      color: var(--cloud);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .social-lightbox-alt {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: rgba(255, 255, 255, 0.85);
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.5;
+      padding: 0.75rem 1.5rem;
+      text-align: center;
+      z-index: 510;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .social-lightbox-alt:empty { display: none; }
+
+    /* Skip-hint sits in the top bar, baseline-aligned with the counter
+       (top-left) and the close button (top-right). On narrow viewports
+       there is no horizontal room for it between those two, and the
+       keyboard hints don't apply to touch users anyway, so hide it. */
+    .social-lightbox-skip {
+      position: absolute;
+      top: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: calc(100vw - 12rem);
+      color: rgba(255, 255, 255, 0.45);
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      z-index: 510;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .social-lightbox-skip:empty { display: none; }
+
+    @media (max-width: 900px) {
+      .social-lightbox-skip {
+        font-size: 0.7rem;
+        max-width: calc(100vw - 9rem);
+      }
+    }
+    @media (max-width: 600px) {
+      .social-lightbox-stage { padding: 1rem; }
+      .social-lightbox-prev,
+      .social-lightbox-next { width: 30%; padding: 0 0.75rem; }
+      .social-lightbox-arrow { font-size: 1.5rem; }
+      .social-lightbox-close { top: 0.5rem; right: 0.75rem; }
+      .social-lightbox-counter { top: 0.75rem; left: 0.75rem; }
+      /* No horizontal room between counter and close on phones, and the
+         hints are keyboard-only — touch users navigate by swipe. */
+      .social-lightbox-skip { display: none; }
+    }
+
+    /* ── Follow button (neubrutalist) ── */
+    .social-follow-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 200;
+      background: var(--fg);
+      color: var(--bg);
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.75rem 1.5rem;
+      border: 3px solid var(--fg);
+      box-shadow: 4px 4px 0 var(--fg);
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .social-follow-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--fg);
+    }
+    .social-follow-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--fg);
+    }
+    :global([data-theme="dark"]) .social-follow-btn {
+      box-shadow: 4px 4px 0 var(--muted);
+    }
+    :global([data-theme="dark"]) .social-follow-btn:hover {
+      box-shadow: 6px 6px 0 var(--muted);
+    }
+    :global([data-theme="dark"]) .social-follow-btn:active {
+      box-shadow: 1px 1px 0 var(--muted);
+    }
+
+    /* ── Follow modal ── */
+    .social-follow-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    .social-follow-overlay.open { display: flex; }
+    .social-follow-modal {
+      position: relative;
+      background: var(--bg);
+      border: 3px solid var(--fg);
+      box-shadow: 8px 8px 0 var(--fg);
+      padding: 2rem;
+      max-width: 420px;
+      width: calc(100% - 40px);
+      font-family: var(--font-commit-mono), var(--font-mono);
+    }
+    :global([data-theme="dark"]) .social-follow-modal {
+      box-shadow: 8px 8px 0 var(--muted);
+    }
+    .social-follow-modal h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: lowercase;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.03em;
+    }
+    .social-follow-modal h2::before {
+      content: "// ";
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .social-follow-modal p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+    .social-follow-input-row {
+      display: flex;
+      gap: 0;
+    }
+    .social-follow-input {
+      flex: 1;
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.85rem;
+      padding: 0.6rem 0.75rem;
+      border: 3px solid var(--fg);
+      border-right: none;
+      background: var(--bg);
+      color: var(--fg);
+      outline: none;
+    }
+    .social-follow-input::placeholder { color: var(--cloud); }
+    .social-follow-input:focus { border-color: var(--accent); }
+    .social-follow-submit {
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.6rem 1rem;
+      background: var(--fg);
+      color: var(--bg);
+      border: 3px solid var(--fg);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .social-follow-submit:hover { opacity: 0.85; }
+    .social-follow-error {
+      font-size: 0.75rem;
+      color: #c44;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    .social-follow-rss {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 1.25rem;
+      font-style: italic;
+      text-align: center;
+    }
+    /* ── QR welcome modal ── */
+    .social-qr-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 350;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .social-qr-overlay.open { display: flex; }
+    :global(body.has-qr-modal-open) { overflow: hidden; }
+    .social-qr-modal {
+      position: relative;
+      background: var(--bg);
+      border: 3px solid var(--fg);
+      box-shadow: 8px 8px 0 var(--fg);
+      max-width: 640px;
+      width: 100%;
+      max-height: calc(100vh - 4rem);
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-reading);
+    }
+    :global([data-theme="dark"]) .social-qr-modal {
+      box-shadow: 8px 8px 0 var(--muted);
+    }
+    .social-qr-close {
+      position: absolute;
+      top: 0.4rem;
+      right: 0.6rem;
+      background: transparent;
+      border: none;
+      color: var(--fg);
+      font-size: 1.6rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      font-family: var(--font-commit-mono), var(--font-mono);
+    }
+    .social-qr-close:hover { color: var(--accent); }
+    .social-qr-flags {
+      display: flex;
+      gap: 0.4rem;
+      padding: 1rem 1rem 0.5rem;
+      border-bottom: 1px solid var(--cloud);
+    }
+    .social-qr-flag {
+      background: transparent;
+      border: 2px solid transparent;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      font-size: 1.4rem;
+      line-height: 1;
+      filter: grayscale(0.6);
+      opacity: 0.65;
+      transition: filter 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
+    }
+    .social-qr-flag:hover { filter: grayscale(0); opacity: 1; }
+    .social-qr-flag.is-active {
+      filter: grayscale(0);
+      opacity: 1;
+      border-color: var(--fg);
+    }
+    .social-qr-body {
+      overflow-y: auto;
+      padding: 1.25rem 1.5rem 1rem;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: var(--fg);
+    }
+    .social-qr-body p { margin: 0 0 0.85rem; }
+    .social-qr-body ul {
+      margin: 0 0 1rem;
+      padding-left: 1.1rem;
+      list-style: square;
+    }
+    .social-qr-body li { margin-bottom: 0.45rem; }
+    .social-qr-body a {
+      color: var(--fg);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.18em;
+    }
+    .social-qr-body a:hover { color: var(--accent); }
+    .social-qr-body code {
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.85em;
+      padding: 0 0.25em;
+      background: var(--cloud);
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+    .social-qr-h {
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0 0 0.85rem;
+      letter-spacing: -0.02em;
+    }
+    .social-qr-h::before {
+      content: "// ";
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .social-qr-h3 {
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 1.25rem 0 0.6rem;
+      letter-spacing: -0.01em;
+    }
+    .social-qr-actions {
+      padding: 0.9rem 1.5rem 1.1rem;
+      border-top: 1px solid var(--cloud);
+      display: flex;
+      justify-content: flex-end;
+    }
+    .social-qr-confirm {
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.6rem 1.1rem;
+      background: var(--fg);
+      color: var(--bg);
+      border: 3px solid var(--fg);
+      cursor: pointer;
+    }
+    .social-qr-confirm:hover { opacity: 0.85; }
+    @media (prefers-reduced-motion: reduce) {
+      .social-qr-flag { transition: none; }
+    }
+
+    .social-follow-rss a {
+      color: var(--fg);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .social-follow-close {
+      position: absolute;
+      top: 0.75rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: var(--font-commit-mono), var(--font-mono);
+    }
+    .social-follow-close:hover { color: var(--fg); }
+
+    /* ── Post-header trigger: avatar/name/date open the profile card ── */
+    :global(button.social-post-header) {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0 0 0.75rem;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: opacity 0.15s;
+    }
+    :global(button.social-post-header:hover .social-post-author),
+    :global(button.social-post-header:focus-visible .social-post-author) {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    :global(button.social-post-header:focus-visible) {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    /* ── Profile card ── */
+    .social-profile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 320;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .social-profile-overlay.open { display: flex; }
+    .social-profile-card {
+      position: relative;
+      background: var(--bg);
+      color: var(--fg);
+      border: 3px solid var(--fg);
+      box-shadow: 8px 8px 0 var(--fg);
+      padding: 1.75rem 1.75rem 1.5rem;
+      /* Match the feed column width so the card sits at the same scale as
+         the posts behind it instead of being squeezed. */
+      max-width: 680px;
+      width: 100%;
+      max-height: calc(100vh - 4rem);
+      overflow-y: auto;
+      /* Reserve the scrollbar gutter so content never touches the bar. */
+      scrollbar-gutter: stable;
+      font-family: var(--font-commit-mono), var(--font-mono);
+
+      /* Blog-body link palette, scoped to the card so bio + field links
+         get the blue highlighter underline used in /blog. */
+      --link-under: rgba(70, 140, 195, 0.6);
+      --link-under-hover: rgba(70, 140, 195, 0.95);
+      --link-bg-hover: rgba(70, 140, 195, 0.14);
+    }
+    :global([data-theme="dark"]) .social-profile-card {
+      --link-under: rgba(130, 190, 235, 0.65);
+      --link-under-hover: rgba(130, 190, 235, 1);
+      --link-bg-hover: rgba(130, 190, 235, 0.16);
+    }
+    :global([data-theme="dark"]) .social-profile-card {
+      box-shadow: 8px 8px 0 var(--muted);
+    }
+
+    .social-profile-go {
+      position: absolute;
+      top: 0.75rem;
+      right: 2.75rem;
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.15s;
+    }
+    .social-profile-go:hover { color: var(--accent); }
+    .social-profile-close {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.9rem;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      line-height: 1;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: var(--font-commit-mono), var(--font-mono);
+    }
+    .social-profile-close:hover { color: var(--fg); }
+
+    .social-profile-head {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-right: 4.5rem; /* room for the arrow + close in top-right */
+      min-width: 0;
+    }
+    .social-profile-ident {
+      min-width: 0;
+      flex: 1;
+    }
+    .social-profile-handle {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .social-profile-avatar {
+      width: 64px;
+      height: 64px;
+      border: 2px solid var(--fg);
+      border-radius: 4px;
+      background: var(--cloud);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .social-profile-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      word-wrap: break-word;
+    }
+    .social-profile-name::before {
+      content: "// ";
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .social-profile-handle {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .social-profile-bio {
+      font-size: 0.85rem;
+      line-height: 1.55;
+      margin-bottom: 1rem;
+      word-wrap: break-word;
+    }
+    .social-profile-bio:empty { display: none; }
+    .social-profile-bio :global(p) { margin: 0 0 0.6rem; }
+    .social-profile-bio :global(p:last-child) { margin-bottom: 0; }
+
+    .social-profile-fields {
+      border-top: 1px dashed var(--cloud);
+      border-bottom: 1px dashed var(--cloud);
+      padding: 0.5rem 0;
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    /* These elements are inserted via innerHTML, so the styles need to be
+       global — Astro's scope hash isn't applied to dynamically-created
+       nodes. */
+    :global(.social-profile-field) {
+      display: grid;
+      grid-template-columns: minmax(6.5rem, 0.4fr) 1fr;
+      column-gap: 0.85rem;
+      row-gap: 0.1rem;
+      font-size: 0.8rem;
+      align-items: baseline;
+    }
+    :global(.social-profile-field__name) {
+      color: var(--muted);
+      text-transform: lowercase;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    :global(.social-profile-field__name)::before { content: "» "; }
+    :global(.social-profile-field__value) {
+      color: var(--fg);
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
+
+    /* Blog-body blue-highlighter link styling for any link inside the
+       card (bio paragraphs + field values). */
+    .social-profile-card :global(a) {
+      color: var(--fg);
+      text-decoration: none;
+      border-bottom: 2px solid var(--link-under);
+      padding: 0 0.1em 0.01em;
+      margin: 0 -0.05em;
+      transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .social-profile-card :global(a:hover) {
+      background-color: var(--link-bg-hover);
+      border-color: var(--link-under-hover);
+    }
+    /* The arrow link (top-right) opts out of the highlighter — it is its own
+       affordance, no underline noise. */
+    .social-profile-card .social-profile-go,
+    .social-profile-card .social-profile-go:hover {
+      border-bottom: none;
+      background: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .social-profile-stats {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .social-profile-stat {
+      flex: 1;
+      border: 2px solid var(--fg);
+      padding: 0.5rem 0.6rem;
+      text-align: center;
+      background: var(--bg);
+    }
+    .social-profile-stat__num {
+      display: block;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .social-profile-stat__label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .social-profile-joined {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: right;
+      letter-spacing: 0.04em;
+    }
+    .social-profile-joined:empty { display: none; }
+
+    @media (max-width: 600px) {
+      .social-profile-card { padding: 1.25rem 1.25rem 1.1rem; }
+      .social-profile-avatar { width: 52px; height: 52px; }
+      .social-profile-stat__num { font-size: 0.95rem; }
+      .social-profile-go { right: 2.5rem; }
+    }
+
+    /* ── Tag panel ── */
+    .social-tag-panel {
+      position: fixed;
+      top: var(--nav-total-height, 110px);
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      z-index: 250;
+      background: var(--bg);
+      color: var(--fg);
+      border-right: 3px solid var(--fg);
+      box-shadow: 6px 0 0 var(--fg);
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-commit-mono), var(--font-mono);
+      transform: translateX(-100%);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      visibility: hidden;
+    }
+    .social-tag-panel.open {
+      transform: translateX(0);
+      visibility: visible;
+    }
+    :global([data-theme="dark"]) .social-tag-panel {
+      box-shadow: 6px 0 0 var(--muted);
+    }
+
+    @media (min-width: 900px) {
+      .social-tag-panel {
+        width: clamp(340px, 30vw, 420px);
+      }
+    }
+
+    .social-tag-panel__head {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg);
+      border-bottom: 2px solid var(--fg);
+    }
+    .social-tag-panel__title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.02em;
+      word-break: break-word;
+      min-width: 0;
+    }
+    .social-tag-panel__title::before {
+      content: "// ";
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .social-tag-panel__close {
+      flex-shrink: 0;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      line-height: 1;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0 0 0 0.75rem;
+    }
+    .social-tag-panel__close:hover { color: var(--fg); }
+    .social-tag-panel__close:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .social-tag-panel__body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+      padding: 1rem 1.25rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    /* Loading + empty states inside the body share copy with the main feed. */
+    .social-tag-panel__body :global(.social-loading),
+    .social-tag-panel__body :global(.social-empty) {
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    /* Lock background scroll on small viewports where the panel covers the
+       feed. On wider screens the feed remains visible to the right and stays
+       scrollable. */
+    @media (max-width: 899px) {
+      :global(body.has-tag-panel-open) { overflow: hidden; }
+    }
+
+    /* On /social only: lift the global Ask launcher above the Follow button. */
+    :global(body:has(.social-page) .oliv-chat) {
+      bottom: 6.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .social-follow-btn {
+        bottom: 1rem;
+        right: 1rem;
+        font-size: 0.8rem;
+        padding: 0.6rem 1rem;
+      }
+      .social-page {
+        padding: 1.25rem 16px 3rem;
+      }
+      :global(body:has(.social-page) .oliv-chat) {
+        bottom: 5rem;
+        right: 1rem;
+      }
+    }
+  </style>
+</BaseLayout>

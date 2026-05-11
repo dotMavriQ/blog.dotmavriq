@@ -1,0 +1,500 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CloudMarquee from "../components/CloudMarquee.astro";
+---
+
+<BaseLayout title="404 // blog.dotmavriq.life" description="Page not found.">
+  <CloudMarquee slot="marquee" />
+
+  <section class="fourohfour">
+    <div class="fof-left">
+      <pre class="fof-ascii" aria-label="404">
+{`██   ██  ██████  ██   ██
+██   ██ ██  ████ ██   ██
+███████ ██ ██ ██ ███████
+     ██ ████  ██      ██
+     ██  ██████       ██`}
+      </pre>
+      <div class="fof-typewriter" aria-live="polite">
+        <span class="fof-prompt">&gt;</span>
+        <span id="typewriter-text"></span><span class="fof-cursor">_</span>
+      </div>
+      <a href="/" class="fof-home">[&nbsp;return&nbsp;home&nbsp;]</a>
+    </div>
+    <div class="fof-right">
+      <canvas id="snake-canvas" aria-hidden="true"></canvas>
+    </div>
+  </section>
+
+  <script>
+    import { prepareWithSegments, layoutNextLine } from '@chenglou/pretext';
+
+    // ── Dense mock JS error code ──
+    const ERROR_TEXT = [
+      'Uncaught TypeError: Cannot read properties of undefined (reading "route") ',
+      'at Router.resolve (router.js:404) at Object.navigate (app.js:187) ',
+      'at HTMLAnchorElement.<anonymous> (nav.js:42) ',
+      'ReferenceError: page is not defined ',
+      'at Module.render (pages.js:404) at async ServerResponse.handle (server.js:92) ',
+      'Error: ENOENT: no such file or directory ',
+      "open '/dist/pages/undefined.html' ",
+      'at Object.openSync (fs.js:497) at readFileSync (fs.js:393) ',
+      'TypeError: expected string, got undefined ',
+      'at validate (schema.js:118) at buildPage (build.js:404) ',
+      'SyntaxError: Unexpected token < in JSON at position 0 ',
+      'at JSON.parse (<anonymous>) at fetchRoute (fetch.js:73) ',
+      'at async loadPage (loader.js:404) ',
+      'Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent ',
+      'at new NodeError (internal/errors.js:322) ',
+      'at ServerResponse.setHeader (_http_outgoing.js:561) ',
+      'RangeError: Maximum call stack size exceeded ',
+      'at RouteTree.lookup (tree.js:404) at RouteTree.lookup (tree.js:404) ',
+      'Warning: Each child in a list should have a unique "key" prop. ',
+      'at PageList (pages.tsx:404) at Routes (router.tsx:89) ',
+      'Unhandled promise rejection: NotFoundError ',
+      'at resolve (resolver.js:404) at async render (ssr.js:211) ',
+      'TypeError: this.getPage is not a function ',
+      'at ContentLayer.fetch (content.js:404) at async build (astro.js:1) ',
+      'Error: 404 Not Found at ServerResponse.send (response.js:404) ',
+      'at /src/middleware/fallback.js:12:5 ',
+      'FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed ',
+      'JavaScript heap out of memory at process.exit (internal/process.js:1) ',
+      'TypeError: Cannot destructure property "slug" of undefined ',
+      'at getStaticPaths (pages/[slug].astro:404) ',
+      'Error: EPERM: operation not permitted, unlink ',
+      'Segmentation fault (core dumped) ',
+      'at wasm://wasm/009f4a:wasm-function[404]:0x1a2b ',
+      'at Module._compile (loader.js:999) ',
+    ].join('');
+
+    const LONG_TEXT = ERROR_TEXT.repeat(8);
+    const COMMIT_FONT =
+      getComputedStyle(document.documentElement).getPropertyValue('--font-commit-mono').trim() ||
+      'CommitMono';
+    const FONT = `11px ${COMMIT_FONT}, ui-monospace, monospace`;
+    const LINE_H = 13;
+    const FRAME_COUNT = 8;
+    const FRAME_DURATION = 130;
+
+    function loadFrames(): Promise<HTMLImageElement[]> {
+      return Promise.all(
+        Array.from({ length: FRAME_COUNT }, (_, i) => {
+          return new Promise<HTMLImageElement>((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(img);
+            img.src = `/snake-frames/f${i + 1}.png`;
+          });
+        })
+      );
+    }
+
+    let snakeCleanup: (() => void) | null = null;
+
+    async function initSnakeCanvas() {
+      if (snakeCleanup) { snakeCleanup(); snakeCleanup = null; }
+
+      const canvas = document.getElementById('snake-canvas') as HTMLCanvasElement;
+      if (!canvas) return;
+
+      const frames = await loadFrames();
+      if (!frames[0]?.naturalWidth) return;
+
+      snakeCleanup = setupCanvas(canvas, frames);
+    }
+
+    function setupCanvas(
+      canvas: HTMLCanvasElement,
+      frames: HTMLImageElement[],
+    ): () => void {
+      const ctx = canvas.getContext('2d', { alpha: false });
+      if (!ctx) return () => {};
+
+      const sample = document.createElement('canvas');
+      const sCtx = sample.getContext('2d', { willReadFrequently: true });
+      if (!sCtx) return () => {};
+
+      let rows = 0;
+      let rafId: number;
+      let stopped = false;
+      let lastTs: number | null = null;
+      let textDrift = 0;
+      let prepared = prepareWithSegments(LONG_TEXT, FONT);
+      let lastDriftIdx = -1;
+      let animTime = 0;
+
+      const styles = getComputedStyle(document.documentElement);
+      const bgStyle = styles.getPropertyValue('--bg').trim() || '#f5f3ec';
+
+      // Parse --fg into rgb() for use with variable alpha
+      const fgHex = styles.getPropertyValue('--fg').trim() || '#1a1a1a';
+      const fgMatch = fgHex.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+      const fgColor = fgMatch
+        ? `rgb(${parseInt(fgMatch[1], 16)}, ${parseInt(fgMatch[2], 16)}, ${parseInt(fgMatch[3], 16)})`
+        : 'rgb(26, 26, 26)';
+
+      function measure() {
+        const rect = canvas.parentElement!.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+        rows = Math.floor(rect.height / LINE_H);
+      }
+
+      function render(ts: number) {
+        if (!ctx || !sCtx || stopped) return;
+        if (lastTs === null) lastTs = ts;
+        const dt = Math.min(ts - lastTs, 50) / 1000;
+        lastTs = ts;
+
+        animTime += dt * 1000;
+        const frameIdx = Math.floor(animTime / FRAME_DURATION) % FRAME_COUNT;
+        const img = frames[frameIdx];
+
+        textDrift += dt * 6;
+        const driftIdx = Math.floor(textDrift) % ERROR_TEXT.length;
+        const quantized = Math.floor(driftIdx / 12) * 12;
+        if (quantized !== lastDriftIdx) {
+          lastDriftIdx = quantized;
+          const shifted = LONG_TEXT.slice(quantized) + LONG_TEXT.slice(0, quantized);
+          try { prepared = prepareWithSegments(shifted, FONT); } catch { /* */ }
+        }
+
+        const w = canvas.width / (window.devicePixelRatio || 1);
+        const h = canvas.height / (window.devicePixelRatio || 1);
+        const gifW = img.naturalWidth || 200;
+        const gifH = img.naturalHeight || 295;
+
+        let scale = h / gifH;
+        const dx = (w - gifW * scale) / 2;
+        const dy = (h - gifH * scale) / 2;
+
+        const sampleCols = Math.floor(w / 4);
+        if (sampleCols < 1 || rows < 1) { rafId = requestAnimationFrame(render); return; }
+
+        sample.width = sampleCols;
+        sample.height = rows;
+        sCtx.clearRect(0, 0, sampleCols, rows);
+        sCtx.drawImage(
+          img,
+          0, 0, gifW, gifH,
+          dx / (w / sampleCols), dy / (h / rows),
+          (gifW * scale) / (w / sampleCols), (gifH * scale) / (h / rows)
+        );
+        const pixels = sCtx.getImageData(0, 0, sampleCols, rows).data;
+
+        type RowSpan = { left: number; right: number; brightnesses: Float32Array } | null;
+        const rowSpans: RowSpan[] = [];
+
+        for (let r = 0; r < rows; r++) {
+          let left = -1, right = -1;
+          for (let c = 0; c < sampleCols; c++) {
+            const idx = (r * sampleCols + c) * 4;
+            if (pixels[idx + 3] > 20) {
+              if (left < 0) left = c;
+              right = c;
+            }
+          }
+          if (left < 0) {
+            rowSpans.push(null);
+          } else {
+            const pxLeft = (left / sampleCols) * w;
+            const pxRight = ((right + 1) / sampleCols) * w;
+            const spanCols = right - left + 1;
+            const brightnesses = new Float32Array(spanCols);
+            for (let c = left; c <= right; c++) {
+              const idx = (r * sampleCols + c) * 4;
+              brightnesses[c - left] = (pixels[idx] * 0.299 + pixels[idx + 1] * 0.587 + pixels[idx + 2] * 0.114) / 255;
+            }
+            rowSpans.push({ left: pxLeft, right: pxRight, brightnesses });
+          }
+        }
+
+        ctx.fillStyle = bgStyle;
+        ctx.fillRect(0, 0, w, h);
+
+        let cursor = { segmentIndex: 0, graphemeIndex: 0 };
+
+        for (let r = 0; r < rows; r++) {
+          const span = rowSpans[r];
+          if (!span) continue;
+
+          const lineWidth = span.right - span.left;
+          if (lineWidth < 6) continue;
+
+          const line = layoutNextLine(prepared, cursor, lineWidth);
+          if (!line) {
+            cursor = { segmentIndex: 0, graphemeIndex: 0 };
+            continue;
+          }
+          cursor = line.end;
+
+          const text = line.text;
+          const y = r * LINE_H + LINE_H * 0.85;
+          const charW = lineWidth / Math.max(text.length, 1);
+
+          for (let i = 0; i < text.length; i++) {
+            const ch = text[i];
+            if (ch === ' ') continue;
+
+            const frac = i / text.length;
+            const sampleIdx = Math.floor(frac * span.brightnesses.length);
+            const brightness = span.brightnesses[Math.min(sampleIdx, span.brightnesses.length - 1)];
+
+            let weight = 'normal';
+            let style = 'normal';
+            let opacity = 0.3;
+
+            if (brightness > 0.5) {
+              weight = 'bold';
+              opacity = 0.9;
+            } else if (brightness > 0.25) {
+              weight = 'bold';
+              style = 'italic';
+              opacity = 0.6;
+            } else {
+              style = 'italic';
+              opacity = 0.35;
+            }
+
+            ctx.font = `${style} ${weight} 11px ${COMMIT_FONT}, ui-monospace, monospace`;
+            ctx.fillStyle = fgColor.replace(')', `, ${opacity})`).replace('rgb(', 'rgba(');
+            ctx.fillText(ch, span.left + i * charW, y);
+          }
+        }
+
+        rafId = requestAnimationFrame(render);
+      }
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        measure();
+        requestAnimationFrame((ts) => { render(ts); cancelAnimationFrame(rafId); });
+      } else {
+        measure();
+        rafId = requestAnimationFrame(render);
+      }
+
+      const ro = new ResizeObserver(() => { measure(); });
+      ro.observe(canvas.parentElement!);
+
+      return () => {
+        stopped = true;
+        cancelAnimationFrame(rafId);
+        ro.disconnect();
+      };
+    }
+
+    // ── Typewriter ──
+    const LINES = [
+      // Games
+      'Sorry, your princess is in another castle.',
+      'The cake is a lie. So is this page.',
+      "You've met with a terrible fate, haven't you?",
+      'I used to be a webpage like you, then I took a 404 to the knee.',
+      "It's a-me, 404!",
+      'GAME OVER. Continue? [Y/N]',
+      "Hey! Listen! ...this page doesn't exist.",
+      'All your page are belong to us.',
+      'Snake? Snake?! SNAAAAKE!!',
+      'You died. Respawn at homepage?',
+      'Would you kindly... go back?',
+      'The Enrichment Center regrets to inform you that this page is gone.',
+      // Songs
+      "Like a rainbow in the dark... so is this page.",
+      "Is this the real page? Is this just fantasy?",
+      "I tried to live, but this page didn't make it.",
+      "Another one bites the dust. Another page gone.",
+      "Under pressure... but this page already cracked.",
+      "Money for nothing, and your page for free.",
+      "I can't get no... page-isfaction.",
+      "Should I stay or should I go? The page already left.",
+      "Schism between you and the page you wanted.",
+      "Come as you are... but the page didn't.",
+      "Smoke on the water, fire in the server.",
+      "Been dazed and confused, but this page is just gone.",
+      "Running with the devil, but not with this page.",
+      "Around the world... but not to this URL.",
+      "The page feels good... wait, no it doesn't.",
+      "Seven Nation Army couldn't find this page.",
+    ];
+
+    let typewriterTimer: ReturnType<typeof setTimeout> | null = null;
+
+    function initTypewriter() {
+      if (typewriterTimer) clearTimeout(typewriterTimer);
+      const el = document.getElementById('typewriter-text');
+      if (!el) return;
+
+      const line = LINES[Math.floor(Math.random() * LINES.length)];
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.textContent = line;
+        return;
+      }
+
+      el.textContent = '';
+      let charIdx = 0;
+
+      function tick() {
+        charIdx++;
+        el!.textContent = line.slice(0, charIdx);
+        if (charIdx < line.length) {
+          typewriterTimer = setTimeout(tick, 50 + Math.random() * 40);
+        } else {
+          typewriterTimer = null;
+        }
+      }
+
+      typewriterTimer = setTimeout(tick, 600);
+    }
+
+    function initAll() {
+      initSnakeCanvas();
+      initTypewriter();
+    }
+
+    document.addEventListener('astro:page-load', initAll);
+  </script>
+
+  <style>
+    :global(body:has(.fourohfour) .footer) {
+      display: none;
+    }
+
+    :global(.page-content:has(.fourohfour)) {
+      padding-top: 0;
+      padding-bottom: 0;
+      max-width: 960px;
+    }
+
+    .fourohfour {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      height: calc(100dvh - var(--nav-total-height, 110px));
+      overflow: hidden;
+    }
+
+    .fof-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+
+    .fof-right {
+      flex-shrink: 0;
+      width: 50%;
+      align-self: stretch;
+    }
+
+    .fof-ascii {
+      font-family: var(--font-mono);
+      font-size: clamp(0.8rem, 2.5vw, 1.8rem);
+      line-height: 1.1;
+      color: var(--fg);
+      white-space: pre;
+      margin: 0;
+      user-select: none;
+      letter-spacing: 0.05em;
+    }
+
+    .fof-typewriter {
+      font-family: var(--font-mono);
+      font-size: clamp(0.8rem, 1.3vw, 1.05rem);
+      color: var(--fg);
+      opacity: 0.7;
+      line-height: 1.4;
+      min-height: 1.4em;
+    }
+
+    .fof-prompt {
+      color: var(--fg);
+      opacity: 0.4;
+      margin-right: 0.5ch;
+    }
+
+    .fof-cursor {
+      animation: blink 800ms step-end infinite;
+      color: var(--fg);
+      opacity: 0.6;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fof-cursor { animation: none; }
+    }
+
+    .fof-home {
+      font-family: var(--font-mono);
+      font-size: clamp(0.75rem, 1.1vw, 0.95rem);
+      color: var(--fg);
+      text-decoration: none;
+      opacity: 0.4;
+      transition: opacity 0.2s, border-color 0.2s;
+      letter-spacing: 0.05em;
+      border: 1px solid transparent;
+      padding: 0.3em 0.6em;
+    }
+
+    .fof-home:hover {
+      opacity: 0.9;
+      border-color: var(--cloud);
+    }
+
+    #snake-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    @media (max-width: 600px) {
+      .fourohfour {
+        flex-direction: column;
+        gap: 0;
+        align-items: center;
+        justify-content: flex-end;
+        padding-bottom: 0.75rem;
+      }
+
+      .fof-left {
+        align-items: center;
+        text-align: center;
+        order: 2;
+        gap: 0.4rem;
+        flex-shrink: 0;
+        padding: 0.5rem 0 0;
+      }
+
+      .fof-right {
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        align-self: stretch;
+        order: 1;
+      }
+
+      .fof-ascii {
+        font-size: clamp(0.35rem, 2.2vw, 0.55rem);
+        line-height: 1.05;
+      }
+
+      .fof-typewriter {
+        font-size: clamp(0.6rem, 2.6vw, 0.75rem);
+        line-height: 1.2;
+      }
+
+      .fof-home {
+        font-size: clamp(0.55rem, 2.3vw, 0.7rem);
+        padding: 0.2em 0.4em;
+      }
+    }
+  </style>
+</BaseLayout>

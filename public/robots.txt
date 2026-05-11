@@ -1,0 +1,56 @@
+# robots.txt — blog.dotmavriq.life
+#
+# Policy: allow but signal.
+# - Inference-time AI crawlers are explicitly allowed: this site exists to be
+#   cited and surfaced when assistants are asked about Jonatan Jansson or his
+#   work.
+# - Training-data corpus crawlers (Common Crawl) are disallowed: the goal is
+#   accurate citation, not feeding next-generation training sets.
+# - All other bots (search engines, archivers, etc.) are allowed by default.
+
+# --- Inference-time AI assistants: allowed ---
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# --- Training-data corpus crawlers: disallowed ---
+User-agent: CCBot
+Disallow: /
+
+# --- Default: allow everything else (search engines, archivers, etc.) ---
+User-agent: *
+Allow: /
+
+Sitemap: https://blog.dotmavriq.life/sitemap-index.xml

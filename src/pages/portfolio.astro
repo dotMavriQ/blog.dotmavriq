@@ -1,0 +1,845 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CloudMarquee from "../components/CloudMarquee.astro";
+
+const siteUrl = "https://blog.dotmavriq.life";
+const jsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Portfolio — dotMavriQ",
+  "description": "Selected works and digital artifacts.",
+  "url": `${siteUrl}/portfolio`,
+  "author": {
+    "@type": "Person",
+    "name": "Jonatan Jansson",
+    "alternateName": "dotMavriQ"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "SoftwareApplication",
+        "position": 1,
+        "name": "TEAL",
+        "description": "Self-hosted media tracker for books, films, and games.",
+        "url": "https://teal.dotmavriq.life",
+        "applicationCategory": "WebApplication",
+        "operatingSystem": "Web"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "position": 2,
+        "name": "Ankode",
+        "description": "Spaced-recall study tool for software engineering interview prep. Full-stack React SPA with Hono API, GitHub OAuth, and spaced-repetition scheduling.",
+        "url": "https://ankode-web-dotmavriq-eu-de.s3-web.eu-de.cloud-object-storage.appdomain.cloud",
+        "applicationCategory": "WebApplication",
+        "operatingSystem": "Web"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "position": 3,
+        "name": "TeamTailor Integrator",
+        "description": "WordPress plugin that imports TeamTailor job ads into CPTs with taxonomy mapping and WP-Cron sync.",
+        "url": "https://github.com/dotMavriQ/TeamTailor-Integrator-For-WordPress",
+        "applicationCategory": "Plugin"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "position": 3,
+        "name": "STXTOFR",
+        "description": "Multi-provider ETL pipeline for Swedish roadside facility data. Normalizes heterogeneous sources, routes through a Baserow human-review layer, and exports versioned JSON DTO bundles via FastAPI.",
+        "url": "https://github.com/dotMavriQ/STXTOFR",
+        "applicationCategory": "WebApplication"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "position": 5,
+        "name": "Habsiad",
+        "description": "Obsidian-Habitica bridge that syncs tasks, stats, and streak insights.",
+        "url": "https://github.com/dotMavriQ/Habsiad",
+        "applicationCategory": "Plugin"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "position": 6,
+        "name": "Linea Web",
+        "description": "AI-powered Linear issue resolution running entirely in the browser.",
+        "url": "https://dotmavriq.github.io/linea-web/",
+        "applicationCategory": "WebApplication"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "position": 7,
+        "name": "Linian",
+        "description": "Transforms Linear shortcodes into rich status-aware links inside Obsidian notes.",
+        "url": "https://github.com/dotMavriQ/Linian",
+        "applicationCategory": "Plugin"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "position": 8,
+        "name": "Slactac",
+        "description": "Browser extension that normalizes Slack channel names for cleaner focus.",
+        "url": "https://github.com/dotMavriQ/Slactac",
+        "applicationCategory": "BrowserExtension"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "position": 9,
+        "name": "Lyncs",
+        "description": "Terminal music sync for DAPs with FAT32 filename sanitization and batch transfer.",
+        "url": "https://github.com/dotMavriQ/lyncs",
+        "applicationCategory": "DesktopApplication"
+      }
+    ]
+  }
+});
+---
+
+<BaseLayout
+  title="portfolio // dotmavriq"
+  description="Portfolio — Jonatan Jansson. Production WordPress plugins, Laravel platforms, and AI tooling. Open source."
+>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={jsonLd} />
+  </Fragment>
+  <CloudMarquee slot="marquee" />
+
+  <section class="portfolio">
+
+    <!-- ─── Intro ─── -->
+    <div class="intro-card neu-box">
+      <h1 class="prefix-slash">portfolio</h1>
+      <p class="tagline">Production work &amp; open-source tools</p>
+      <p class="sub">Enterprise WordPress integrations, full-stack platforms, and AI-assisted developer tooling.<br>Built for real deployment, shipped open&nbsp;source.</p>
+    </div>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- FEATURED — TEAL                                  -->
+    <!-- ════════════════════════════════════════════════ -->
+    <article class="featured-card neu-box">
+      <div class="featured-img-wrap">
+        <img
+          src="/img/portfolio/teal.png"
+          alt="TEAL — media tracker dashboard"
+          loading="eager"
+          width="1917"
+          height="936"
+        />
+        <div class="grain" aria-hidden="true"></div>
+      </div>
+      <div class="featured-body">
+        <span class="label-featured">FEATURED</span>
+        <h2>TEAL</h2>
+        <p class="featured-desc">
+          Self-hosted media tracker for books, films, and games. No algorithms, no ads, no dark patterns &mdash; just you and your collection. Imports your existing libraries from the usual suspects and enriches each entry with metadata from open sources. Real-time UI on Livewire&nbsp;3, single-binary deployment behind FrankenPHP.
+        </p>
+        <div class="card-tags">
+          <span class="tag">PHP 8.3</span>
+          <span class="tag">Laravel 11</span>
+          <span class="tag">Livewire 3</span>
+          <span class="tag">FrankenPHP</span>
+          <span class="tag">Tailwind CSS</span>
+          <span class="tag">REST APIs</span>
+          <span class="tag">Multi-source ETL</span>
+        </div>
+        <div class="card-links">
+          <a href="https://teal.dotmavriq.life" target="_blank" rel="noopener">Live&nbsp;→</a>
+          <a href="https://github.com/dotMavriQ/teal" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- PRIMARY — 2-col                                  -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="row-primary">
+
+      <article class="primary-card neu-box">
+        <div class="primary-img-wrap stxtofr-split">
+          <img class="stxtofr-baserow" src="/img/portfolio/stxtofr-baserow.png" alt="" loading="lazy" width="712" height="346" aria-hidden="true" />
+          <img class="stxtofr-map" src="/img/portfolio/stxtofr-map.png" alt="STXTOFR — Swedish roadside facility ETL" loading="lazy" width="712" height="346" />
+          <svg class="stxtofr-divider" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="100" y1="0" x2="0" y2="100" vector-effect="non-scaling-stroke" stroke="#111" stroke-width="2" />
+          </svg>
+          <div class="grain" aria-hidden="true"></div>
+        </div>
+        <div class="primary-body">
+          <h2>STXTOFR</h2>
+          <p class="card-desc">Pulls Swedish traffic and roadside data from several mismatched sources, maps it, cleans and standardizes it, then hands it to Baserow for manual review before exporting the finished set as a DTO. Python, FastAPI, PostgreSQL.</p>
+          <div class="card-tags">
+            <span class="tag">Python</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Geospatial</span>
+            <span class="tag">ETL</span>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/dotMavriQ/STXTOFR" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="primary-card neu-box">
+        <div class="primary-img-wrap">
+          <img class="img-contain" src="/img/portfolio/ankode.png" alt="Ankode" loading="lazy" width="1024" height="1024" />
+          <div class="grain" aria-hidden="true"></div>
+        </div>
+        <div class="primary-body">
+          <h2>Ankode</h2>
+          <p class="card-desc">Spaced-repetition drill for software engineering interview prep. React SPA + Hono API with a shared Zod/grading/SRS package across both ends. Static frontend on IBM Cloud Object Storage, API on Cloud Code Engine with GitHub OAuth and HMAC-signed sessions.</p>
+          <div class="card-tags">
+            <span class="tag">React</span>
+            <span class="tag">Hono</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">Zod</span>
+            <span class="tag">IBM Cloud</span>
+          </div>
+          <div class="card-links">
+            <a href="https://ankode-web-dotmavriq-eu-de.s3-web.eu-de.cloud-object-storage.appdomain.cloud" target="_blank" rel="noopener">Live&nbsp;→</a>
+            <a href="https://github.com/dotMavriQ/Ankode" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- SECONDARY — 3-col compact                        -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="row-secondary">
+
+      <article class="compact-card neu-box-sm">
+        <div class="compact-img-wrap">
+          <img src="/img/portfolio/teamtailor.png" alt="TeamTailor Integrator" loading="lazy" width="1024" height="1024" />
+          <div class="grain" aria-hidden="true"></div>
+        </div>
+        <div class="compact-body">
+          <h2>TeamTailor Integrator</h2>
+          <p class="card-desc">WordPress plugin that pulls a company's job listings from TeamTailor into their site, kept in sync automatically.</p>
+          <div class="card-tags">
+            <span class="tag">PHP</span>
+            <span class="tag">WordPress</span>
+            <span class="tag">REST API</span>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/dotMavriQ/TeamTailor-Integrator-For-WordPress" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="compact-card neu-box-sm">
+        <div class="compact-img-wrap">
+          <img class="img-contain" src="/img/portfolio/hydrorigs.png" alt="HydroRigs" loading="lazy" width="600" height="600" />
+          <div class="grain" aria-hidden="true"></div>
+        </div>
+        <div class="compact-body">
+          <h2>HydroRigs</h2>
+          <p class="card-desc">Terminal monitor for AI tool quotas and cooldowns. Shows which rigs are ready, which are cooling down, and surfaces alerts via Waybar.</p>
+          <div class="card-tags">
+            <span class="tag">Python</span>
+            <span class="tag">TUI</span>
+            <span class="tag">CLI</span>
+            <span class="tag">Waybar</span>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/dotMavriQ/HydroRigs" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="compact-card neu-box-sm">
+        <div class="compact-img-wrap">
+          <img class="img-zoom" src="/img/portfolio/lineaweb.png" alt="Linea Web" loading="lazy" width="2880" height="1462" />
+          <div class="grain" aria-hidden="true"></div>
+        </div>
+        <div class="compact-body">
+          <h2>Linea Web</h2>
+          <p class="card-desc">AI-powered Linear issue resolution — runs entirely in the browser. Zero backend.</p>
+          <div class="card-tags">
+            <span class="tag">TypeScript</span>
+            <span class="tag">AI / Gemini</span>
+          </div>
+          <div class="card-links">
+            <a href="https://dotmavriq.github.io/linea-web/" target="_blank" rel="noopener">Live&nbsp;→</a>
+            <a href="https://github.com/dotMavriQ/linea-web" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+            <a href="https://github.com/dotMavriQ/linea" target="_blank" rel="noopener">TUI&nbsp;→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="compact-card neu-box-sm">
+        <div class="compact-img-wrap">
+          <img class="img-contain" src="/img/portfolio/slactac.png" alt="Slactac" loading="lazy" width="1024" height="1024" />
+          <div class="grain" aria-hidden="true"></div>
+        </div>
+        <div class="compact-body">
+          <h2>Slactac</h2>
+          <p class="card-desc">Browser extension that normalizes Slack channel names for cleaner focus. Chrome&nbsp;&amp;&nbsp;Firefox.</p>
+          <div class="card-tags">
+            <span class="tag">JavaScript</span>
+            <span class="tag">Extension</span>
+          </div>
+          <div class="card-links">
+            <a href="https://chromewebstore.google.com/detail/slactac/gnjiocbockjlkpnlonimgihcbhpdephe" target="_blank" rel="noopener">Chrome&nbsp;→</a>
+            <a href="https://addons.mozilla.org/en-US/firefox/addon/slactac/" target="_blank" rel="noopener">Firefox&nbsp;→</a>
+            <a href="https://github.com/dotMavriQ/Slactac" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="compact-card neu-box-sm">
+        <div class="compact-img-wrap">
+          <img src="/img/portfolio/habsiad.png" alt="Habsiad" loading="lazy" width="1024" height="1024" />
+          <div class="grain" aria-hidden="true"></div>
+        </div>
+        <div class="compact-body">
+          <h2>Habsiad</h2>
+          <p class="card-desc">Your Obsidian&nbsp;⚡&nbsp;Habitica bridge. Syncs tasks&nbsp;&amp;&nbsp;stats, enriches daily notes, and surfaces streak&nbsp;insights.</p>
+          <div class="card-tags">
+            <span class="tag">TypeScript</span>
+            <span class="tag">Obsidian</span>
+            <span class="tag">API</span>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/dotMavriQ/Habsiad" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="compact-card neu-box-sm">
+        <div class="compact-img-wrap">
+          <img class="img-contain" src="/img/portfolio/linian.png" alt="Linian" loading="lazy" width="1024" height="1024" />
+          <div class="grain" aria-hidden="true"></div>
+        </div>
+        <div class="compact-body">
+          <h2>Linian</h2>
+          <p class="card-desc">Transforms <code>[TEAM-465]</code> shortcodes into rich, status-aware links inside Obsidian&nbsp;notes.</p>
+          <div class="card-tags">
+            <span class="tag">TypeScript</span>
+            <span class="tag">Obsidian</span>
+            <span class="tag">Linear</span>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/dotMavriQ/Linian" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="compact-card neu-box-sm">
+        <div class="compact-img-wrap">
+          <img class="img-contain" src="/img/portfolio/lyncs.png" alt="Lyncs" loading="lazy" width="810" height="810" />
+          <div class="grain" aria-hidden="true"></div>
+        </div>
+        <div class="compact-body">
+          <h2>Lyncs</h2>
+          <p class="card-desc">Terminal music sync for DAPs. Side-by-side comparison, FAT32&nbsp;filename sanitization, and batch&nbsp;transfer with&nbsp;progress.</p>
+          <div class="card-tags">
+            <span class="tag">Lua</span>
+            <span class="tag">TUI</span>
+          </div>
+          <div class="card-links">
+            <a href="https://github.com/dotMavriQ/lyncs" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- META — this site                                 -->
+    <!-- ════════════════════════════════════════════════ -->
+    <article class="meta-card neu-dashed">
+      <div class="meta-img-wrap">
+        <img src="/dotblogo.webp" alt="blog.dotmavriq" loading="lazy" width="751" height="657" />
+        <div class="grain" aria-hidden="true"></div>
+      </div>
+      <div class="meta-body">
+        <span class="label-meta">META</span>
+        <h2>blog.dotmavriq</h2>
+        <p class="card-desc">This site. Astro&nbsp;SSG with monospace ASCII art, Pretext editorial text flow, animated cloud backgrounds, and neubrutalist&nbsp;design.</p>
+        <div class="card-tags">
+          <span class="tag">TypeScript</span>
+          <span class="tag">Astro</span>
+        </div>
+        <div class="card-links">
+          <a href="#" class="meta-live-link">Live&nbsp;→</a>
+          <a href="https://github.com/dotMavriQ/blog.dotmavriq" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+        </div>
+      </div>
+    </article>
+
+  </section>
+</BaseLayout>
+
+<style>
+  /* ── Layout — full nav-width ── */
+  .portfolio {
+    padding: 3rem 0 4rem;
+    width: min(1200px, 100vw);
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-inline: 20px;
+    box-sizing: border-box;
+  }
+
+  /* ── Shared: BW rugged image treatment ── */
+  .featured-img-wrap,
+  .primary-img-wrap,
+  .compact-img-wrap,
+  .meta-img-wrap {
+    position: relative;
+    overflow: hidden;
+    background: #111;
+  }
+
+  .featured-img-wrap img,
+  .primary-img-wrap img,
+  .compact-img-wrap img,
+  .meta-img-wrap img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.2);
+    transition: filter 0.4s ease, transform 0.4s ease;
+  }
+
+  /* Per-card framing modifiers */
+  .primary-img-wrap img.img-contain,
+  .compact-img-wrap img.img-contain {
+    object-fit: contain;
+    padding: 0.5rem;
+    box-sizing: border-box;
+  }
+
+  /* STXTOFR diagonal-split: two stacked images with a clip-path so the
+     split always anchors to the wrap's actual corners regardless of crop. */
+  .primary-img-wrap.stxtofr-split { position: relative; }
+  .primary-img-wrap.stxtofr-split img {
+    position: absolute;
+    inset: 0;
+    object-fit: cover;
+  }
+  .primary-img-wrap.stxtofr-split .stxtofr-map { z-index: 1; }
+  .primary-img-wrap.stxtofr-split .stxtofr-baserow {
+    z-index: 2;
+    /* Upper-left triangle: top-left, top-right, bottom-left */
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+  .primary-img-wrap.stxtofr-split svg.stxtofr-divider {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .primary-img-wrap.stxtofr-split .grain { z-index: 4; }
+
+  /* Per-card wrap backgrounds — match each source image's bg under the
+     grayscale(1) contrast(1.2) filter so contained images blend seamlessly. */
+  .compact-img-wrap:has(img[src$="slactac.png"]),
+  .compact-img-wrap:has(img[src$="linian.png"]) {
+    transition: background 0.4s ease;
+  }
+  .compact-img-wrap:has(img[src$="slactac.png"]) { background: #242424; }
+  .compact-img-wrap:has(img[src$="linian.png"]) { background: #181818; }
+  .compact-img-wrap:has(img[src$="ankode.png"]) { background: #2d2d2d; }
+  .compact-card:hover .compact-img-wrap:has(img[src$="ankode.png"]) { background: #353535; }
+  .primary-img-wrap:has(img[src$="ankode.png"]) { background: #1d1d1d; }
+  .primary-card:hover .primary-img-wrap:has(img[src$="ankode.png"]) { background: #2a2a2a; }
+  /* Hover: match the source's bottom-left pixel under grayscale(0.3) contrast(1.05) */
+  .compact-card:hover .compact-img-wrap:has(img[src$="slactac.png"]) { background: #293037; }
+  .compact-card:hover .compact-img-wrap:has(img[src$="linian.png"]) { background: #252429; }
+  .compact-img-wrap:has(img[src$="lyncs.png"]) { background: #000; }
+
+  .compact-img-wrap img.img-zoom {
+    object-fit: cover;
+    object-position: center top;
+    transform: scale(1.6);
+    transform-origin: center 30%;
+  }
+
+  /* Noise / grain overlay — CSS-only */
+  .grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /* ── Shared: tags & links ── */
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border: 1.5px solid var(--fg);
+    color: var(--fg);
+    letter-spacing: 0.02em;
+  }
+
+  .card-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .card-links a {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: 2px solid var(--fg);
+    padding-bottom: 1px;
+    transition: color 0.12s ease, border-color 0.12s ease;
+  }
+
+  .card-links a:hover {
+    color: var(--muted);
+    border-color: var(--muted);
+  }
+
+  .card-desc {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  /* ── Intro card ── */
+  .intro-card {
+    padding: 2rem 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .intro-card h1 { margin-bottom: 0.75rem; font-size: 1.8rem; }
+  .tagline { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .sub { color: var(--muted); font-size: 1rem; }
+
+  /* ═══════════════════════════════════════════════════
+     FEATURED card — full width, landscape screenshot
+  ═══════════════════════════════════════════════════ */
+  .featured-card {
+    background: var(--bg);
+    margin-bottom: 2rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .featured-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--fg);
+  }
+
+  .featured-card:hover .featured-img-wrap img {
+    filter: grayscale(0.3) contrast(1.05);
+  }
+
+  .featured-img-wrap {
+    height: 320px;
+    border-bottom: 3px solid var(--fg);
+  }
+
+  .featured-body {
+    padding: 1.75rem 2rem;
+  }
+
+  .label-featured {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 0.2rem 0.6rem;
+    background: var(--fg);
+    color: var(--bg);
+    margin-bottom: 0.75rem;
+    display: inline-block;
+  }
+
+  .featured-body h2 {
+    font-size: 1.6rem;
+    font-family: var(--font-mono);
+    margin: 0.5rem 0 0.75rem;
+  }
+
+  .featured-desc {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+    max-width: 72ch;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     PRIMARY row — 2-col
+  ═══════════════════════════════════════════════════ */
+  .row-primary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .primary-card {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .primary-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--fg);
+  }
+
+  .primary-card:hover .primary-img-wrap img {
+    filter: grayscale(0.3) contrast(1.05);
+  }
+
+  .primary-img-wrap {
+    height: 200px;
+    border-bottom: 3px solid var(--fg);
+  }
+
+  .primary-body {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .primary-body h2 {
+    font-size: 1.15rem;
+    font-family: var(--font-mono);
+    margin-bottom: 0.5rem;
+  }
+
+  .primary-body .card-desc {
+    margin-bottom: auto;
+    padding-bottom: 0.75rem;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SECONDARY row — 3-col compact
+  ═══════════════════════════════════════════════════ */
+  .row-secondary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .compact-card {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .compact-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--fg);
+  }
+
+  .compact-card:hover .compact-img-wrap img {
+    filter: grayscale(0.3) contrast(1.05);
+  }
+
+  .compact-img-wrap {
+    height: 140px;
+    border-bottom: 2px solid var(--fg);
+  }
+
+  .compact-img-placeholder,
+  .img-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: repeating-linear-gradient(
+      45deg,
+      var(--cloud) 0px,
+      var(--cloud) 1px,
+      transparent 1px,
+      transparent 8px
+    );
+  }
+
+  .placeholder-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    background: var(--bg);
+    padding: 0.25em 0.6em;
+    border: 1px solid var(--fg);
+  }
+
+  .compact-body {
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .compact-body h2 {
+    font-size: 1rem;
+    font-family: var(--font-mono);
+    margin-bottom: 0.4rem;
+  }
+
+  .compact-body .card-desc {
+    font-size: 0.82rem;
+    margin-bottom: auto;
+    padding-bottom: 0.6rem;
+  }
+
+  .compact-body .tag {
+    font-size: 0.66rem;
+  }
+
+  .compact-body .card-links a {
+    font-size: 0.76rem;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     META card — horizontal, different tone
+  ═══════════════════════════════════════════════════ */
+  .meta-card {
+    display: flex;
+    background: var(--bg);
+    transition: border-color 0.2s ease;
+  }
+
+  .meta-card:hover {
+    border-color: var(--fg);
+  }
+
+  .meta-card:hover .meta-img-wrap img {
+    filter: grayscale(0.4) contrast(1.1);
+  }
+
+  .meta-img-wrap {
+    width: 200px;
+    flex-shrink: 0;
+    border-right: 2px dashed var(--muted);
+    background: #000;
+  }
+
+  .meta-img-wrap img {
+    object-fit: contain;
+    padding: 1rem;
+  }
+
+  .meta-card:hover .meta-img-wrap {
+    border-color: var(--fg);
+  }
+
+  .meta-body {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .label-meta {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .meta-body h2 {
+    font-size: 1rem;
+    font-family: var(--font-mono);
+    margin-bottom: 0.35rem;
+  }
+
+  .meta-body .card-desc {
+    font-size: 0.82rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .meta-body .tag {
+    font-size: 0.66rem;
+  }
+
+  .meta-body .card-links a {
+    font-size: 0.76rem;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     Responsive
+  ═══════════════════════════════════════════════════ */
+  @media (max-width: 800px) {
+    .row-primary {
+      grid-template-columns: 1fr;
+    }
+    .row-secondary {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 500px) {
+    .row-secondary {
+      grid-template-columns: 1fr;
+    }
+    .meta-card {
+      flex-direction: column;
+    }
+    .meta-img-wrap {
+      width: 100%;
+      height: 140px;
+      border-right: none;
+      border-bottom: 2px dashed var(--muted);
+    }
+    .featured-img-wrap {
+      height: 200px;
+    }
+    .intro-card {
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  function initPortfolio() {
+    const link = document.querySelector('.meta-live-link');
+    if (link) {
+      // Reset state in case we're returning via View Transition
+      (link as HTMLElement).style.opacity = '';
+      (link as HTMLElement).style.display = '';
+      link.textContent = 'Live\u00a0→';
+    }
+    link?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const l = e.currentTarget as HTMLAnchorElement;
+      l.textContent = "don't be silly...";
+      l.style.transition = 'opacity 1.2s';
+      l.style.opacity = '0';
+      setTimeout(() => { l.style.display = 'none'; }, 1200);
+    });
+  }
+
+  document.addEventListener("astro:page-load", initPortfolio);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initPortfolio, { once: true });
+  } else {
+    initPortfolio();
+  }
+</script>

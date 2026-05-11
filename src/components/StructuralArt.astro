@@ -1,0 +1,433 @@
+---
+/*
+  StructuralArt.astro
+  Animated ASCII cityscape hero. Auto-sizes to fill its container.
+  Uses JGS-SingleLine font, tight 1:1 line-height, full contrast.
+*/
+---
+
+<div class="structural-art" aria-hidden="true">
+  <pre id="ascii-scene" aria-hidden="true"></pre>
+</div>
+
+<script>
+  // ── Obstacle carving geometry (from @chenglou/pretext wrap-geometry) ──
+  type Rect = { x: number; y: number; width: number; height: number };
+  type Interval = { left: number; right: number };
+
+  function getRectIntervalsForBand(
+    rects: Rect[], bandTop: number, bandBottom: number,
+    hPad: number, vPad: number
+  ): Interval[] {
+    const intervals: Interval[] = [];
+    for (const rect of rects) {
+      if (bandBottom <= rect.y - vPad || bandTop >= rect.y + rect.height + vPad) continue;
+      intervals.push({ left: rect.x - hPad, right: rect.x + rect.width + hPad });
+    }
+    return intervals;
+  }
+
+  let prevStructuralRaf: number | null = null;
+  let prevStructuralRo: ResizeObserver | null = null;
+
+  function initStructuralArt() {
+    if (prevStructuralRaf) cancelAnimationFrame(prevStructuralRaf);
+    if (prevStructuralRo) prevStructuralRo.disconnect();
+
+    const sceneEl = document.getElementById("ascii-scene");
+    const wrapperEl = sceneEl?.parentElement;
+    if (!sceneEl || !wrapperEl) return;
+    {
+    const scene: HTMLElement = sceneEl;
+    const wrapper: HTMLElement = wrapperEl;
+
+    // Obstacle element — hero content carves a hole in the ASCII grid
+    const obstacle = document.querySelector('[data-ascii-obstacle]') as HTMLElement | null;
+
+    // ── Skyline tiles (cycle left→right: low houses → medium → tall → varied) ──
+    // Tile 0: Low suburb — tiny pointy-roof cottages (behind hero text)
+    const tile = [
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░/\\░░░░░░░░░░░░░/\\░░░░░░░░░░/\\░░░",
+      "░░|  |░░░░░░░░░░░░||░░░░░░░░░░|.|░░",
+      "__|__|____________||__________|_|__",
+    ];
+    const TILE_W = tile[0].length;
+    const TILE_H = tile.length;
+
+    // Tile 1: Medium rise — apartment block + small house (transition zone)
+    const tile2 = [
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░_____░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░|     |░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░| . . |░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░| . . |░░░░░░░░░░░░___░░░░░░░░░░",
+      "░░░|_____|░░░░░░░░░░░|   |░░░░░░░░░",
+      "___|=|=|=|___________| . |_________",
+      "   |=|=|=|           |   |         ",
+      "___|=|=|=|___________|___|_________",
+    ];
+
+    // Tile 2: Three tall buildings — the signature skyline cluster
+    const tile3 = [
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░_______░░░░░░░░░░░░░░░░░░░",
+      "░░░░_░░░|       |░░░░░░░░_____░░░░░",
+      "░░░|=|░░| .   . |░░░░░░░|     |░░░░",
+      "░░░|=|░░|  ___  |░░░░░░░| . . |░░░░",
+      "░░░|=|░░| |   | |░_░░░░░|_____|░░░░",
+      "░░░|=|░░| |   | ||=|░░░░|=|=|=|░░░░",
+      "░░░|=|░░|_|___|_||=|░░░░|=|=|=|░░░░",
+      "___|=|__|=|=|=|=||=|____|=|=|=|____",
+      "   |=|  |=|=|=|=||=|    |=|=|=|    ",
+      "___|=|__|=|=|=|=||=|___.|=|=|=|____",
+    ];
+
+    // Tile 3: Varied towers + tiny cottage on the right
+    const tile4 = [
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░░_░░░░░░░░░░░░",
+      "░░░░░░░░░░░░░░░░░░░░░|=|░░░░░░░░░░░",
+      "░░░_____░░░░░░░░░░░░░|=|░░░░░░░░░░░",
+      "░░|     |░░░░░_░░░░░░|=|░░░░░░░░░░░",
+      "░░| . . |░░░░|=|░░░░░|=|░░░░░░░░░░░",
+      "░░|     |░░░░|=|░_░░░|=|░░░░░░░░░░░",
+      "░░|_____|░░░░|=||=|░░|=|░░░░░░░░░░░",
+      "__|=|=|=|____|=||=|__|=|_______/\\__",
+      "  |=|=|=|    |=||=|  |=|       ||  ",
+      "__|=|=|=|____|=||=|__|=|_______||__",
+    ];
+
+    // Animated elements
+    // yFrac = fraction of sky height (0 = top, 1 = rooftops)
+    const birds = [
+      { x: 5, yFrac: 0.55, speed: 0.15, frames: ["~v~", "~^~"] },
+      { x: 40, yFrac: 0.45, speed: 0.22, frames: ["-v-", "-^-"] },
+      { x: 75, yFrac: 0.65, speed: 0.12, frames: ["~v~", "~^~"] },
+      { x: 110, yFrac: 0.50, speed: 0.18, frames: ["-v-", "-^-"] },
+    ];
+
+    const clouds = [
+      { x: -25, yFrac: 0.08, speed: 0.04, art: [
+        "    .-.   .-.",
+        " .-'   '-'   '-.",
+        "(                )",
+        " '-._________.-'"
+      ]},
+      { x: 40, yFrac: 0.22, speed: 0.025, art: [
+        "     .-.",
+        "  .-'   '-.",
+        " (         )",
+        "  '-.___.-'"
+      ]},
+      { x: 95, yFrac: 0.12, speed: 0.035, art: [
+        "   .-.    .-.",
+        ".-'   '..'   '-.",
+        "(                )",
+        " '-.__________.-'"
+      ]},
+    ];
+
+    let W = 80;
+    let H = TILE_H;
+    let frame = 0;
+    let rafId = 0;
+    let charW = 0;
+    let charH = 0;
+
+    function measure() {
+      // Measure how many chars fit in the container
+      const probe = document.createElement("span");
+      probe.style.cssText = "position:absolute;visibility:hidden;white-space:pre;font:inherit;";
+      probe.textContent = "░\n░";
+      wrapper.appendChild(probe);
+      const rect = probe.getBoundingClientRect();
+      charW = rect.width;
+      charH = rect.height / 2; // height of one character row
+      wrapper.removeChild(probe);
+      if (charW > 0) {
+        W = Math.floor(wrapper.clientWidth / charW);
+      }
+      if (charH > 0 && wrapper.clientHeight > 0) {
+        H = Math.max(TILE_H, Math.floor(wrapper.clientHeight / charH));
+      } else {
+        H = TILE_H;
+      }
+    }
+
+    function buildRow(row: number, totalH: number, w: number): string[] {
+      // Sky rows are prepended to push buildings to the bottom
+      const skyRows = totalH - TILE_H;
+      const tileRow = row - skyRows;
+      const tiles = [tile, tile2, tile3, tile4];
+      const out: string[] = [];
+      for (let col = 0; col < w; col++) {
+        if (tileRow < 0) {
+          // Sky filler
+          out.push("░");
+        } else {
+          const tileIndex = Math.floor(col / TILE_W);
+          const src = tiles[tileIndex % tiles.length];
+          const srcRow = tileRow < src.length ? src[tileRow] : null;
+          if (srcRow) {
+            out.push(srcRow[col % TILE_W]);
+          } else {
+            out.push("░");
+          }
+        }
+      }
+      return out;
+    }
+
+    function applyCleanEdgeGutters(buffer: string[][], w: number) {
+      const guard = Math.max(10, Math.min(28, Math.floor(w * 0.055)));
+      for (let r = 0; r < buffer.length; r++) {
+        for (let d = 0; d < guard; d++) {
+          const left = d;
+          const right = w - 1 - d;
+          if (left < w && buffer[r][left] !== " ") buffer[r][left] = "░";
+          if (right >= 0 && buffer[r][right] !== " ") buffer[r][right] = "░";
+        }
+      }
+    }
+
+    function applyEdgeDissolve(buffer: string[][], w: number) {
+      const fadeDepth = Math.max(3, Math.floor(w * 0.06));
+      for (let r = 0; r < buffer.length; r++) {
+        const hash = ((r * 2654435761) >>> 0) / 4294967296;
+        const rowDepth = Math.floor(fadeDepth * (0.5 + hash * 0.8));
+
+        for (let d = 0; d < rowDepth; d++) {
+          const fade = d / rowDepth;
+          if (fade < 0.3) {
+            buffer[r][d] = " ";
+          } else if (fade < 0.6) {
+            const ch = buffer[r][d];
+            buffer[r][d] = ch !== " " && ch !== "░" ? "·" : " ";
+          } else if (fade < 0.8 && buffer[r][d] === "░") {
+            buffer[r][d] = "·";
+          }
+
+          const col = w - 1 - d;
+          if (col < 0) continue;
+          if (fade < 0.3) {
+            buffer[r][col] = " ";
+          } else if (fade < 0.6) {
+            const ch = buffer[r][col];
+            buffer[r][col] = ch !== " " && ch !== "░" ? "·" : " ";
+          } else if (fade < 0.8 && buffer[r][col] === "░") {
+            buffer[r][col] = "·";
+          }
+        }
+      }
+    }
+
+    function render() {
+      const buffer: string[][] = [];
+      for (let r = 0; r < H; r++) {
+        buffer.push(buildRow(r, H, W));
+      }
+
+      const t = frame;
+      const skyRows = H - TILE_H;
+
+      // Edge treatments first, on the bare sky + city. Clouds and birds
+      // paint on top afterwards so they remain visible when they cross
+      // mid-frame, but are clipped to the inner stage so they don't leak
+      // into the frayed-edge gutter zone.
+      applyCleanEdgeGutters(buffer, W);
+      applyEdgeDissolve(buffer, W);
+
+      // Per-row paint window for clouds & birds. Mirrors the same hash
+      // formula `applyEdgeDissolve` uses, so the silhouette of the
+      // visible frayed dots and the cloud/bird disappearance line are
+      // exactly aligned row-by-row. Anything in [0, rowInset) is pure
+      // whitespace after dissolve — that's where they should vanish.
+      const fadeDepth = Math.max(3, Math.floor(W * 0.06));
+      const rowInset: number[] = new Array(H);
+      for (let r = 0; r < H; r++) {
+        const hash = ((r * 2654435761) >>> 0) / 4294967296;
+        const rowDepth = Math.floor(fadeDepth * (0.5 + hash * 0.8));
+        // dissolve writes pure spaces for d/rowDepth < 0.3
+        rowInset[r] = Math.floor(0.3 * rowDepth);
+      }
+
+      // Draw clouds (multi-line, opaque interior)
+      for (const cloud of clouds) {
+        const cloudW = Math.max(...cloud.art.map((l: string) => l.length));
+        const baseY = Math.max(0, Math.floor(skyRows * cloud.yFrac));
+        const cx = Math.floor((cloud.x + t * cloud.speed) % (W + cloudW + 30)) - cloudW;
+        for (let line = 0; line < cloud.art.length; line++) {
+          const cy = baseY + line;
+          if (cy >= 0 && cy < skyRows && buffer[cy]) {
+            const artLine = cloud.art[line];
+            // Find the first and last non-space character on this line
+            let first = -1, last = -1;
+            for (let i = 0; i < artLine.length; i++) {
+              if (artLine[i] !== ' ') { if (first < 0) first = i; last = i; }
+            }
+            if (first < 0) continue; // blank line, skip
+            // Render: outline chars + opaque whitespace fill between bounds.
+            // Full width — the post-pass whitespace overlay below crops
+            // anything that drifts past the last visible frayed glyph.
+            for (let i = first; i <= last; i++) {
+              const px = cx + i;
+              if (px >= 0 && px < W) {
+                buffer[cy][px] = artLine[i] !== ' ' ? artLine[i] : ' ';
+              }
+            }
+          }
+        }
+      }
+
+      // Draw birds (positioned by sky fraction — mid-to-lower sky).
+      // Birds paint over sky, dissolved dots, or empty cells; the
+      // whitespace overlay pass crops them at the frayed boundary.
+      for (const bird of birds) {
+        const by = skyRows > 2 ? Math.max(0, Math.min(skyRows - 1, Math.floor(skyRows * bird.yFrac))) : bird.yFrac < 0.5 ? 0 : 1;
+        if (by < H && buffer[by]) {
+          const bx = Math.floor((bird.x + t * bird.speed) % (W + 10)) - 5;
+          const bf = bird.frames[Math.floor(t / 8) % bird.frames.length];
+          for (let i = 0; i < bf.length; i++) {
+            const px = bx + i;
+            if (px >= 0 && px < W) {
+              const cell = buffer[by][px];
+              if (cell === "░" || cell === "·" || cell === " ") {
+                buffer[by][px] = bf[i];
+              }
+            }
+          }
+        }
+      }
+
+      // Whitespace edge overlay — highest priority. Re-blanks the outer
+      // 30 % of each row's dissolve depth so any cloud or bird glyph
+      // that drifted into the pure-whitespace strip is cleared, matching
+      // the dissolve silhouette row-for-row.
+      for (let r = 0; r < H; r++) {
+        const inset = rowInset[r] ?? 0;
+        for (let d = 0; d < inset; d++) {
+          buffer[r][d] = " ";
+          buffer[r][W - 1 - d] = " ";
+        }
+      }
+
+      // ── Obstacle carving (Pretext wrap-geometry) ──
+      // Punch a hole where the hero content lives so ASCII flows around it.
+      // Runs last so the hero hole stays clean even if a cloud/bird drifts
+      // across it.
+      if (obstacle && charW > 0 && charH > 0) {
+        const wrapperRect = wrapper!.getBoundingClientRect();
+        const obsRect = obstacle.getBoundingClientRect();
+        // Convert to wrapper-relative coordinates
+        const heroRect = {
+          x: obsRect.left - wrapperRect.left,
+          y: obsRect.top - wrapperRect.top,
+          width: obsRect.width,
+          height: obsRect.height,
+        };
+        const padH = charW * 3;  // 3 chars horizontal breathing room
+        const padV = charH * 1;  // 1 row vertical breathing room
+        for (let r = 0; r < H; r++) {
+          const bandTop = r * charH;
+          const bandBottom = (r + 1) * charH;
+          const blocked = getRectIntervalsForBand(
+            [heroRect], bandTop, bandBottom, padH, padV
+          );
+          for (const interval of blocked) {
+            const colStart = Math.max(0, Math.floor(interval.left / charW));
+            const colEnd = Math.min(W, Math.ceil(interval.right / charW));
+            for (let c = colStart; c < colEnd; c++) {
+              buffer[r]![c] = ' ';
+            }
+          }
+        }
+      }
+
+      scene.textContent = buffer.map(row => row.join("")).join("\n");
+      frame++;
+      rafId = requestAnimationFrame(render);
+    }
+
+    function init() {
+      measure();
+      if (rafId) cancelAnimationFrame(rafId);
+      frame = 0;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        // Static render with organic edges
+        const buf: string[][] = [];
+        for (let r = 0; r < H; r++) buf.push(buildRow(r, H, W));
+        applyCleanEdgeGutters(buf, W);
+        applyEdgeDissolve(buf, W);
+        scene.textContent = buf.map(row => row.join("")).join("\n");
+      } else {
+        rafId = requestAnimationFrame(render);
+      }
+    }
+
+    // Resize handler
+    const ro = new ResizeObserver(() => {
+      measure();
+    });
+    ro.observe(wrapper);
+    prevStructuralRo = ro;
+
+    init();
+    prevStructuralRaf = rafId;
+    }
+  }
+
+  document.addEventListener("astro:page-load", initStructuralArt);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initStructuralArt, { once: true });
+  } else {
+    initStructuralArt();
+  }
+</script>
+
+<style>
+  .structural-art {
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: clamp(14px, 1.65vw, 22px);
+    line-height: 1;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    min-height: 400px; /* Base height to reduce CLS on mobile/tablet */
+  }
+
+  @media (min-width: 769px) {
+    .structural-art {
+      min-height: calc(100vh - 120px);
+    }
+  }
+  pre {
+    margin: 0;
+    white-space: pre;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+</style>

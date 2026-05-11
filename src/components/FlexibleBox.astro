@@ -1,0 +1,82 @@
+---
+/*
+  FlexibleBox.astro
+  A responsive ASCII box component that repeats borders to fit container width.
+*/
+
+interface Props {
+  title?: string;
+}
+
+const { title = "content.md" } = Astro.props;
+---
+
+<div class="flexible-box">
+  <div class="box-top" aria-hidden="true">
+    <span class="corner">┌</span>
+    <span class="title">──[ {title} ]</span>
+    <span class="line"></span>
+    <span class="corner">┐</span>
+  </div>
+
+  <div class="box-body">
+    <slot />
+  </div>
+
+  <div class="box-bottom" aria-hidden="true">
+    <span class="corner">└</span>
+    <span class="line"></span>
+    <span class="corner">┘</span>
+  </div>
+</div>
+
+<style>
+  .flexible-box {
+    margin: 2rem 0;
+    font-family: var(--font-mono);
+  }
+
+  .box-top,
+  .box-bottom {
+    display: flex;
+    align-items: center;
+    color: var(--cloud);
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .title {
+    padding-right: 0.5ch;
+  }
+
+  .line {
+    flex-grow: 1;
+    position: relative;
+    height: 1em;
+    overflow: hidden;
+  }
+
+  /* The magic: Repeating the dash character using CSS ::after */
+  .line::after {
+    content: "────────────────────────────────────────────────────────────────────────────────────────────────────";
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .box-body {
+    /* Nudging the side borders to align with the vertical stems of the corner characters */
+    border-left: 1px solid var(--cloud);
+    border-right: 1px solid var(--cloud);
+    margin: 0 calc(0.5ch - 0.5px);
+    /* Vertical: 1.5rem (≤600px vw) → 2rem (≥800px vw). 4vw equals 24px at
+       600 and 32px at 800, so endpoints match the previous step exactly.
+       Horizontal: 1rem (≤600px vw) → 3rem (≥1000px vw), via a calc slope
+       that pins both endpoints; mid-range becomes a smooth ramp. */
+    padding:
+      clamp(1.5rem, 4vw, 2rem)
+      clamp(1rem, calc(1rem + (100vw - 600px) * 0.08), 3rem);
+  }
+</style>

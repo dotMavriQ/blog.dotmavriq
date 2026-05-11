@@ -1,0 +1,463 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CloudMarquee from "../components/CloudMarquee.astro";
+import StructuralArt from "../components/StructuralArt.astro";
+
+const siteUrl = "https://blog.dotmavriq.life";
+
+const jsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "blog.dotmavriq.life",
+  url: siteUrl,
+  description: "Personal blog and portfolio site for dotMavriQ — Jonatan Jansson.",
+  author: {
+    "@type": "Person",
+    name: "Jonatan Jansson",
+    alternateName: "dotMavriQ",
+    url: siteUrl,
+    sameAs: [
+      "https://github.com/dotMavriQ",
+      "https://www.linkedin.com/in/janssonjonatan/",
+      "https://social.dotmavriq.life/users/dotmavriq",
+    ],
+  },
+});
+---
+
+<BaseLayout title="blog.dotmavriq.life // welcome" description="Personal blog and portfolio site for dotMavriQ — Jonatan Jansson.">
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={jsonLd} />
+  </Fragment>
+  <CloudMarquee slot="marquee" />
+
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-content" data-ascii-obstacle>
+        <div class="hero-intro">
+          <h1 class="hero-name" id="hero-name">
+            <span class="hero-name__first" id="name-first">dot</span>
+            <span class="hero-name__last" id="name-last">MavriQ</span>
+          </h1>
+          <p class="hero-slogan">
+            We keep building tools,<br>
+            hoping that they<br>
+            make us lighter.<br>
+            Sometimes they do.<br>
+            This is a small corner<br>
+            about the craft of trying.
+          </p>
+        </div>
+
+        <nav class="hero-links" aria-label="External links">
+          <div class="hero-links__primary">
+            <a href="https://github.com/dotMavriQ" class="hero-link" target="_blank" rel="noopener">
+              <span class="hero-link__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                </svg>
+              </span>
+              <span class="hero-link__label">GitHub</span>
+            </a>
+            <a href="https://www.linkedin.com/in/janssonjonatan/" class="hero-link" target="_blank" rel="noopener">
+              <span class="hero-link__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                  <rect x="2" y="9" width="4" height="12"/>
+                  <circle cx="4" cy="4" r="2"/>
+                </svg>
+              </span>
+              <span class="hero-link__label">LinkedIn</span>
+            </a>
+          </div>
+          <div class="hero-links__secondary">
+            <a href="#" class="hero-link hero-link--sm" data-m="lZWas5ScpJndh1GdvRGQxlmc2FWb09GZ" id="email-link">
+              <span class="hero-link__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2"/>
+                  <polyline points="22,4 12,13 2,4"/>
+                </svg>
+              </span>
+              <span class="hero-link__label">Email</span>
+            </a>
+            <a href="/social" class="hero-link hero-link--sm">
+              <span class="hero-link__icon hero-link__icon--glyph" aria-hidden="true">⁂</span>
+              <span class="hero-link__label">Fediverse</span>
+            </a>
+            <a href="https://matrix.to/#/@dotmavriq:chat.dotmavriq.life" class="hero-link hero-link--sm" target="_blank" rel="noopener">
+              <span class="hero-link__icon" aria-hidden="true">
+                <svg viewBox="0 0 27.9 32" fill="currentColor">
+                  <path d="m27.1 31.2v-30.5h-2.19v-0.732h3.04v32h-3.04v-0.732z"/>
+                  <path d="m8.23 10.4v1.54h0.044c0.385-0.564 0.893-1.03 1.49-1.37 0.58-0.323 1.25-0.485 1.99-0.485 0.72 0 1.38 0.14 1.97 0.42 0.595 0.279 1.05 0.771 1.36 1.48 0.338-0.5 0.796-0.941 1.38-1.32 0.58-0.383 1.27-0.574 2.06-0.574 0.602 0 1.16 0.074 1.67 0.22 0.514 0.148 0.954 0.383 1.32 0.707 0.366 0.323 0.653 0.746 0.859 1.27 0.205 0.522 0.308 1.15 0.308 1.89v7.63h-3.13v-6.46c0-0.383-0.015-0.743-0.044-1.08-0.0209-0.307-0.103-0.607-0.242-0.882-0.133-0.251-0.336-0.458-0.584-0.596-0.257-0.146-0.606-0.22-1.05-0.22-0.44 0-0.796 0.085-1.07 0.253-0.272 0.17-0.485 0.39-0.639 0.662-0.159 0.287-0.264 0.602-0.308 0.927-0.052 0.347-0.078 0.697-0.078 1.05v6.35h-3.13v-6.4c0-0.338-7e-3 -0.673-0.021-1-0.0114-0.314-0.0749-0.623-0.188-0.916-0.108-0.277-0.3-0.512-0.55-0.673-0.258-0.168-0.636-0.253-1.14-0.253-0.198 0.0083-0.394 0.042-0.584 0.1-0.258 0.0745-0.498 0.202-0.705 0.374-0.228 0.184-0.422 0.449-0.584 0.794-0.161 0.346-0.242 0.798-0.242 1.36v6.62h-3.13v-11.4z"/>
+                  <path d="m0.936 0.732v30.5h2.19v0.732h-3.04v-32h3.03v0.732z"/>
+                </svg>
+              </span>
+              <span class="hero-link__label">Matrix</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+
+      <div class="hero-art">
+        <StructuralArt />
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import { initNameAnimation } from '../lib/name-animation';
+    document.addEventListener("astro:page-load", initNameAnimation);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initNameAnimation, { once: true });
+    } else {
+      initNameAnimation();
+    }
+  </script>
+
+  <script>
+    import { initEmailLink } from '../lib/email-obfuscation';
+    initEmailLink('email-link');
+  </script>
+
+  <style>
+    :global(.page-content:has(.hero)) {
+      padding: 0;
+    }
+
+    :global(body:has(.hero) .footer) {
+      padding: 0.5rem 0 1rem;
+    }
+
+    :global(body:has(.hero) .footer .ascii-divider) {
+      margin: 0.5rem 0;
+    }
+
+    .hero {
+      padding: 1rem 20px;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 3rem;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── Left column ── */
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 260px;
+      max-width: 340px;
+    }
+
+    .hero-intro {
+      margin-bottom: 2rem;
+    }
+
+    .hero-name {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      text-transform: none;
+      font-feature-settings: "kern" 1;
+      -webkit-font-feature-settings: "kern" 1;
+      transition: letter-spacing 0.4s ease;
+    }
+
+    .hero-name__first {
+      display: block;
+      color: var(--muted);
+      font-weight: 400;
+      transition: letter-spacing 0.4s ease;
+    }
+
+    .hero-name__last {
+      display: block;
+      color: var(--fg);
+      font-weight: 700;
+      transition: letter-spacing 0.4s ease;
+    }
+
+    /* "dot MavriQ" — fallback during typing; per-char spans override once typed */
+    .hero-name--alias .hero-name__first {
+      letter-spacing: -0.04em;
+    }
+    .hero-name--alias .hero-name__last {
+      letter-spacing: -0.06em;
+    }
+
+    /* "Jonatan Jansson" — even, symmetrical, balanced */
+    .hero-name--real .hero-name__first {
+      letter-spacing: 0em;
+    }
+    .hero-name--real .hero-name__last {
+      letter-spacing: 0em;
+    }
+
+    .hero-slogan {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: var(--muted);
+      font-style: italic;
+      max-width: none;
+      hyphens: none;
+      margin: 0;
+    }
+
+    /* ── Links ── */
+    .hero-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .hero-links__primary,
+    .hero-links__secondary {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .hero-links__secondary {
+      gap: 0.75rem;
+    }
+
+    .hero-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      text-decoration: none;
+      color: var(--fg);
+      transition: color 0.15s;
+    }
+
+    .hero-link:hover {
+      color: var(--muted);
+    }
+
+    .hero-link__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+    }
+
+    .hero-link__icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Glyph icon (⁂, [m] etc) — text rendered as icon */
+    .hero-link__icon--glyph {
+      font-size: 1.4rem;
+      line-height: 1;
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    /* Secondary row: smaller icons */
+    .hero-link--sm .hero-link__icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    .hero-link--sm .hero-link__icon--glyph {
+      font-size: 1.4rem;
+    }
+
+    .hero-link__label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    .hero-link--sm .hero-link__label {
+      font-size: 0.55rem;
+    }
+
+    .hero-link:hover .hero-link__label {
+      color: var(--fg);
+    }
+
+    /* ── Right column: big ASCII art ── */
+    .hero-art {
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    /* ── Desktop: full-bleed ASCII with floating hero content ── */
+    @media (min-width: 769px) {
+      .hero {
+        height: calc(100dvh - var(--nav-total-height, 110px));
+        padding: 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-grid {
+        display: block;
+        position: relative;
+        height: 100%;
+        max-width: none;
+        margin: 0;
+        gap: 0;
+      }
+
+      .hero-art {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+
+      .hero-content {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: max(2rem, calc(50% - 580px));
+        transform: translateY(-50%);
+        width: 360px;
+        max-width: 360px;
+        padding: 2rem;
+      }
+
+      .hero-name {
+        font-size: clamp(3rem, 4vw, 4.5rem);
+        margin-bottom: 2rem;
+      }
+
+      .hero-slogan {
+        font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+        line-height: 1.55;
+        max-width: 34ch;
+      }
+
+      .hero-intro {
+        margin-bottom: 2.5rem;
+      }
+
+      .hero-links {
+        gap: 0.75rem;
+      }
+
+      .hero-links__primary {
+        gap: 1.5rem;
+      }
+
+      .hero-link__icon {
+        width: 80px;
+        height: 80px;
+      }
+
+      .hero-link--sm .hero-link__icon {
+        width: 60px;
+        height: 60px;
+      }
+
+      .hero-link__icon--glyph {
+        font-size: 3rem;
+      }
+
+      .hero-link--sm .hero-link__icon--glyph {
+        font-size: 2.4rem;
+      }
+
+      .hero-link__label {
+        font-size: 0.78rem;
+      }
+
+      .hero-link--sm .hero-link__label {
+        font-size: 0.68rem;
+      }
+
+      :global(body:has(.hero) .footer) {
+        display: none;
+      }
+    }
+
+    /* ── Mobile: stacked layout ── */
+    @media (max-width: 768px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .hero-content {
+        max-width: 100%;
+      }
+
+      .hero-art {
+        order: -1;
+      }
+
+      .hero-name {
+        font-size: clamp(2rem, 10vw, 3rem);
+      }
+
+      .hero-links__primary,
+      .hero-links__secondary {
+        justify-content: center;
+      }
+
+      .hero-links__secondary {
+        gap: 0.5rem;
+      }
+    }
+
+    /* ── Tablet: intro + links side by side ── */
+    @media (min-width: 500px) and (max-width: 768px) {
+      .hero-content {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+        max-width: 100%;
+      }
+
+      .hero-intro {
+        flex: 0 1 auto;
+        margin-bottom: 0;
+      }
+
+      .hero-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6rem;
+        flex-shrink: 0;
+      }
+
+      .hero-links__primary,
+      .hero-links__secondary {
+        justify-content: center;
+        gap: 0.75rem;
+      }
+
+      .hero-links__secondary {
+        gap: 0.5rem;
+      }
+    }
+
+    /* ── Tiny screens: fully stacked ── */
+    @media (max-width: 380px) {
+      .hero-links__primary {
+        gap: 0.75rem;
+      }
+
+      .hero-link--sm .hero-link__icon pre {
+        font-size: calc(var(--ascii-size) * 0.7);
+      }
+    }
+  </style>
+</BaseLayout>

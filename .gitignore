@@ -1,0 +1,39 @@
+node_modules/
+dist/
+.DS_Store
+.astro/
+
+# RTK local data
+.rtk/
+
+# Cloudflare Worker source + chatbot system-prompt drafts (kept private)
+cloudflare-worker/
+
+# Test artifacts
+playwright-report/
+test-results/
+
+# Dev/debug screenshots
+_*.png
+_*.mjs
+
+# Alternate lockfiles
+bun.lock
+
+# Private planning notes — canonical home for in-progress markdown
+# (replaces older /*.md rule; keeps docs/ tracked for PRODUCTION_READINESS.md etc.)
+_scratch/
+
+# Qodo private agentic guardian — configs, agents, and review outputs stay local
+.qodo/
+
+# Per-agent / private working files at root
+/CLAUDE.md
+/VOICE.md
+
+# Blog post sources are owned by the user and not shipped during the 2026
+# curation window. Directory stays tracked via .gitkeep; the markdown bodies
+# are deliberately private until they are rewritten.
+src/content/blog/*.md
+src/content/blog/*.mdx
+!src/content/blog/.gitkeep

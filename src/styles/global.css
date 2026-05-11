@@ -1,0 +1,414 @@
+/*
+  blog.dotmavriq.life — Global Styles (2026 PEAK Edition)
+  Minimalist, Kinetic, Character-Core
+*/
+
+:root {
+  /* High-contrast Terminal Aesthetic */
+  --bg: #f5f3ec;
+  --fg: #1a1a1a;
+  --cloud: #d5d3cc;
+  --muted: #5e5e5e;
+  --accent: #000000;
+
+  /* Typography */
+  --font-mono: var(--font-jgs), ui-monospace, 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+  --font-ascii: var(--font-jgs), ui-monospace, 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+  --font-reading: var(--font-recursive), "Recursive", "Trebuchet MS", "Segoe UI", sans-serif;
+
+  /* ASCII Art Settings — fluid between 12px (≤600px vw) and 18px (≥900px vw).
+     2vw equals 12px at 600px and 18px at 900px, so endpoints match the
+     previous step function exactly; mid-range becomes a smooth ramp. */
+  --ascii-size: clamp(12px, 2vw, 18px);
+  --ascii-line: clamp(12px, 2vw, 18px);
+}
+
+[data-theme="dark"] {
+  --bg: #1a1a17;
+  --fg: #e8e6df;
+  --cloud: #333330;
+  --muted: #9a9a95;
+  --accent: #e8e6df;
+}
+
+/* Skip-to-content link — hidden until focused */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  hanging-punctuation: first last;
+}
+
+@supports not (scrollbar-gutter: stable) {
+  html {
+    overflow-y: scroll;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  min-height: 100vh;
+  line-height: 1.5;
+  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  font-feature-settings: "liga" 1, "calt" 1;
+}
+
+/* ── Typography ── */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5em;
+  color: var(--accent);
+  text-transform: lowercase;
+  line-height: 1.25;
+}
+
+.prefix-slash::before {
+  content: "// ";
+  color: var(--muted);
+  font-weight: 400;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+/* ── Layout ── */
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.page-content {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+/* ── Components ── */
+.ascii-divider {
+  user-select: none;
+  pointer-events: none;
+  font-family: var(--font-ascii);
+  font-size: var(--ascii-size);
+  line-height: var(--ascii-line);
+  color: var(--fg);
+  white-space: pre;
+  margin: 2rem 0;
+}
+
+/* ── A11y & Utility ── */
+
+/* Focus rings — neubrutalist offset, visible in both themes */
+:focus-visible {
+  outline: 3px solid var(--fg);
+  outline-offset: 2px;
+}
+
+[data-theme="dark"] :focus-visible {
+  outline-color: var(--fg);
+}
+
+/* Remove default focus for mouse/touch users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Sticker-float: image floats right on desktop, stacks above on mobile */
+.sticker-float {
+  float: right;
+  margin: 0 0 1rem 1.5rem;
+  max-width: 240px;
+}
+
+.sticker-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
+}
+
+@media (max-width: 600px) {
+  .sticker-float {
+    float: none;
+    margin: 0 auto 1.25rem;
+    max-width: 200px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Neubrutalist Utilities ── */
+
+/* Base neu-box: thick border + offset shadow, no border-radius */
+.neu-box {
+  border: 3px solid var(--fg);
+  box-shadow: 4px 4px 0 var(--fg);
+  background: var(--bg);
+}
+
+/* Smaller variant for secondary/compact cards */
+.neu-box-sm {
+  border: 2px solid var(--fg);
+  box-shadow: 3px 3px 0 var(--fg);
+  background: var(--bg);
+}
+
+/* Base transition for any neu element that moves on hover */
+.neu-lift {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Hover state: lift and enlarge shadow */
+.neu-shadow {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.neu-shadow:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--fg);
+}
+
+/* Smaller hover variant for compact cards */
+.neu-shadow-sm {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.neu-shadow-sm:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--fg);
+}
+
+/* Larger hover variant for featured/hero elements */
+.neu-shadow-lg {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.neu-shadow-lg:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--fg);
+}
+
+/* Pressed/active state */
+.neu-pressed {
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.neu-pressed:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--fg);
+}
+
+/* Thick bottom border accent (section headings, dividers) */
+.neu-border-bottom {
+  border-bottom: 3px solid var(--fg);
+}
+
+/* Thick top border accent (nav separators) */
+.neu-border-top {
+  border-top: 3px solid var(--fg);
+}
+
+/* Thick left border accent (sidebars, accents) */
+.neu-border-left {
+  border-left: 3px solid var(--fg);
+}
+
+.neu-border-left-sm {
+  border-left: 2px solid var(--fg);
+}
+
+/* Neubrutalist photo frame — thick border + offset shadow for images */
+.neu-frame {
+  border: 3px solid var(--fg);
+  box-shadow: 4px 4px 0 var(--fg);
+  background: var(--bg);
+  padding: 4px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.neu-frame:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--fg);
+}
+
+.neu-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Dashed variant (meta/decorative elements) */
+.neu-dashed {
+  border: 2px dashed var(--muted);
+  background: var(--bg);
+  transition: border-color 0.15s ease;
+}
+.neu-dashed:hover {
+  border-color: var(--fg);
+}
+
+/* ── Data Tables ──
+   Readable, grid-lined tables with neubrutalist trim.
+   Applied automatically to tables inside .post-content, and available
+   as a .data-table utility for any future table outside prose. */
+
+.data-table,
+.post-content table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 2rem 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  border: 2px solid var(--fg);
+  box-shadow: 4px 4px 0 var(--fg);
+  background: var(--bg);
+}
+
+.data-table th,
+.data-table td,
+.post-content th,
+.post-content td {
+  padding: 0.65rem 0.9rem;
+  border-right: 1px solid var(--cloud);
+  border-bottom: 1px solid var(--cloud);
+  text-align: left;
+  vertical-align: top;
+}
+
+.data-table th:last-child,
+.data-table td:last-child,
+.post-content th:last-child,
+.post-content td:last-child {
+  border-right: none;
+}
+
+.data-table tr:last-child td,
+.post-content tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table thead th,
+.post-content thead th {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  background: var(--fg);
+  color: var(--bg);
+  border-right-color: var(--bg);
+  border-bottom: 2px solid var(--fg);
+}
+
+.data-table thead th:last-child,
+.post-content thead th:last-child {
+  border-right: none;
+}
+
+.data-table tbody tr:nth-child(even) td,
+.post-content tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--cloud) 45%, transparent);
+}
+
+.data-table tbody td:first-child,
+.post-content tbody td:first-child {
+  font-weight: 700;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+/* Horizontal scroll wrapper for narrow viewports */
+@media (max-width: 640px) {
+  .data-table,
+  .post-content table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 3px 3px 0 var(--fg);
+  }
+
+  .data-table tbody td:first-child,
+  .post-content tbody td:first-child {
+    white-space: normal;
+  }
+}
+
+/* ── Archive link indicators ── */
+.link-archived {
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+  opacity: 0.5;
+  white-space: nowrap;
+}
+
+.link-archive-backup {
+  text-decoration: none;
+  font-size: 0.8em;
+  opacity: 0.3;
+  margin-left: 0.15em;
+  transition: opacity 0.15s;
+}
+
+.link-archive-backup:hover {
+  opacity: 0.7;
+}

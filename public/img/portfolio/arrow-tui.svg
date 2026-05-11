@@ -1,0 +1,5 @@
+<svg width="38" height="18" viewBox="0 0 38 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M1 9h32m0 0l-5-5m5 5l-5 5" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="30" y="2" width="7" height="14" rx="2" fill="#000"/>
+  <text x="33.5" y="13" text-anchor="middle" font-family="monospace" font-size="8" fill="#fff">TUI</text>
+</svg>
