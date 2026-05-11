@@ -140,21 +140,19 @@ const csp = [
       <slot name="marquee" />
     </nav>
 
-    <div class="page-scroll" id="page-scroll">
-      <main class="page-content container" id="main">
-        <slot />
-      </main>
+    <main class="page-content container" id="main">
+      <slot />
+    </main>
 
-      <footer class="footer container" transition:animate="none">
-        <pre
-          class="ascii-divider" aria-hidden="true">|:::|=======|:::|_______|:::|=======|:::|_______|:::|</pre>
-        <p>
-          &copy; {new Date().getFullYear()} dotmavriq. <span class="slash"
-            >//</span
-          > crafted with intent.
-        </p>
-      </footer>
-    </div>
+    <footer class="footer container" transition:animate="none">
+      <pre
+        class="ascii-divider" aria-hidden="true">|:::|=======|:::|_______|:::|=======|:::|_______|:::|</pre>
+      <p>
+        &copy; {new Date().getFullYear()} dotmavriq. <span class="slash"
+          >//</span
+        > crafted with intent.
+      </p>
+    </footer>
 
     <DotBlogAI />
 
