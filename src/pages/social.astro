@@ -620,7 +620,11 @@ import StructuralArt from "../components/StructuralArt.astro";
       display: none;
       position: fixed;
       inset: 0;
-      z-index: 500;
+      /* Above the site nav (z-index 100) and any other social overlay.
+         The lightbox is the topmost overlay when active, so it gets
+         a deliberately large index that won't collide with nav,
+         marquee, follow / profile / tag-panel modals, or DotBlogAI. */
+      z-index: 9000;
       background: rgba(0, 0, 0, 0.92);
       flex-direction: column;
       align-items: center;
