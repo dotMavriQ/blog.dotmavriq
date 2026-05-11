@@ -208,6 +208,21 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
     z-index: 250;
     font-family: var(--font-mono);
     max-width: calc(100vw - 2rem);
+    transition: opacity 0.15s ease, visibility 0.15s ease;
+  }
+  /* When any social overlay is open, take the Ask widget out of the
+     stacking + interaction surface entirely. The lightbox is the loud
+     case (it covers everything), but the same rule cleanly covers
+     follow / profile / qr / tag modals too. :has() is supported in
+     every browser the rest of this site already requires. */
+  :global(body:has(.social-lightbox.open)) .oliv-chat,
+  :global(body:has(.social-follow-overlay.open)) .oliv-chat,
+  :global(body:has(.social-qr-overlay.open)) .oliv-chat,
+  :global(body:has(.social-profile-overlay.open)) .oliv-chat,
+  :global(body:has(.social-tag-panel.open)) .oliv-chat {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .oliv-launch {
