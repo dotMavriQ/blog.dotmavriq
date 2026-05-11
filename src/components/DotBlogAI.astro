@@ -205,7 +205,12 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
     position: fixed;
     right: 2rem;
     bottom: 2rem;
-    z-index: 250;
+    /* Must sit above .page-scroll (z-index 300) so the launcher and
+       panel stay clickable. The :has() rules below take it back out
+       of the interaction surface whenever a social overlay is open,
+       which leaves the lightbox (z-index 9000 inside .page-scroll's
+       stacking context) visually on top. */
+    z-index: 350;
     font-family: var(--font-mono);
     max-width: calc(100vw - 2rem);
     transition: opacity 0.15s ease, visibility 0.15s ease;
