@@ -156,6 +156,57 @@
     let charW = 0;
     let charH = 0;
 
+    // ── Per-resize caches ───────────────────────────────────────────
+    // Everything below is invalidated by `invalidateCache()` whenever
+    // W, H or the obstacle rect changes. The render loop then rebuilds
+    // lazily on the next frame. This eliminates the O(H·W) per-frame
+    // base reconstruction and the two `getBoundingClientRect` calls
+    // (the latter were forcing a layout flush every frame).
+    let baseRows: string[][] | null = null;
+    let baseW = -1;
+    let baseH = -1;
+    let cachedRowInset: number[] = [];
+    type HeroRect = { x: number; y: number; width: number; height: number };
+    let cachedHeroRect: HeroRect | null = null;
+
+    function invalidateCache() {
+      baseRows = null;
+      cachedHeroRect = null;
+    }
+
+    function rebuildBase() {
+      const buf: string[][] = new Array(H);
+      for (let r = 0; r < H; r++) buf[r] = buildRow(r, H, W);
+      applyCleanEdgeGutters(buf, W);
+      applyEdgeDissolve(buf, W);
+      baseRows = buf;
+      baseW = W;
+      baseH = H;
+
+      // rowInset mirrors applyEdgeDissolve's per-row depth so the
+      // whitespace-overlay clip line lands on exactly the same column
+      // dissolve produced. Computed once here, reused every frame.
+      const fadeDepth = Math.max(3, Math.floor(W * 0.06));
+      cachedRowInset = new Array(H);
+      for (let r = 0; r < H; r++) {
+        const hash = ((r * 2654435761) >>> 0) / 4294967296;
+        const rowDepth = Math.floor(fadeDepth * (0.5 + hash * 0.8));
+        cachedRowInset[r] = Math.floor(0.3 * rowDepth);
+      }
+    }
+
+    function refreshHeroRect() {
+      if (!obstacle) { cachedHeroRect = null; return; }
+      const wrapperRect = wrapper.getBoundingClientRect();
+      const obsRect = obstacle.getBoundingClientRect();
+      cachedHeroRect = {
+        x: obsRect.left - wrapperRect.left,
+        y: obsRect.top - wrapperRect.top,
+        width: obsRect.width,
+        height: obsRect.height,
+      };
+    }
+
     function measure() {
       // Measure how many chars fit in the container
       const probe = document.createElement("span");
@@ -244,34 +295,20 @@
     }
 
     function render() {
-      const buffer: string[][] = [];
-      for (let r = 0; r < H; r++) {
-        buffer.push(buildRow(r, H, W));
-      }
+      // Rebuild the static base only when geometry changes.
+      if (!baseRows || baseW !== W || baseH !== H) rebuildBase();
+
+      // Per-frame buffer: shallow-clone each cached row. This keeps the
+      // base (sky + city + gutters + dissolve) immutable across frames
+      // while letting clouds, birds, the obstacle and the whitespace
+      // overlay mutate freely. row.slice() is V8-fast-path for shallow
+      // string arrays — O(W) but no per-cell pushes or hash recompute.
+      const buffer: string[][] = new Array(H);
+      for (let r = 0; r < H; r++) buffer[r] = baseRows![r].slice();
+      const rowInset = cachedRowInset;
 
       const t = frame;
       const skyRows = H - TILE_H;
-
-      // Edge treatments first, on the bare sky + city. Clouds and birds
-      // paint on top afterwards so they remain visible when they cross
-      // mid-frame, but are clipped to the inner stage so they don't leak
-      // into the frayed-edge gutter zone.
-      applyCleanEdgeGutters(buffer, W);
-      applyEdgeDissolve(buffer, W);
-
-      // Per-row paint window for clouds & birds. Mirrors the same hash
-      // formula `applyEdgeDissolve` uses, so the silhouette of the
-      // visible frayed dots and the cloud/bird disappearance line are
-      // exactly aligned row-by-row. Anything in [0, rowInset) is pure
-      // whitespace after dissolve — that's where they should vanish.
-      const fadeDepth = Math.max(3, Math.floor(W * 0.06));
-      const rowInset: number[] = new Array(H);
-      for (let r = 0; r < H; r++) {
-        const hash = ((r * 2654435761) >>> 0) / 4294967296;
-        const rowDepth = Math.floor(fadeDepth * (0.5 + hash * 0.8));
-        // dissolve writes pure spaces for d/rowDepth < 0.3
-        rowInset[r] = Math.floor(0.3 * rowDepth);
-      }
 
       // Draw clouds (multi-line, opaque interior)
       for (const cloud of clouds) {
@@ -336,17 +373,11 @@
       // ── Obstacle carving (Pretext wrap-geometry) ──
       // Punch a hole where the hero content lives so ASCII flows around it.
       // Runs last so the hero hole stays clean even if a cloud/bird drifts
-      // across it.
+      // across it. heroRect is cached and refreshed only on resize, so we
+      // avoid forcing a layout flush every frame.
       if (obstacle && charW > 0 && charH > 0) {
-        const wrapperRect = wrapper!.getBoundingClientRect();
-        const obsRect = obstacle.getBoundingClientRect();
-        // Convert to wrapper-relative coordinates
-        const heroRect = {
-          x: obsRect.left - wrapperRect.left,
-          y: obsRect.top - wrapperRect.top,
-          width: obsRect.width,
-          height: obsRect.height,
-        };
+        if (!cachedHeroRect) refreshHeroRect();
+        const heroRect = cachedHeroRect!;
         const padH = charW * 3;  // 3 chars horizontal breathing room
         const padV = charH * 1;  // 1 row vertical breathing room
         for (let r = 0; r < H; r++) {
@@ -386,11 +417,15 @@
       }
     }
 
-    // Resize handler
+    // Resize handler. Both the wrapper changing size and the obstacle
+    // (hero) moving/resizing must invalidate the cache so the next
+    // frame rebuilds the base buffer and re-measures the hero rect.
     const ro = new ResizeObserver(() => {
       measure();
+      invalidateCache();
     });
     ro.observe(wrapper);
+    if (obstacle) ro.observe(obstacle);
     prevStructuralRo = ro;
 
     init();

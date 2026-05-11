@@ -58,33 +58,61 @@
 
 html {
   font-size: 16px;
-  scroll-behavior: smooth;
-  scrollbar-gutter: stable;
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   hanging-punctuation: first last;
-}
-
-@supports not (scrollbar-gutter: stable) {
-  html {
-    overflow-y: scroll;
-  }
+  /* The page uses an inner-scroll shell layout: <body> is locked to
+     the viewport and `.page-scroll` carries the scrollbar. So html
+     itself never scrolls — no gutter needed, no overflow on html. */
+  height: 100%;
 }
 
 body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-mono);
-  min-height: 100vh;
+  /* Fixed viewport box. Nav lives at the top, .page-scroll fills the
+     rest and has the only scrollbar. This frees the nav and marquee
+     to span the full physical viewport width (no scrollbar gutter)
+     and keeps them visible without needing position: sticky. */
+  height: 100vh;
+  overflow: hidden;
   line-height: 1.5;
   transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
   font-feature-settings: "liga" 1, "calt" 1;
+}
+
+/* Inner scroll container — the only scrollable element on the page.
+   `min-height: 0` lets it shrink inside the flex column so its own
+   overflow-y: auto actually kicks in. scroll-behavior moves here so
+   `<a href="#anchor">` and the skip-link still animate smoothly. */
+.page-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) var(--bg);
+}
+.page-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.page-scroll::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+.page-scroll::-webkit-scrollbar-thumb {
+  background: var(--muted);
+  border-radius: 4px;
+}
+.page-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 /* ── Typography ── */
