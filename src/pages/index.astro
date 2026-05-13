@@ -482,7 +482,7 @@ const jsonLd = JSON.stringify({
     }
 
     /* ── Tablet: intro + links side by side ── */
-    @media (min-width: 500px) and (max-width: 768px) {
+    @media (min-width: 600px) and (max-width: 768px) {
       .hero-content {
         flex-direction: row;
         align-items: center;
@@ -492,8 +492,13 @@ const jsonLd = JSON.stringify({
       }
 
       .hero-intro {
-        flex: 0 1 auto;
+        flex: 0 0 clamp(18rem, 42vw, 23rem);
         margin-bottom: 0;
+      }
+
+      .hero-name {
+        width: 100%;
+        text-align: left;
       }
 
       .hero-links {
@@ -542,6 +547,67 @@ const jsonLd = JSON.stringify({
 
       .hero-link--sm .hero-link__icon pre {
         font-size: calc(var(--ascii-size) * 0.7);
+      }
+    }
+
+    @media (max-width: 380px) {
+      .hero {
+        padding-bottom: 0.5rem;
+      }
+
+      .hero-content {
+        padding-bottom: 3.35rem;
+      }
+
+      .hero-links {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 4.25rem;
+        row-gap: 0.35rem;
+        align-items: center;
+        justify-items: center;
+        width: min(210px, 100%);
+      }
+
+      .hero-links__primary,
+      .hero-links__secondary {
+        display: contents;
+      }
+
+      .hero-links__primary .hero-link:first-child {
+        order: 1;
+      }
+
+      .hero-links__primary .hero-link:last-child {
+        order: 2;
+      }
+
+      .hero-links__secondary .hero-link:nth-child(1) {
+        order: 3;
+      }
+
+      .hero-links__secondary .hero-link:nth-child(2) {
+        order: 4;
+      }
+
+      .hero-links__secondary .hero-link:nth-child(3) {
+        grid-column: 2;
+        order: 5;
+      }
+
+      .hero-link__icon {
+        width: 30px;
+        height: 30px;
+      }
+
+      .hero-link--sm .hero-link__icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .hero-link__label,
+      .hero-link--sm .hero-link__label {
+        font-size: 0.48rem;
       }
     }
   </style>
