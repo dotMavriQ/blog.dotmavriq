@@ -13,13 +13,20 @@ interface Props {
 }
 
 const siteUrl = "https://blog.dotmavriq.life";
+function canonicalFromPath(pathname: string): string {
+  const cleanPath = pathname
+    .replace(/\/index\.html$/, "/")
+    .replace(/\.html$/, "")
+    .replace(/\/$/, "");
+  return new URL(cleanPath || "/", siteUrl).href;
+}
 
 const {
   title = "blog.dotmavriq.life",
   description = "Personal blog and portfolio site for dotmavriq.",
   ogImage = `${siteUrl}/cool.webp`,
   ogType = "website",
-  canonicalUrl = new URL(Astro.url.pathname, siteUrl).href,
+  canonicalUrl = canonicalFromPath(Astro.url.pathname),
 } = Astro.props;
 
 const csp = [
@@ -27,7 +34,7 @@ const csp = [
   "base-uri 'self'",
   "object-src 'none'",
   "font-src 'self'",
-  "img-src 'self' data: https://social.dotmavriq.life https://dotmedia.b-cdn.net https://s3.eu-central-1.wasabisys.com",
+  "img-src 'self' data: https://social.dotmavriq.life https://dotmedia.b-cdn.net",
   "connect-src 'self' https://dotblogai.dotmavriq-6d3.workers.dev https://social.dotmavriq.life",
   "frame-src https://cal.com https://app.cal.com",
   "script-src 'self' 'unsafe-inline' https://app.cal.com",

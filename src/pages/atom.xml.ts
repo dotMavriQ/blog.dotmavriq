@@ -1,10 +1,8 @@
-import { getCollection } from 'astro:content';
 import { AUTHOR, SITE } from '../lib/author';
+import { absoluteBlogUrl, getPublishableBlogPosts } from '../lib/blog';
 
 export async function GET() {
-  const posts = (await getCollection('blog'))
-    .filter(p => !p.data.draft)
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  const posts = await getPublishableBlogPosts();
 
   const site = SITE.url;
   const latest = posts[0]?.data.updatedDate ?? posts[0]?.data.pubDate;
@@ -13,7 +11,7 @@ export async function GET() {
   const authorBlock = `<author><name>${escapeXml(AUTHOR.name)}</name><uri>${site}</uri><email>${AUTHOR.email}</email></author>`;
 
   const entries = posts.map(p => {
-    const url = `${site}/blog/${p.id}/`;
+    const url = absoluteBlogUrl(site, p.id);
     const categories = (p.data.tags ?? [])
       .map((t: string) => `    <category term="${escapeXml(t)}" />`)
       .join('\n');

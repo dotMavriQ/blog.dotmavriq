@@ -1,13 +1,14 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import CloudMarquee from "../../components/CloudMarquee.astro";
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import { Image, Picture } from "astro:assets";
+import { absoluteBlogUrl, blogPath, getPublishableBlogPosts } from "../../lib/blog";
 import { getBlogHeroImage } from "../../lib/blog-hero-images";
 import { AUTHOR, SITE } from "../../lib/author";
 
 export async function getStaticPaths() {
-  const posts = (await getCollection("blog")).filter((post) => !post.data.draft);
+  const posts = await getPublishableBlogPosts();
   return posts.map((post) => ({
     params: { slug: post.id },
     props: { post },
@@ -19,9 +20,7 @@ const { Content, headings } = await render(post);
 
 // Prev/next: inside a series, follow part order (I → II → III).
 // Outside a series, fall back to reverse-chron across non-series posts.
-const allPosts = (await getCollection("blog"))
-  .filter((p) => !p.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const allPosts = await getPublishableBlogPosts();
 
 let prevPost: (typeof allPosts)[number] | null = null;
 let nextPost: (typeof allPosts)[number] | null = null;
@@ -72,10 +71,10 @@ for (const h of tocHeadings) {
 const tocTotalEntries = tocTree.reduce((n, g) => n + 1 + g.children.length, 0);
 
 const siteUrl = SITE.url;
-const postUrl = `${siteUrl}/blog/${post.id}/`;
+const postUrl = absoluteBlogUrl(siteUrl, post.id);
 const postDescription = post.data.excerpt || `Blog post: ${post.data.title}`;
-const prevUrl = prevPost ? `${siteUrl}/blog/${prevPost.id}/` : null;
-const nextUrl = nextPost ? `${siteUrl}/blog/${nextPost.id}/` : null;
+const prevUrl = prevPost ? absoluteBlogUrl(siteUrl, prevPost.id) : null;
+const nextUrl = nextPost ? absoluteBlogUrl(siteUrl, nextPost.id) : null;
 const heroImage = getBlogHeroImage(post.data.heroImage);
 const heroImageUrl = post.data.heroImage ? `${siteUrl}${post.data.heroImage}` : undefined;
 
@@ -120,7 +119,7 @@ const breadcrumbJsonLd = {
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: `${siteUrl}/` },
-    { "@type": "ListItem", position: 2, name: "Blog", item: `${siteUrl}/blog/` },
+    { "@type": "ListItem", position: 2, name: "Blog", item: absoluteBlogUrl(siteUrl) },
     { "@type": "ListItem", position: 3, name: post.data.title, item: postUrl },
   ],
 };
@@ -190,7 +189,7 @@ const breadcrumbLd = JSON.stringify(breadcrumbJsonLd);
             <span class="meta-sep" aria-hidden="true">·</span>
             <div class="post-tags">
               {post.data.tags.map((tag) => (
-                <a href={`/blog/?tags=${encodeURIComponent(tag)}`} class="tag-link">{tag}</a>
+                <a href={`${blogPath()}?tags=${encodeURIComponent(tag)}`} class="tag-link">{tag}</a>
               ))}
             </div>
           </>
@@ -231,20 +230,20 @@ const breadcrumbLd = JSON.stringify(breadcrumbJsonLd);
     <!-- Post navigation -->
     <nav class="post-nav neu-border-top" aria-label={post.data.series ? "Series navigation" : "Post navigation"}>
       {prevPost ? (
-        <a href={`/blog/${prevPost.id}/`} class="nav-prev" rel="prev">
+        <a href={blogPath(prevPost.id)} class="nav-prev" rel="prev">
           <span class="nav-label">{post.data.series ? `← part ${prevPost.data.part ?? ""}` : "← prev"}</span>
           <span class="nav-title">{prevPost.data.title}</span>
         </a>
       ) : <div />}
       {nextPost ? (
-        <a href={`/blog/${nextPost.id}/`} class="nav-next" rel="next">
+        <a href={blogPath(nextPost.id)} class="nav-next" rel="next">
           <span class="nav-label">{post.data.series ? `part ${nextPost.data.part ?? ""} →` : "next →"}</span>
           <span class="nav-title">{nextPost.data.title}</span>
         </a>
       ) : <div />}
     </nav>
 
-    <a href="/blog/" class="back-to-blog">← back to blog</a>
+    <a href={blogPath()} class="back-to-blog">← back to blog</a>
 
     <!-- Desktop ToC sidebar -->
     {tocTotalEntries > 1 && (

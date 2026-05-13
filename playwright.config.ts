@@ -1,5 +1,8 @@
 import { defineConfig } from '@playwright/test';
 
+const port = Number(process.env.PLAYWRIGHT_PORT ?? 4329);
+const host = `http://127.0.0.1:${port}`;
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -8,12 +11,12 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:4321',
+    baseURL: host,
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'npm run preview',
-    url: 'http://localhost:4321',
+    command: `npm run preview -- --host 127.0.0.1 --port ${port}`,
+    url: host,
     reuseExistingServer: !process.env.CI,
   },
   projects: [

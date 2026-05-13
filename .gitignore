@@ -17,9 +17,6 @@ test-results/
 _*.png
 _*.mjs
 
-# Alternate lockfiles
-bun.lock
-
 # Private planning notes — canonical home for in-progress markdown
 # (replaces older /*.md rule; keeps docs/ tracked for PRODUCTION_READINESS.md etc.)
 _scratch/
