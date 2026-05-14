@@ -2,6 +2,7 @@ import { defineConfig, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import remarkArchiveLinks from './src/plugins/remark-archive-links.mjs';
+import rehypeCitationScope from './src/plugins/rehype-citation-scope.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -90,6 +91,7 @@ export default defineConfig({
   ],
   markdown: {
     remarkPlugins: [remarkArchiveLinks],
+    rehypePlugins: [rehypeCitationScope],
     shikiConfig: {
       theme: 'gruvbox-dark-hard',
     },
