@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import CloudMarquee from "../../components/CloudMarquee.astro";
 import { BLOG_CURATION_COPY, blogPath, getPublishableBlogPosts } from "../../lib/blog";
 import { markdownToPlainText } from "../../lib/markdown-text";
+import { estimateReadingMinutes } from "../../lib/reading-time";
 
 // Reverse-chron base, then collapse series so parts stay grouped in reading
 // order (I → II → III) and the group is anchored by the newest part's date.
@@ -40,8 +41,7 @@ const CHAR_LIMIT = 500;
 
 // Build post preview data
 const postData = posts.map((p) => {
-  const words = p.body?.split(/\s+/).length || 0;
-  const readingTime = Math.max(1, Math.ceil(words / 200));
+  const readingTime = estimateReadingMinutes(p.body ?? "");
 
   const plain = markdownToPlainText(p.body || "", { dropHeadings: true });
   const isLong = plain.length > CHAR_LIMIT;

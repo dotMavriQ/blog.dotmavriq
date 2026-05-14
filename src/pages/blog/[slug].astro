@@ -5,6 +5,7 @@ import { render } from "astro:content";
 import { Image, Picture } from "astro:assets";
 import { absoluteBlogUrl, blogPath, getPublishableBlogPosts } from "../../lib/blog";
 import { getBlogHeroImage } from "../../lib/blog-hero-images";
+import { countReadableWords, estimateReadingMinutes } from "../../lib/reading-time";
 import { AUTHOR, SITE } from "../../lib/author";
 
 export async function getStaticPaths() {
@@ -39,9 +40,9 @@ if (post.data.series) {
   nextPost = idx > 0 ? standalone[idx - 1] : null;
 }
 
-// Reading time
-const wordCount = post.body?.split(/\s+/).length || 0;
-const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+// Reading time (excludes footnote definitions, code blocks, URLs)
+const wordCount = countReadableWords(post.body ?? "");
+const readingTime = estimateReadingMinutes(post.body ?? "");
 
 // Filter to h2/h3/h4 for ToC (exclude the sr-only footnote label).
 // Convention: a trailing "(…)" in a heading is treated as supplementary
@@ -686,16 +687,16 @@ const breadcrumbLd = JSON.stringify(breadcrumbJsonLd);
   }
 
   /* Widows & orphans — keep paragraphs from leaving lonely lines */
-  .post-content p,
-  .post-content li,
-  .post-content blockquote p {
+  :global(.post-content p),
+  :global(.post-content li),
+  :global(.post-content blockquote p) {
     orphans: 3;
     widows: 3;
     text-wrap: pretty;
   }
 
   /* Drop cap on the first paragraph after the header */
-  .post-content > p:first-of-type::first-letter,
+  :global(.post-content > p:first-of-type)::first-letter,
   :global(.post-content .series-intro + h2 + p)::first-letter {
     font-family: var(--font-commit-mono), var(--font-mono);
     font-size: 3.2em;
@@ -774,11 +775,40 @@ const breadcrumbLd = JSON.stringify(breadcrumbJsonLd);
   }
 
   /* Paragraphs — generous vertical rhythm */
-  .post-content p {
+  :global(.post-content p) {
     margin-bottom: 1.2rem;
   }
 
-  .post-content > p:first-of-type,
+  /* Lists — match paragraph rhythm and indent for readability */
+  :global(.post-content ul),
+  :global(.post-content ol) {
+    margin: 0 0 1.4rem;
+    padding-left: 1.5rem;
+  }
+
+  :global(.post-content li) {
+    margin-bottom: 0.45rem;
+  }
+
+  :global(.post-content li > p) {
+    margin-bottom: 0.55rem;
+  }
+
+  :global(.post-content li:last-child) {
+    margin-bottom: 0;
+  }
+
+  /* Code blocks — separate from surrounding prose */
+  :global(.post-content pre) {
+    margin: 0 0 1.4rem;
+  }
+
+  /* Horizontal rules — give them air */
+  :global(.post-content hr) {
+    margin: 2.2rem 0;
+  }
+
+  :global(.post-content > p:first-of-type),
   :global(.post-content .series-intro + h2 + p) {
     font-size: 1.08em;
     line-height: 1.74;
@@ -829,6 +859,19 @@ const breadcrumbLd = JSON.stringify(breadcrumbJsonLd);
     --link-under: rgba(220, 200, 100, 0.7);
     --link-under-hover: rgba(220, 200, 100, 1);
     --link-bg-hover: rgba(220, 200, 100, 0.14);
+  }
+
+  :global(.post-content .citation-scope) {
+    --citation-under: rgba(195, 175, 80, 0.6);
+    background-image: linear-gradient(var(--citation-under), var(--citation-under));
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 2.5px;
+    padding-bottom: 0.01em;
+  }
+
+  :global([data-theme="dark"]) :global(.post-content .citation-scope) {
+    --citation-under: rgba(220, 200, 100, 0.7);
   }
 
   .post-content strong {
@@ -1287,14 +1330,14 @@ const breadcrumbLd = JSON.stringify(breadcrumbJsonLd);
     vertical-align: super;
     line-height: 0;
     color: var(--accent);
-    text-decoration: none;
     font-weight: 700;
     margin-left: 0.1em;
+    border-bottom-width: 2px;
+    padding: 0 0.08em 0.04em;
   }
 
   :global(.post-content sup a[data-footnote-ref]:hover) {
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    text-decoration: none;
   }
 
   :global(.post-content section.footnotes) {
