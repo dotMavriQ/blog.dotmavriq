@@ -561,12 +561,12 @@ const jsonLd = JSON.stringify({
 
       .hero-links {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        column-gap: 4.25rem;
-        row-gap: 0.35rem;
+        grid-template-columns: repeat(6, 1fr);
+        column-gap: 0.35rem;
+        row-gap: 0.45rem;
         align-items: center;
         justify-items: center;
-        width: min(210px, 100%);
+        width: min(250px, 100%);
       }
 
       .hero-links__primary,
@@ -575,23 +575,27 @@ const jsonLd = JSON.stringify({
       }
 
       .hero-links__primary .hero-link:first-child {
+        grid-column: 1 / span 2;
         order: 1;
       }
 
       .hero-links__primary .hero-link:last-child {
+        grid-column: 3 / span 2;
         order: 2;
       }
 
       .hero-links__secondary .hero-link:nth-child(1) {
+        grid-column: 5 / span 2;
         order: 3;
       }
 
       .hero-links__secondary .hero-link:nth-child(2) {
+        grid-column: 2 / span 2;
         order: 4;
       }
 
       .hero-links__secondary .hero-link:nth-child(3) {
-        grid-column: 2;
+        grid-column: 4 / span 2;
         order: 5;
       }
 

@@ -5,7 +5,7 @@ import CloudMarquee from "../components/CloudMarquee.astro";
 const siteUrl = "https://blog.dotmavriq.life";
 const pageTitle = "about // dotmavriq";
 const description =
-  "Jonatan Jansson — Senior Full-Stack Developer in the Lisbon area. 15+ years building across the full web stack, currently at Nordhealth.";
+  "Jonatan Jansson, Software Engineer, Product Systems in the Lisbon area. 15+ years building across the full web stack, currently at Nordhealth.";
 const ogImage = `${siteUrl}/cool.webp`;
 
 const jsonLd = JSON.stringify({
@@ -16,7 +16,7 @@ const jsonLd = JSON.stringify({
     "@type": "Person",
     name: "Jonatan Jansson",
     alternateName: "dotMavriQ",
-    jobTitle: "Senior Full-Stack Developer",
+    jobTitle: "Software Engineer, Product Systems",
     url: `${siteUrl}/about`,
     image: ogImage,
     sameAs: [
@@ -63,8 +63,8 @@ const jsonLd = JSON.stringify({
         </h1>
         <p class="about-hero__name">Jonatan Jansson</p>
         <p class="about-hero__role">
-          <span class="sr-only">Senior Full-Stack Developer</span>
-          <span class="typewriter" aria-hidden="true">Senior Full-Stack Developer</span>
+          <span class="sr-only">Software Engineer, Product Systems</span>
+          <span class="typewriter" aria-hidden="true">Software Engineer, Product Systems</span>
         </p>
         <p class="about-hero__meta">Lisbon Area &middot; EU&nbsp;Time&nbsp;Zones &middot; Open to&nbsp;opportunities</p>
       </div>
@@ -107,27 +107,27 @@ const jsonLd = JSON.stringify({
       <div class="journey__grid">
         <div class="journey__card neu-box" data-reveal>
           <h3 class="journey__label">// origin</h3>
-          <p>I got a CD from a Swedish PC magazine when I was eight. It had a copy of Game Maker on it. That was enough. By twelve I was building websites for friends and family. By sixteen I was running Linux. In 2007 I touched WordPress for the first time, and around the same time I built a community site on a customized PHPBB installation for a youth startup competition — earned a silver medal for it, working entirely on my own.</p>
+          <p>I got a CD from a Swedish PC magazine when I was eight. It had a copy of Game Maker on it, and that was enough to pull me in. By twelve I was building websites for friends and family. By sixteen I was running Linux because I wanted to understand the machine properly. In 2007 I touched WordPress for the first time, and around the same period I built a community site on a customized PHPBB installation for a youth startup competition. It earned a silver medal, but mostly I remember the feeling of making something real on my own.</p>
         </div>
 
         <div class="journey__card neu-box" data-reveal>
           <h3 class="journey__label">// early career</h3>
-          <p>I co-founded a web bureau with three friends. We could build the product but couldn't sell it — a full-stack restaurant platform, priced at a fraction of market rate, got turned down as "too expensive." That's when I internalized something I still carry: technical skill without communication is incomplete. Nordic Goods was where I proved I could do both. They needed one person to launch an international e-commerce operation — I provisioned the servers, built the storefronts, ran the initial marketing, and brought in their first paying customers. In between, I founded the Lidkoping Makerspace — an NGO built on the belief that technology should be as accessible as a public library. My generation learned networking through LAN parties and programming through curiosity. I wanted to keep that door open. Ran it for two years with eight co-organizers before the founding team scattered to other ventures.</p>
+          <p>I co-founded a small web bureau with three friends. We could build, but we had a lot to learn about explaining the value of what we built. A restaurant platform we were proud of, priced far below what it probably should have been, still got turned down as too expensive. That stayed with me. Good work needs communication around it, otherwise it does not travel very far. At Nordic Goods I got to stretch both sides of that. I set up the servers, built the storefronts, handled the early marketing, and helped bring in the first paying customers for an international e-commerce push.</p>
         </div>
 
         <div class="journey__card neu-box" data-reveal>
           <h3 class="journey__label">// pigeon years</h3>
-          <p>Over half a decade, 50+ clients, full ownership from scoping to invoicing. Duva was where I became a proper full-stack developer. Client-facing from day one — translating business needs into technical scope, then building and shipping it myself. The client list ranged from Academedia, Sweden's largest private education group, to multiple municipalities and industrial groups like Assemblin and Absolent. I owned entire web properties end-to-end: Linux hosting, security hardening, GDPR compliance, accessibility, payment integrations, SEO. Toward the end I built a Python middleware service aggregating geospatial data across multiple third-party APIs — ingestion, transformation, and delivery across disparate sources. The biggest lesson from those years wasn't technical. It was learning to own the process when a delivery went sideways — not just fix the code, but fix the communication.</p>
+          <p>Duva was the period where the hobby fully became a trade. For a little over five years I worked directly with clients, usually from the first conversation through delivery, hosting, maintenance, and invoicing. The client work started with low-code WordPress solutions and grew into more structured builds with Roots tooling, theme architecture, Composer workflows, staging routines, security hardening, GDPR, accessibility, payment integrations, SEO, and the day-to-day maintenance that keeps enterprise WordPress sites healthy. In those years I went from PHP 5.6 to PHP 8, and from small pieces of vanilla JavaScript to fuller solutions with React and Express before TypeScript made the larger systems feel clearer to work in. Toward the end I also built a Python middleware service that pulled geospatial data from several third-party APIs, cleaned it up, and made it usable elsewhere. From 2017 to 2019 I also founded Lidkoping Makerspace in my spare time, helping run the local NGO chapter while aiding the national organisation with web development and planning. The lasting lesson was ownership: communicating clearly, setting expectations, making tradeoffs visible, and staying with the work after it had left my editor.</p>
         </div>
 
         <div class="journey__card neu-box" data-reveal>
           <h3 class="journey__label">// international</h3>
-          <p>Moved to Portugal. Joined IPTOR as a Senior Developer, building enterprise plugins and managing a dozen web properties across their portfolio. Then Block Labs, where the work got sharper — I led a team of two developers on coinpoker.com, a real-time poker platform with thousands of concurrent sessions and 25 stakeholders pulling in different directions. The code was one thing. The harder part was triaging competing priorities under pressure and shipping on deadline without letting quality slide.</p>
+          <p>Moving to Portugal widened the scale of the work. At IPTOR I worked as a Senior Developer, building enterprise plugins and helping maintain a portfolio of web properties. At Block Labs the pace changed again. I was Team Lead for two colleagues on coinpoker.com, a real-time poker platform with a lot of people depending on it and a hefty time-zone spread inside the team. The technical parts mattered, of course, but the harder part was learning how to keep priorities clear when deadlines, stakeholders, and production pressure were all in the room at once.</p>
         </div>
 
         <div class="journey__card journey__card--current neu-box" data-reveal>
           <h3 class="journey__label">// today</h3>
-          <p>When I joined Nordhealth, the content managers couldn't publish to their own sites. That was the starting point. I built CI/CD pipelines with GitHub Actions, migrated five legacy properties onto a unified platform, and created AI-powered workflows using Claude Code and MCP servers to auto-generate WordPress Blocks that content teams could deploy across every property. Playwright test suites for validation. Standardizing all production WordPress sites into a shared monorepo with common tooling and deployment pipelines. I handle GDPR compliance, Core Web Vitals, A/B testing, analytics, and HubSpot integrations across all properties. Sole owner of eleven web environments spanning WordPress, Eleventy, and Astro.</p>
+          <p>At Nordhealth, the first problem was simple: content managers could not publish to their own sites without developer help. That became the thread I followed. I built GitHub Actions pipelines, moved legacy properties onto a more shared foundation, added Playwright checks, and helped turn scattered site work into something easier to repeat and maintain. Some of that now includes Claude Code and MCP-based workflows for generating WordPress blocks, but the goal is still practical: remove the boring friction so people can publish safely. These days my work also touches GDPR, Core Web Vitals, A/B testing, analytics, HubSpot, and the general care of production web environments across WordPress, Eleventy, and Astro.</p>
         </div>
       </div>
     </section>
@@ -195,6 +195,7 @@ const jsonLd = JSON.stringify({
             <span class="stack__tag" role="listitem">WCAG</span>
             <span class="stack__tag" role="listitem">GDPR</span>
             <span class="stack__tag" role="listitem">Core Web Vitals</span>
+            <span class="stack__tag" role="listitem">DevOps</span>
             <span class="stack__tag" role="listitem">A/B Testing</span>
             <span class="stack__tag" role="listitem">UI/UX</span>
             <span class="stack__tag" role="listitem">SSR</span>
@@ -206,14 +207,8 @@ const jsonLd = JSON.stringify({
 
     <!-- ═══════ Philosophy ═══════ -->
     <section class="philosophy" data-reveal>
-      <h2 class="section-heading prefix-slash">what this site is</h2>
-      <p class="philosophy__text">A place to write about the things I'm working through — tools, systems, approaches. Not a portfolio in the traditional sense. More like public notes from someone who has been doing this long enough to have opinions, but not so long that they've stopped questioning them.</p>
-    </section>
-
-    <!-- ═══════ Off the Clock ═══════ -->
-    <section class="human" data-reveal>
-      <h2 class="section-heading prefix-slash">off the clock</h2>
-      <p class="human__list">Bass guitar. Cooking. Reading. Trekking. Time with my&nbsp;partner.</p>
+      <h2 class="section-heading prefix-slash">outside the editor</h2>
+      <p class="philosophy__text">I'm Jonatan Jansson, born and raised in the small town of Lidköping in Sweden. I have played bass guitar since I was fifteen, and I have a soft spot for books, podcasts, trekking, cooking, and the kind of film that leaves the room feeling a little different afterwards. I met Margarida on the internet while discussing music, she flew from Portugal to Sweden to be with me, and we have been together ever since. Since 2023 I live with her in Portugal, finding my way through another side of Europe, the language, and all the small cultural details that come with it. This site is where I write findings and musings about software, the industry, Linux, digital anthropology, and the very human desire to automate the boring stuff, including what that desire does to us.</p>
     </section>
 
     <!-- ═══════ Explore ═══════ -->
@@ -279,7 +274,7 @@ const jsonLd = JSON.stringify({
 
 <style>
   /* ═══════════════════════════════════════════════
-     About page — 2026 Neubrutalist Edition
+     About page, 2026 Neubrutalist Edition
      Kinetic typography · Scroll reveals · WCAG AA
      ═══════════════════════════════════════════════ */
 
@@ -339,13 +334,13 @@ const jsonLd = JSON.stringify({
     border-right: 2px solid var(--muted);
     width: 0;
     animation:
-      typewriter 2.2s steps(27, end) 0.8s forwards,
+      typewriter 2.2s steps(34, end) 0.8s forwards,
       blink-caret 0.75s step-end 3s,
       fade-caret 0.6s ease 5.5s forwards;
   }
 
   @keyframes typewriter {
-    to { width: 27ch; }
+    to { width: calc(34ch + 2px); }
   }
 
   @keyframes blink-caret {
@@ -378,7 +373,7 @@ const jsonLd = JSON.stringify({
 
   @media (prefers-reduced-motion: reduce) {
     .typewriter {
-      width: 27ch;
+      width: calc(34ch + 2px);
       border-right: none;
       animation: none;
     }
@@ -388,7 +383,7 @@ const jsonLd = JSON.stringify({
     }
   }
 
-  /* ── Hero Photo — neubrutalist frame ── */
+  /* ── Hero Photo, neubrutalist frame ── */
   .about-hero__photo {
     width: clamp(180px, 22vw, 280px);
     border: 3px solid var(--fg);
@@ -514,10 +509,10 @@ const jsonLd = JSON.stringify({
     color: var(--fg);
   }
 
-  /* "today" card — inverted to signal current role */
+  /* "today" card, inverted to signal current role */
   .journey__card--current {
     background: var(--fg);
-    border-left-color: var(--muted);
+    border-left-color: var(--fg);
   }
 
   .journey__card--current .journey__label {
@@ -579,7 +574,7 @@ const jsonLd = JSON.stringify({
     box-shadow: 2px 2px 0 var(--fg);
   }
 
-  /* ── Philosophy — inverted block ── */
+  /* ── Philosophy, inverted block ── */
   .philosophy {
     margin-bottom: 3.5rem;
     padding: 2.5rem;
@@ -602,18 +597,6 @@ const jsonLd = JSON.stringify({
     line-height: 1.7;
     font-style: italic;
     color: var(--bg);
-  }
-
-  /* ── Human ── */
-  .human {
-    margin-bottom: 3.5rem;
-  }
-
-  .human__list {
-    font-family: var(--font-commit-mono), var(--font-mono);
-    font-size: 1rem;
-    color: var(--muted);
-    line-height: 1.6;
   }
 
   /* ── CTA Row ── */
@@ -677,7 +660,7 @@ const jsonLd = JSON.stringify({
     transform: translateY(0);
   }
 
-  /* ── Responsive — Tablet ── */
+  /* ── Responsive, Tablet ── */
   @media (max-width: 768px) {
     .about-hero {
       grid-template-columns: 1fr;
@@ -713,7 +696,7 @@ const jsonLd = JSON.stringify({
     }
   }
 
-  /* ── Responsive — Small ── */
+  /* ── Responsive, Small ── */
   @media (max-width: 500px) {
     .about {
       padding: 2rem 0 3rem;
