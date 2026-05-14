@@ -41,6 +41,26 @@ interface GalleryItem {
   spoiler: string;
 }
 
+function isDotmarguiPost(post: Post): boolean {
+  const acct = post.account.acct.toLowerCase();
+  return acct === "dotmargui" || acct.startsWith("dotmargui@");
+}
+
+function hasImageAttachment(post: Post): boolean {
+  return !!post.media_attachments?.some((m) => m.type === "image");
+}
+
+function isVisiblePost(post: Post): boolean {
+  if (post.reblog) return false;
+  if (post.in_reply_to_id) return false;
+  if (isDotmarguiPost(post) && !hasImageAttachment(post)) return false;
+
+  const txt = post.content.replace(/^<p>/, "").trimStart();
+  if (txt.match(/^<span class="h-card">/)) return false;
+
+  return true;
+}
+
 let prevAbort: AbortController | null = null;
 
 export function initSocialFeed() {
@@ -146,13 +166,7 @@ export function initSocialFeed() {
         return res.json() as Promise<Post[]>;
       })
       .then((posts) => {
-        const filtered = posts.filter((p) => {
-          if (p.reblog) return false;
-          if (p.in_reply_to_id) return false;
-          const txt = p.content.replace(/^<p>/, "").trimStart();
-          if (txt.match(/^<span class="h-card">/)) return false;
-          return true;
-        });
+        const filtered = posts.filter(isVisiblePost);
 
         if (posts.length === 0) {
           if (!maxId) feedEl!.innerHTML = '<div class="social-empty">no posts yet.</div>';
@@ -464,7 +478,7 @@ function initTagPanel(
         return res.json() as Promise<Post[]>;
       })
       .then((posts) => {
-        const filtered = posts.filter((p) => !p.reblog && !p.in_reply_to_id);
+        const filtered = posts.filter(isVisiblePost);
         bodyEl.innerHTML = "";
         if (filtered.length === 0) {
           bodyEl.innerHTML = '<div class="social-empty">no posts with this tag.</div>';
