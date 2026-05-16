@@ -1,5 +1,6 @@
 import aiRetrospective from "../assets/blog/ai-retrospective.png";
 import cognitiveLoadTheory from "../assets/blog/cognitive-load-theory.png";
+import ergonomics from "../assets/blog/ergonomics.webp";
 import leavingSpotify from "../assets/blog/leaving-spotify.png";
 import milimetradoSticker from "../assets/blog/milimetrado_sticker.webp";
 import modelContextProtocol from "../assets/blog/model-context-protocol.svg";
@@ -31,6 +32,11 @@ const blogHeroImages: Record<string, BlogHeroImage> = {
   "/img/blog/cognitive-load-theory.png": {
     asset: cognitiveLoadTheory,
     fallbackFormat: "png",
+    isSvg: false,
+  },
+  "/img/blog/ergonomics.webp": {
+    asset: ergonomics,
+    fallbackFormat: "webp",
     isSvg: false,
   },
   "/img/blog/leaving-spotify.png": {
