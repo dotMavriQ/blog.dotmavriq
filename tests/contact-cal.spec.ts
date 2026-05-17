@@ -78,7 +78,9 @@ test.describe('Contact booking modal', () => {
     expect(await page.evaluate(() => window.__calCalls)).toContain('modal');
     await expect(page.locator('cal-modal-box')).toHaveCount(1);
     await expect(page.locator('cal-modal-box')).toHaveAttribute('state', 'loaded');
-    await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
+    await expect
+      .poll(() => page.locator('body').evaluate((body) => (body as HTMLElement).style.overflow))
+      .toBe('hidden');
 
     await page.locator('cal-modal-box').evaluate((modal) => {
       modal.shadowRoot
@@ -87,7 +89,9 @@ test.describe('Contact booking modal', () => {
     });
     await expect(page.locator('cal-modal-box')).toHaveAttribute('state', 'closed');
     await expect(page.locator('cal-modal-box')).toHaveCSS('visibility', 'hidden');
-    await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
+    await expect
+      .poll(() => page.locator('body').evaluate((body) => (body as HTMLElement).style.overflow))
+      .not.toBe('hidden');
 
     await page.click('#cal-btn');
     await expect(page.locator('cal-modal-box')).toHaveCount(1);
@@ -97,6 +101,8 @@ test.describe('Contact booking modal', () => {
       modal.shadowRoot?.querySelector<HTMLButtonElement>('.close')?.click();
     });
     await expect(page.locator('cal-modal-box')).toHaveAttribute('state', 'closed');
-    await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
+    await expect
+      .poll(() => page.locator('body').evaluate((body) => (body as HTMLElement).style.overflow))
+      .not.toBe('hidden');
   });
 });

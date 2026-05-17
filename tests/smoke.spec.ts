@@ -66,12 +66,13 @@ test.describe('Pages load', () => {
   });
 });
 
-// ─── Blog Index (placeholder during 2026 curation window) ────────
+// ─── Blog Index ──────────────────────────────────────────────────
 test.describe('Blog index', () => {
-  test('renders the curation notice', async ({ page }) => {
+  test('renders published posts', async ({ page }) => {
     await page.goto('/blog');
     await expect(page.locator('h1').first()).toContainText(/blog/i);
-    await expect(page.locator('main')).toContainText(/curated|prepared|publication/i);
+    expect(await page.locator('.post-card').count()).toBeGreaterThan(0);
+    await expect(page.locator('main')).toContainText(/State of WordPress 2026|Model Context Protocol/i);
   });
 });
 

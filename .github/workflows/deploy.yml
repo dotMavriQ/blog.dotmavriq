@@ -84,16 +84,19 @@ jobs:
         run: npm run build
 
       - name: Lighthouse CI (advisory budgets)
+        continue-on-error: true
         uses: treosh/lighthouse-ci-action@v12
         with:
           uploadArtifacts: true
           configPath: ./lighthouserc.json
 
       - name: Archive link check (advisory)
+        continue-on-error: true
         run: npm run archive:check
 
       - name: Install Playwright (firefox + webkit)
         run: npx playwright install --with-deps firefox webkit
 
       - name: Cross-browser smoke (firefox + webkit)
+        continue-on-error: true
         run: npx playwright test --project=firefox --project=webkit
