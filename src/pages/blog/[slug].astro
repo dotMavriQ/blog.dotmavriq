@@ -979,6 +979,24 @@ const breadcrumbLd = JSON.stringify(breadcrumbJsonLd);
     display: block;
   }
 
+  /* Gallery — mirrors the /social attachment look */
+  :global(.post-content .post-gallery) {
+    margin: 2rem 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  :global(.post-content .post-gallery.media-1) { grid-template-columns: 1fr; }
+  :global(.post-content .post-gallery.media-2) { grid-template-columns: 1fr 1fr; }
+  :global(.post-content .post-gallery img) {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border: 1px solid var(--cloud);
+    border-radius: 4px;
+    display: block;
+    margin: 0;
+  }
+
   /* Horizontal rules — section breaks */
   .post-content hr {
     border: none;

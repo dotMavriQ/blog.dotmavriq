@@ -5,8 +5,9 @@ import { BLOG_CURATION_COPY, blogPath, getPublishableBlogPosts } from "../../lib
 import { markdownToPlainText } from "../../lib/markdown-text";
 import { estimateReadingMinutes } from "../../lib/reading-time";
 
-// Reverse-chron base, then collapse series so parts stay grouped in reading
-// order (I → II → III) and the group is anchored by the newest part's date.
+// Reverse-chron base, then collapse series so parts stay grouped in
+// reverse-chron order (III → II → I) matching the rest of the listing,
+// anchored by the newest part's date.
 const rawPosts = await getPublishableBlogPosts();
 
 type Post = typeof rawPosts[number];
@@ -29,7 +30,7 @@ const entries: { anchor: number; posts: Post[] }[] = [
   ...singletons.map((s) => ({ anchor: s.anchor, posts: [s.post] })),
   ...Array.from(seriesBuckets.values()).map((b) => ({
     anchor: b.anchor,
-    posts: b.parts.sort((a, b) => (a.data.part ?? 0) - (b.data.part ?? 0)),
+    posts: b.parts.sort((a, b) => (b.data.part ?? 0) - (a.data.part ?? 0)),
   })),
 ].sort((a, b) => b.anchor - a.anchor);
 
