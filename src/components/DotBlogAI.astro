@@ -36,9 +36,20 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
           <p>portfolio chatbot</p>
         </div>
       </div>
-      <button class="oliv-close" id="oliv-close" type="button" aria-label="Close OLIV chat">
-        ×
-      </button>
+      <div class="oliv-header-actions">
+        <button
+          class="oliv-theme-toggle"
+          id="oliv-theme-toggle"
+          type="button"
+          aria-label="Toggle colour theme"
+        >
+          <span class="icon-sun" aria-hidden="true">☼</span>
+          <span class="icon-moon" aria-hidden="true">☽</span>
+        </button>
+        <button class="oliv-close" id="oliv-close" type="button" aria-label="Close OLIV chat">
+          ✕
+        </button>
+      </div>
     </header>
 
     <div class="oliv-log" id="oliv-log" role="log" aria-label="Conversation" aria-live="polite">
@@ -136,6 +147,18 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
 
     launch.addEventListener("click", () => setOpen(panel.hidden), { signal });
     close.addEventListener("click", () => setOpen(false), { signal });
+
+    /* Theme toggle inside OLIV header — mirrors the nav theme toggle */
+    const olivThemeToggle = document.getElementById("oliv-theme-toggle") as HTMLButtonElement | null;
+    if (olivThemeToggle) {
+      olivThemeToggle.addEventListener("click", () => {
+        const html = document.documentElement;
+        const isDark = html.getAttribute("data-theme") === "dark";
+        const next = isDark ? "light" : "dark";
+        html.setAttribute("data-theme", next);
+        try { localStorage.setItem("blog-theme", next); } catch { /* noop */ }
+      }, { signal });
+    }
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && !panel.hidden) {
         setOpen(false);
@@ -313,6 +336,50 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
     border-bottom: 3px solid var(--fg);
   }
 
+  .oliv-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .oliv-theme-toggle {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 1.15rem;
+    line-height: 1;
+    padding: 0.1rem 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+  }
+
+  .oliv-theme-toggle {
+    display: none;
+  }
+
+  .oliv-theme-toggle:hover {
+    color: var(--fg);
+  }
+
+  .oliv-theme-toggle .icon-sun {
+    display: none;
+  }
+  .oliv-theme-toggle .icon-moon {
+    display: inline;
+  }
+
+  :global([data-theme="dark"]) .oliv-theme-toggle .icon-sun {
+    display: inline;
+  }
+
+  :global([data-theme="dark"]) .oliv-theme-toggle .icon-moon {
+    display: none;
+  }
+
   .oliv-identity {
     display: flex;
     align-items: center;
@@ -354,7 +421,7 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
   .oliv-close {
     border: 0;
     background: transparent;
-    color: var(--muted);
+    color: var(--fg);
     cursor: pointer;
     font-family: var(--font-mono);
     font-size: 1.45rem;
@@ -484,16 +551,59 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
       max-width: calc(100vw - 2rem);
     }
 
+    .oliv-chat.is-open {
+      right: 0;
+      bottom: 0;
+      max-width: 100vw;
+      z-index: 10002;
+    }
+
     .oliv-launch {
       min-height: 44px;
       padding: 0.65rem 1rem;
       font-size: 0.8rem;
     }
 
+    .oliv-chat.is-open .oliv-launch {
+      display: none;
+    }
+
     .oliv-panel {
       width: calc(100vw - 2rem);
       height: min(560px, calc(100dvh - 5.75rem));
       max-height: calc(100dvh - 5.75rem);
+    }
+
+    .oliv-chat.is-open .oliv-panel {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100dvh;
+      max-height: 100dvh;
+      bottom: 0;
+      border: none;
+      box-shadow: none;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    .oliv-chat.is-open .oliv-header {
+      padding: 0.8rem 1rem;
+      border-bottom: 3px solid var(--fg);
+    }
+
+    .oliv-chat.is-open .oliv-header-actions {
+      gap: 0.75rem;
+    }
+
+    .oliv-chat.is-open .oliv-theme-toggle {
+      display: flex;
+      font-size: 1.3rem;
+      padding: 0.2rem 0.3rem;
+    }
+
+    .oliv-chat.is-open .oliv-close {
+      font-size: 1.6rem;
+      padding: 0.2rem 0.4rem;
     }
 
     .oliv-send {
