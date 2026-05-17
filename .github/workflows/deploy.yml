@@ -21,29 +21,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: '22'
+          cache: npm
 
-      - run: bun install --frozen-lockfile
+      - run: npm ci
 
       - name: Guard against local Git remotes
-        run: bun run guard:remotes
+        run: npm run guard:remotes
 
       - name: Install poppler-utils (pdfinfo + pdftotext for CV PDF tests)
         run: sudo apt-get update && sudo apt-get install -y poppler-utils
 
       - name: Type-check (astro check)
-        run: bunx astro check
+        run: npx astro check
 
       - name: Build
-        run: bun run build
+        env:
+          DOTBLOG_PUBLISH_POSTS: '1'
+        run: npm run build
 
       - name: Install Playwright (chromium only)
-        run: bunx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Playwright tests (chromium only)
-        run: bunx playwright test --project=chromium
+        run: npx playwright test --project=chromium
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
@@ -68,14 +71,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: '22'
+          cache: npm
 
-      - run: bun install --frozen-lockfile
+      - run: npm ci
 
       - name: Build (for Lighthouse + cross-browser)
-        run: bun run build
+        env:
+          DOTBLOG_PUBLISH_POSTS: '1'
+        run: npm run build
 
       - name: Lighthouse CI (advisory budgets)
         uses: treosh/lighthouse-ci-action@v12
@@ -84,10 +90,10 @@ jobs:
           configPath: ./lighthouserc.json
 
       - name: Archive link check (advisory)
-        run: bun run archive:check
+        run: npm run archive:check
 
       - name: Install Playwright (firefox + webkit)
-        run: bunx playwright install --with-deps firefox webkit
+        run: npx playwright install --with-deps firefox webkit
 
       - name: Cross-browser smoke (firefox + webkit)
-        run: bunx playwright test --project=firefox --project=webkit
+        run: npx playwright test --project=firefox --project=webkit

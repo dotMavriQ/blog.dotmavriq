@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "sync-posts": "node scripts/sync-posts.mjs",
-    "dev": "bun run sync-posts && astro dev",
-    "start": "bun run sync-posts && astro dev",
-    "build": "bun run sync-posts && astro build",
+    "dev": "npm run sync-posts && astro dev",
+    "start": "npm run sync-posts && astro dev",
+    "build": "npm run sync-posts && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "guard:remotes": "node scripts/assert-no-local-remotes.mjs",
