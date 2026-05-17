@@ -5,36 +5,11 @@ import { BLOG_CURATION_COPY, blogPath, getPublishableBlogPosts } from "../../lib
 import { markdownToPlainText } from "../../lib/markdown-text";
 import { estimateReadingMinutes } from "../../lib/reading-time";
 
-// Reverse-chron base, then collapse series so parts stay grouped in
-// reverse-chron order (III → II → I) matching the rest of the listing,
-// anchored by the newest part's date.
-const rawPosts = await getPublishableBlogPosts();
-
-type Post = typeof rawPosts[number];
-const seriesBuckets = new Map<string, { anchor: number; parts: Post[] }>();
-const singletons: { anchor: number; post: Post }[] = [];
-
-for (const p of rawPosts) {
-  const key = p.data.series;
-  if (!key) {
-    singletons.push({ anchor: p.data.pubDate.valueOf(), post: p });
-    continue;
-  }
-  const bucket = seriesBuckets.get(key) ?? { anchor: 0, parts: [] };
-  bucket.parts.push(p);
-  bucket.anchor = Math.max(bucket.anchor, p.data.pubDate.valueOf());
-  seriesBuckets.set(key, bucket);
-}
-
-const entries: { anchor: number; posts: Post[] }[] = [
-  ...singletons.map((s) => ({ anchor: s.anchor, posts: [s.post] })),
-  ...Array.from(seriesBuckets.values()).map((b) => ({
-    anchor: b.anchor,
-    posts: b.parts.sort((a, b) => (b.data.part ?? 0) - (a.data.part ?? 0)),
-  })),
-].sort((a, b) => b.anchor - a.anchor);
-
-const posts = entries.flatMap((e) => e.posts);
+// Pure reverse-chronological by each post's own pubDate. Series parts
+// sort into their natural slots (which puts later parts above earlier
+// ones, and allows unrelated posts published between part dates to
+// interleave correctly).
+const posts = await getPublishableBlogPosts();
 
 const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags))).sort();
 
