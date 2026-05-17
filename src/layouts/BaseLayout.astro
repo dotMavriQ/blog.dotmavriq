@@ -16,7 +16,7 @@ const siteUrl = "https://blog.dotmavriq.life";
 function canonicalFromPath(pathname: string): string {
   const cleanPath = pathname
     .replace(/\/index\.html$/, "/")
-    .replace(/\.html$/, "")
+    .replace(/\.html$/, "/")
     .replace(/\/$/, "");
   return new URL(cleanPath || "/", siteUrl).href;
 }
@@ -134,7 +134,7 @@ const csp = [
           <button
             class="nav-toggle"
             aria-expanded="false"
-            aria-controls="nav-links"
+            aria-controls="mobile-menu"
             id="nav-toggle"
             aria-label="Toggle menu"
           >
@@ -146,6 +146,17 @@ const csp = [
       <!-- Kinetic Cloud Border -->
       <slot name="marquee" />
     </nav>
+
+    <!-- Mobile menu overlay — sibling of nav and page-scroll, no stacking context issues -->
+    <div id="mobile-menu" class="mobile-menu" role="dialog" aria-label="Navigation" hidden>
+      <ul class="mobile-menu__links" role="list">
+        <li><a href="/cv">cv</a></li>
+        <li><a href="/portfolio">portfolio</a></li>
+        <li><a href="/about">about</a></li>
+        <li><a href="/blog">blog</a></li>
+        <li><a href="/contact">contact</a></li>
+      </ul>
+    </div>
 
     <div class="page-scroll" id="page-scroll" transition:animate="none">
       <main class="page-content container" id="main">
@@ -190,12 +201,28 @@ const csp = [
 
         // ── Nav Toggle ──
         const navToggle = document.getElementById("nav-toggle");
-        const navLinks = document.getElementById("nav-links");
+        const mobileMenu = document.getElementById("mobile-menu");
 
-        if (navToggle) {
+        if (navToggle && mobileMenu) {
           navToggle.addEventListener("click", () => {
-            const open = navLinks?.classList.toggle("open");
-            navToggle.setAttribute("aria-expanded", String(open));
+            const open = mobileMenu.toggleAttribute("hidden");
+            navToggle.setAttribute("aria-expanded", String(!open));
+          }, { signal });
+
+          // Close on link click
+          mobileMenu.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+              mobileMenu.toggleAttribute("hidden", true);
+              navToggle.setAttribute("aria-expanded", "false");
+            }, { signal });
+          });
+
+          // Close on Escape
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && !mobileMenu.hasAttribute("hidden")) {
+              mobileMenu.toggleAttribute("hidden", true);
+              navToggle.setAttribute("aria-expanded", "false");
+            }
           }, { signal });
         }
 
@@ -282,8 +309,6 @@ const csp = [
         padding: 0;
         font-size: 1.1rem;
         transition: color 0.1s;
-        /* ☼ and ☽ have different intrinsic widths/heights; lock the
-           button box so toggling doesn't reflow nav-links sideways. */
         width: 1.5rem;
         height: 1.5rem;
         display: inline-flex;
@@ -327,21 +352,59 @@ const csp = [
       @media (max-width: 600px) {
         .nav-toggle {
           display: block;
+          position: relative;
+          z-index: 10002;
         }
+
         .nav-links {
           display: none;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          width: 100%;
-          background: var(--bg);
-          flex-direction: column;
-          padding: 1rem 20px;
-          border-bottom: 1px solid var(--cloud);
         }
-        .nav-links.open {
-          display: flex;
+
+        .nav {
+          position: relative;
+          z-index: 10001;
         }
+      }
+
+      /* Mobile menu overlay — sibling of nav/page-scroll, no stacking context issues */
+      .mobile-menu {
+        display: none;
+      }
+      .mobile-menu:not([hidden]) {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        background: #f5f3ec;
+        margin: 0;
+      }
+      :global([data-theme="dark"]) .mobile-menu:not([hidden]) {
+        background: #1a1a17;
+      }
+      .mobile-menu__links {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        padding: 0;
+        margin: 0;
+      }
+      .mobile-menu__links a {
+        color: var(--muted);
+        font-size: 1.2rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        text-decoration: none;
+      }
+      .mobile-menu__links a:hover {
+        color: var(--accent);
+        text-decoration: underline;
+        text-underline-offset: 4px;
       }
     </style>
   </body>

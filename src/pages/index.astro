@@ -519,42 +519,8 @@ const jsonLd = JSON.stringify({
       }
     }
 
-    /* ── Tiny screens: fully stacked ── */
-    @media (max-width: 380px) {
-      .hero {
-        padding-inline: 10px;
-      }
-
-      .hero-grid {
-        gap: 0.5rem;
-      }
-
-      .hero-name {
-        font-size: clamp(1.75rem, 10vw, 2.2rem);
-      }
-
-      .hero-intro {
-        margin-bottom: 0.55rem;
-      }
-
-      .hero-links__primary {
-        gap: 0.5rem;
-      }
-
-      .hero-links__secondary {
-        gap: 0.45rem;
-      }
-
-      .hero-link--sm .hero-link__icon pre {
-        font-size: calc(var(--ascii-size) * 0.7);
-      }
-    }
-
-    @media (max-width: 380px) {
-      .hero {
-        padding-bottom: 0.5rem;
-      }
-
+    /* ── Phones: 6-column grid for icons (iPhone SE style) ── */
+    @media (max-width: 599px) {
       .hero-content {
         padding-bottom: 3.35rem;
       }
@@ -566,7 +532,7 @@ const jsonLd = JSON.stringify({
         row-gap: 0.45rem;
         align-items: center;
         justify-items: center;
-        width: min(250px, 100%);
+        width: min(280px, 100%);
       }
 
       .hero-links__primary,
