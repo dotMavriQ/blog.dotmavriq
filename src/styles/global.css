@@ -31,6 +31,12 @@
   --accent: #e8e6df;
 }
 
+/* Theme-toggle icons: shared between nav and OLIV header buttons */
+.icon-sun { display: none; }
+.icon-moon { display: inline; }
+[data-theme="dark"] .icon-sun { display: inline; }
+[data-theme="dark"] .icon-moon { display: none; }
+
 /* Skip-to-content link — hidden until focused */
 .skip-link {
   position: absolute;

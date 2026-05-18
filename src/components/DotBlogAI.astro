@@ -78,6 +78,8 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
 </aside>
 
 <script>
+  import { toggleTheme } from "../scripts/theme";
+
   type ChatPayload = {
     detail?: string;
     error?: string;
@@ -148,16 +150,9 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
     launch.addEventListener("click", () => setOpen(panel.hidden), { signal });
     close.addEventListener("click", () => setOpen(false), { signal });
 
-    /* Theme toggle inside OLIV header — mirrors the nav theme toggle */
     const olivThemeToggle = document.getElementById("oliv-theme-toggle") as HTMLButtonElement | null;
     if (olivThemeToggle) {
-      olivThemeToggle.addEventListener("click", () => {
-        const html = document.documentElement;
-        const isDark = html.getAttribute("data-theme") === "dark";
-        const next = isDark ? "light" : "dark";
-        html.setAttribute("data-theme", next);
-        try { localStorage.setItem("blog-theme", next); } catch { /* noop */ }
-      }, { signal });
+      olivThemeToggle.addEventListener("click", () => toggleTheme(), { signal });
     }
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && !panel.hidden) {
@@ -365,20 +360,7 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
     color: var(--fg);
   }
 
-  .oliv-theme-toggle .icon-sun {
-    display: none;
-  }
-  .oliv-theme-toggle .icon-moon {
-    display: inline;
-  }
-
-  :global([data-theme="dark"]) .oliv-theme-toggle .icon-sun {
-    display: inline;
-  }
-
-  :global([data-theme="dark"]) .oliv-theme-toggle .icon-moon {
-    display: none;
-  }
+  /* .icon-sun / .icon-moon visibility lives in global.css (shared with nav) */
 
   .oliv-identity {
     display: flex;

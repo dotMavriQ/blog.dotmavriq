@@ -55,7 +55,8 @@ const csp = [
     <Font cssVariable="--font-commit-mono" preload={[{ weight: "400", style: "normal" }]} />
     <Font cssVariable="--font-recursive" />
 
-    <!-- Theme toggle: blocking script to prevent FOUC -->
+    <!-- Theme toggle: blocking script to prevent FOUC.
+         Inline (cannot import) — storage key must match src/scripts/theme.ts THEME_STORAGE_KEY. -->
     <script is:inline>
       (function() {
         function applyTheme() {
@@ -177,6 +178,8 @@ const csp = [
     <DotBlogAI />
 
     <script>
+      import { toggleTheme } from "../scripts/theme";
+
       let ac: AbortController | null = null;
 
       const init = () => {
@@ -186,17 +189,9 @@ const csp = [
         const { signal } = ac;
 
         // ── Theme toggle ──
-        const html = document.documentElement;
         const themeToggle = document.getElementById("theme-toggle");
-        const STORAGE_KEY = "blog-theme";
-
         if (themeToggle) {
-          themeToggle.addEventListener("click", () => {
-            const isDark = html.getAttribute("data-theme") === "dark";
-            const next = isDark ? "light" : "dark";
-            html.setAttribute("data-theme", next);
-            localStorage.setItem(STORAGE_KEY, next);
-          }, { signal });
+          themeToggle.addEventListener("click", () => toggleTheme(), { signal });
         }
 
         // ── Nav Toggle ──
@@ -320,18 +315,7 @@ const csp = [
         color: var(--accent);
       }
 
-      .icon-sun {
-        display: none;
-      }
-      .icon-moon {
-        display: inline;
-      }
-      :global([data-theme="dark"]) .icon-sun {
-        display: inline;
-      }
-      :global([data-theme="dark"]) .icon-moon {
-        display: none;
-      }
+      /* .icon-sun / .icon-moon visibility lives in global.css (shared with OLIV) */
 
       .nav-toggle {
         display: none;
