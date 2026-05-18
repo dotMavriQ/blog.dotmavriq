@@ -221,23 +221,55 @@
       };
     }
 
-    function measure() {
-      // Measure how many chars fit in the container
+    function probeChar(): { w: number; h: number } {
       const probe = document.createElement("span");
       probe.style.cssText = "position:absolute;visibility:hidden;white-space:pre;font:inherit;";
       probe.textContent = "░\n░";
       wrapper.appendChild(probe);
-      const rect = probe.getBoundingClientRect();
-      charW = rect.width;
-      charH = rect.height / 2; // height of one character row
+      const r = probe.getBoundingClientRect();
       wrapper.removeChild(probe);
-      if (charW > 0) {
-        W = Math.floor(wrapper.clientWidth / charW);
-      }
+      return { w: r.width, h: r.height / 2 };
+    }
+
+    function measure() {
+      // Reset any prior font-size override before measuring at CSS default
+      scene.style.fontSize = "";
+
+      let d = probeChar();
+      charW = d.w;
+      charH = d.h;
+
+      if (charW > 0) W = Math.floor(wrapper.clientWidth / charW);
       if (charH > 0 && wrapper.clientHeight > 0) {
         H = Math.max(TILE_H, Math.floor(wrapper.clientHeight / charH));
       } else {
         H = TILE_H;
+      }
+
+      // Cap sky on compact viewports so the empty band between the lowest
+      // bird (yFrac 0.65) and the rooftops doesn't become dead weight.
+      const vw = window.innerWidth;
+      const skyMultiplier =
+        vw <= 380 ? 0.4 :
+        vw <= 480 ? 0.7 :
+        vw <= 768 ? 1.1 :
+        Infinity;
+      if (Number.isFinite(skyMultiplier)) {
+        const maxH = TILE_H + Math.floor(TILE_H * skyMultiplier);
+        if (H > maxH) {
+          H = maxH;
+          // Bump the font-size so the capped grid fills the wrapper height
+          // (otherwise the wrapper has whitespace below the buildings).
+          const targetCharH = wrapper.clientHeight / H;
+          const baseFs = parseFloat(getComputedStyle(scene).fontSize);
+          if (baseFs > 0 && targetCharH > charH) {
+            scene.style.fontSize = `${(baseFs * targetCharH / charH).toFixed(2)}px`;
+            d = probeChar();
+            charW = d.w;
+            charH = d.h;
+            if (charW > 0) W = Math.floor(wrapper.clientWidth / charW);
+          }
+        }
       }
     }
 
@@ -246,20 +278,23 @@
       const skyRows = totalH - TILE_H;
       const tileRow = row - skyRows;
       const tiles = [tile, tile2, tile3, tile4];
+      // Center the signature tile (index 2 — three tall buildings) on screen
+      // regardless of viewport width. Shift the cycle so that the column at
+      // floor((w - TILE_W)/2) is the first column of tiles[2].
+      const SIGNATURE_INDEX = 2;
+      const centerStart = Math.floor((w - TILE_W) / 2);
+      const shift = SIGNATURE_INDEX * TILE_W - centerStart;
       const out: string[] = [];
       for (let col = 0; col < w; col++) {
         if (tileRow < 0) {
-          // Sky filler
           out.push("░");
         } else {
-          const tileIndex = Math.floor(col / TILE_W);
-          const src = tiles[tileIndex % tiles.length];
+          const idx = col + shift;
+          const tileIndex = ((Math.floor(idx / TILE_W) % tiles.length) + tiles.length) % tiles.length;
+          const within = ((idx % TILE_W) + TILE_W) % TILE_W;
+          const src = tiles[tileIndex];
           const srcRow = tileRow < src.length ? src[tileRow] : null;
-          if (srcRow) {
-            out.push(srcRow[col % TILE_W]);
-          } else {
-            out.push("░");
-          }
+          out.push(srcRow ? srcRow[within] : "░");
         }
       }
       return out;
