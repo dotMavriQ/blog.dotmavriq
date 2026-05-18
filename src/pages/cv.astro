@@ -229,7 +229,7 @@ const jsonLd = JSON.stringify({
     <!-- ═══════════════════════════════════════════════
          EXPERIENCE — timeline
     ═══════════════════════════════════════════════ -->
-    <h2 class="cv-section-heading neu-border-bottom">
+    <h2 class="cv-section-heading neu-border-bottom" id="cv-experience">
       <span class="cv-heading-prefix" aria-hidden="true">//</span> experience
     </h2>
 
@@ -1223,6 +1223,12 @@ const jsonLd = JSON.stringify({
     :global(.page-content) {
       padding: 0 !important;
       max-width: none !important;
+    }
+
+    /* Experience starts page 2 — it was hugging the bottom of page 1. */
+    #cv-experience {
+      break-before: page;
+      page-break-before: always; /* legacy fallback */
     }
 
     .cv {
