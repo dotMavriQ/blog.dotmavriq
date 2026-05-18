@@ -147,14 +147,14 @@ test.describe('Mobile navigation', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/');
 
-    const navLinks = page.locator('.nav-links');
-    await expect(navLinks).not.toHaveClass(/open/);
+    const mobileMenu = page.locator('#mobile-menu');
+    await expect(mobileMenu).toHaveAttribute('hidden', '');
 
     await page.click('#nav-toggle');
-    await expect(navLinks).toHaveClass(/open/);
+    await expect(mobileMenu).not.toHaveAttribute('hidden', '');
 
     await page.click('#nav-toggle');
-    await expect(navLinks).not.toHaveClass(/open/);
+    await expect(mobileMenu).toHaveAttribute('hidden', '');
   });
 });
 
