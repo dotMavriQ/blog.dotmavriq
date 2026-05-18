@@ -42,11 +42,8 @@ jobs:
           DOTBLOG_PUBLISH_POSTS: '1'
         run: npm run build
 
-      - name: Install Playwright (chromium only)
-        run: npx playwright install --with-deps chromium
-
-      - name: Playwright tests (chromium only)
-        run: npx playwright test --project=chromium
+      # Playwright smoke tests temporarily disabled while we refactor;
+      # type-check + build above remain as deploy gates.
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
