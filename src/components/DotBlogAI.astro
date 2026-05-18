@@ -228,7 +228,7 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
        of the interaction surface whenever a social overlay is open,
        which leaves the lightbox (z-index 9000 inside .page-scroll's
        stacking context) visually on top. */
-    z-index: 350;
+    z-index: var(--z-oliv);
     font-family: var(--font-mono);
     max-width: calc(100vw - 2rem);
     transition: opacity 0.15s ease, visibility 0.15s ease;
@@ -338,7 +338,11 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
     flex-shrink: 0;
   }
 
+  /* Hidden by default; shown only in mobile fullscreen OLIV (.oliv-chat.is-open) */
   .oliv-theme-toggle {
+    display: none;
+    align-items: center;
+    gap: 0.15rem;
     border: 0;
     background: transparent;
     color: var(--muted);
@@ -347,13 +351,6 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
     font-size: 1.15rem;
     line-height: 1;
     padding: 0.1rem 0.2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.15rem;
-  }
-
-  .oliv-theme-toggle {
-    display: none;
   }
 
   .oliv-theme-toggle:hover {
@@ -537,7 +534,7 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
       right: 0;
       bottom: 0;
       max-width: 100vw;
-      z-index: 10002;
+      z-index: var(--z-chrome-top);
     }
 
     .oliv-launch {

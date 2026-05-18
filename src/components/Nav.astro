@@ -116,7 +116,7 @@ const navItems = [
     width: 100%;
     background: var(--bg);
     transition: background 0.3s;
-    z-index: 100;
+    z-index: var(--z-nav);
     border-bottom: 1px solid var(--cloud);
   }
   .nav-bar {
@@ -191,7 +191,7 @@ const navItems = [
     .nav-toggle {
       display: block;
       position: relative;
-      z-index: 10002;
+      z-index: var(--z-chrome-top);
     }
 
     .nav-links {
@@ -200,7 +200,7 @@ const navItems = [
 
     .nav {
       position: relative;
-      z-index: 10001;
+      z-index: var(--z-mobile-nav);
     }
   }
 
@@ -211,7 +211,7 @@ const navItems = [
     display: flex;
     position: fixed;
     inset: 0;
-    z-index: 10000;
+    z-index: var(--z-mobile-overlay);
     flex-direction: column;
     align-items: center;
     justify-content: center;

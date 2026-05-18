@@ -21,6 +21,13 @@
      previous step function exactly; mid-range becomes a smooth ramp. */
   --ascii-size: clamp(12px, 2vw, 18px);
   --ascii-line: clamp(12px, 2vw, 18px);
+
+  /* Chrome stacking scale. Page-local stacks (social.astro etc.) opt out. */
+  --z-nav: 100;
+  --z-oliv: 350;            /* OLIV launcher above page-scroll (300) */
+  --z-mobile-overlay: 10000; /* mobile menu backdrop */
+  --z-mobile-nav: 10001;     /* nav above the overlay so toggle stays clickable */
+  --z-chrome-top: 10002;     /* nav-toggle button + OLIV fullscreen on mobile */
 }
 
 [data-theme="dark"] {
@@ -42,7 +49,7 @@
   position: absolute;
   left: -9999px;
   top: 0;
-  z-index: 9999;
+  z-index: var(--z-chrome-top);
   padding: 0.5rem 1rem;
   background: var(--fg);
   color: var(--bg);
