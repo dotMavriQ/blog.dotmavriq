@@ -36,6 +36,7 @@ import StructuralArt from "../components/StructuralArt.astro";
       <img id="social-lb-img" src="" alt="" />
       <button class="social-lightbox-next" id="social-lb-next" aria-label="Next">
         <span class="social-lightbox-arrow">&rarr;</span>
+        <span class="social-lightbox-next-label" id="social-lb-next-label" aria-hidden="true"></span>
       </button>
     </div>
     <button class="social-lightbox-cw" id="social-lb-cw" type="button">
@@ -60,7 +61,7 @@ import StructuralArt from "../components/StructuralArt.astro";
 
   <div class="social-profile-overlay" id="social-profile-overlay" role="dialog" aria-modal="true" aria-labelledby="social-profile-name">
     <div class="social-profile-card">
-      <a class="social-profile-go" href="https://social.dotmavriq.life/users/dotmavriq"
+      <a class="social-profile-go" id="social-profile-go" href="https://social.dotmavriq.life/users/dotmavriq"
          target="_blank" rel="noopener" aria-label="Open profile on social.dotmavriq.life in a new tab">
         <span aria-hidden="true">[ ↗ ]</span>
       </a>
@@ -427,7 +428,7 @@ import StructuralArt from "../components/StructuralArt.astro";
       font-family: var(--font-commit-mono), var(--font-mono);
       /* Match the post-card backing so the placeholder reads above the
          StructuralArt backdrop instead of drowning in it. */
-      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      background: color-mix(in srgb, var(--bg) 95%, transparent);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
       border-bottom: 1px solid var(--cloud);
@@ -437,7 +438,7 @@ import StructuralArt from "../components/StructuralArt.astro";
     :global(.social-post) {
       border-bottom: 1px solid var(--cloud);
       padding: 1.5rem 1.25rem;
-      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      background: color-mix(in srgb, var(--bg) 95%, transparent);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
     }
@@ -590,7 +591,7 @@ import StructuralArt from "../components/StructuralArt.astro";
     .social-load-more {
       padding: 1.5rem 1.25rem;
       text-align: center;
-      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      background: color-mix(in srgb, var(--bg) 95%, transparent);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
     }
@@ -713,6 +714,43 @@ import StructuralArt from "../components/StructuralArt.astro";
     .social-lightbox-prev[disabled] .social-lightbox-arrow,
     .social-lightbox-next[disabled] .social-lightbox-arrow {
       color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Load-more affordance on the next-arrow: shown when the user is at the
+       last loaded image but more posts are available. Caption sits beside the
+       arrow; a subtle pulse draws the eye without yanking attention. */
+    .social-lightbox-next-label {
+      color: rgba(255, 255, 255, 0.85);
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      text-transform: lowercase;
+      margin-left: 0.5rem;
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+    }
+    .social-lightbox-next.is-load-more .social-lightbox-next-label {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .social-lightbox-next.is-load-more .social-lightbox-arrow {
+      color: rgba(255, 255, 255, 0.85);
+      animation: social-lb-pulse 1.8s ease-in-out infinite;
+    }
+    .social-lightbox-next.is-loading .social-lightbox-arrow {
+      animation: none;
+      color: rgba(255, 255, 255, 0.5);
+    }
+    @keyframes social-lb-pulse {
+      0%, 100% { opacity: 0.85; }
+      50%      { opacity: 0.45; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .social-lightbox-next.is-load-more .social-lightbox-arrow {
+        animation: none;
+      }
     }
 
     /* ── Sensitive content cover (lightbox) ──

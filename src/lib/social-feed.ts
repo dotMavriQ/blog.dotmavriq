@@ -23,6 +23,7 @@ interface Post {
   sensitive?: boolean;
   spoiler_text?: string;
   in_reply_to_id?: string | null;
+  visibility?: "public" | "unlisted" | "private" | "direct";
   reblog?: Post | null;
   account: {
     avatar: string;
@@ -51,6 +52,7 @@ function hasImageAttachment(post: Post): boolean {
 }
 
 function isVisiblePost(post: Post): boolean {
+  if (post.visibility && post.visibility !== "public") return false;
   if (post.reblog) return false;
   if (post.in_reply_to_id) return false;
   if (isDotmarguiPost(post) && !hasImageAttachment(post)) return false;
@@ -139,6 +141,7 @@ export function initSocialFeed() {
 
     article.innerHTML =
       `<button type="button" class="social-post-header" data-profile-trigger ` +
+        `data-acct="${escAttr(post.account.acct)}" ` +
         `aria-label="Open profile for ${escAttr(post.account.display_name || post.account.acct)}">` +
         `<img class="social-post-avatar" src="${escAttr(post.account.avatar)}" alt="">` +
         `<div class="social-post-meta">` +
@@ -152,15 +155,15 @@ export function initSocialFeed() {
     return article;
   }
 
-  function loadPosts() {
-    if (loading) return;
+  function loadPosts(): Promise<void> {
+    if (loading) return Promise.resolve();
     loading = true;
     if (loadMoreBtn) loadMoreBtn.disabled = true;
 
     let url = `${API}?local=true&limit=${LIMIT}`;
     if (maxId) url += `&max_id=${maxId}`;
 
-    fetch(url, { signal })
+    return fetch(url, { signal })
       .then((res) => {
         if (!res.ok) throw new Error(`API error ${res.status}`);
         return res.json() as Promise<Post[]>;
@@ -219,7 +222,10 @@ export function initSocialFeed() {
   initTagPanel(signal, renderPost);
 
   // ── Lightbox ──
-  initLightbox(galleryImages, signal);
+  initLightbox(galleryImages, signal, {
+    canLoadMore: () => !loading && !!loadMoreEl && loadMoreEl.style.display !== "none",
+    loadMore: () => loadPosts(),
+  });
 }
 
 function initFollow(signal: AbortSignal) {
@@ -303,27 +309,31 @@ interface AccountInfo {
   statuses_count?: number;
 }
 
-let cachedAccount: AccountInfo | null = null;
-let pendingAccount: Promise<AccountInfo | null> | null = null;
+const accountCache = new Map<string, AccountInfo>();
+const accountPending = new Map<string, Promise<AccountInfo | null>>();
 
-function fetchAccount(signal: AbortSignal): Promise<AccountInfo | null> {
-  if (cachedAccount) return Promise.resolve(cachedAccount);
-  if (pendingAccount) return pendingAccount;
-  pendingAccount = fetch(
-    `${SOCIAL_BASE}/api/v1/accounts/lookup?acct=dotmavriq`,
+function fetchAccount(acct: string, signal: AbortSignal): Promise<AccountInfo | null> {
+  const key = acct.toLowerCase();
+  const cached = accountCache.get(key);
+  if (cached) return Promise.resolve(cached);
+  const pending = accountPending.get(key);
+  if (pending) return pending;
+  const p = fetch(
+    `${SOCIAL_BASE}/api/v1/accounts/lookup?acct=${encodeURIComponent(acct)}`,
     { signal }
   )
     .then((res) => (res.ok ? res.json() as Promise<AccountInfo> : null))
     .then((acc) => {
-      if (acc) cachedAccount = acc;
-      pendingAccount = null;
+      if (acc) accountCache.set(key, acc);
+      accountPending.delete(key);
       return acc;
     })
     .catch(() => {
-      pendingAccount = null;
+      accountPending.delete(key);
       return null;
     });
-  return pendingAccount;
+  accountPending.set(key, p);
+  return p;
 }
 
 function formatJoined(iso: string | undefined): string {
@@ -355,6 +365,7 @@ function initProfileCard(signal: AbortSignal) {
   const statsFollowingEl = document.getElementById("social-profile-stat-following");
   const statsFollowersEl = document.getElementById("social-profile-stat-followers");
   const joinedEl = document.getElementById("social-profile-joined");
+  const goEl = document.getElementById("social-profile-go") as HTMLAnchorElement | null;
 
   const close = () => {
     overlay.classList.remove("open");
@@ -402,12 +413,31 @@ function initProfileCard(signal: AbortSignal) {
       const joined = formatJoined(acc.created_at);
       joinedEl.textContent = joined ? `joined ${joined}` : "";
     }
+
+    if (goEl) {
+      if (acc.url) goEl.href = acc.url;
+      const displayHandle = handleEl?.textContent || acc.acct;
+      goEl.setAttribute("aria-label", `Open ${displayHandle} in a new tab`);
+    }
   };
 
-  const open = () => {
+  const resetCard = () => {
+    if (avatarEl) avatarEl.src = "";
+    if (nameEl) nameEl.textContent = "…";
+    if (handleEl) handleEl.textContent = "…";
+    if (bioEl) bioEl.innerHTML = "";
+    if (fieldsEl) { fieldsEl.innerHTML = ""; fieldsEl.style.display = "none"; }
+    if (statsPostsEl) statsPostsEl.textContent = "—";
+    if (statsFollowingEl) statsFollowingEl.textContent = "—";
+    if (statsFollowersEl) statsFollowersEl.textContent = "—";
+    if (joinedEl) joinedEl.textContent = "";
+  };
+
+  const open = (acct: string) => {
     overlay.classList.add("open");
     document.body.style.overflow = "hidden";
-    fetchAccount(signal).then((acc) => {
+    resetCard();
+    fetchAccount(acct, signal).then((acc) => {
       if (acc) populate(acc);
     });
   };
@@ -415,10 +445,11 @@ function initProfileCard(signal: AbortSignal) {
   // Delegate clicks at the document level so post-header triggers in the
   // main feed AND the tag panel both open the card.
   document.addEventListener("click", (e) => {
-    const trigger = (e.target as HTMLElement).closest("[data-profile-trigger]");
+    const trigger = (e.target as HTMLElement).closest<HTMLElement>("[data-profile-trigger]");
     if (!trigger) return;
     e.preventDefault();
-    open();
+    const acct = trigger.dataset.acct || "dotmavriq";
+    open(acct);
   }, { signal });
 
   closeBtn.addEventListener("click", close, { signal });
@@ -529,7 +560,12 @@ function initTagPanel(
   }, { signal });
 }
 
-function initLightbox(galleryImages: GalleryItem[], signal: AbortSignal) {
+interface LightboxDeps {
+  canLoadMore: () => boolean;
+  loadMore: () => Promise<void>;
+}
+
+function initLightbox(galleryImages: GalleryItem[], signal: AbortSignal, deps?: LightboxDeps) {
   const lightbox = document.getElementById("social-lightbox");
   const lbImg = document.getElementById("social-lb-img") as HTMLImageElement | null;
   const lbAlt = document.getElementById("social-lb-alt");
@@ -537,6 +573,7 @@ function initLightbox(galleryImages: GalleryItem[], signal: AbortSignal) {
   const lbClose = document.getElementById("social-lb-close");
   const lbPrev = document.getElementById("social-lb-prev") as HTMLButtonElement | null;
   const lbNext = document.getElementById("social-lb-next") as HTMLButtonElement | null;
+  const lbNextLabel = document.getElementById("social-lb-next-label");
   const lbSkip = document.getElementById("social-lb-skip");
   const lbStage = document.getElementById("social-lb-stage");
   const lbCw = document.getElementById("social-lb-cw");
@@ -595,7 +632,13 @@ function initLightbox(galleryImages: GalleryItem[], signal: AbortSignal) {
     lbCounter.textContent = `${posInPost} / ${postImages.length}`;
 
     lbPrev.disabled = idx <= 0;
-    lbNext.disabled = idx >= galleryImages.length - 1;
+    const atTail = idx >= galleryImages.length - 1;
+    const canMore = atTail && !!deps?.canLoadMore();
+    lbNext.disabled = atTail && !canMore;
+    lbNext.classList.toggle("is-load-more", canMore);
+    lbNext.classList.remove("is-loading");
+    if (lbNextLabel) lbNextLabel.textContent = canMore ? "» more" : "";
+    lbNext.setAttribute("aria-label", canMore ? "Load more posts" : "Next");
 
     let skipText = "";
     if (idx >= galleryImages.length - 1 || galleryImages[idx + 1].postIndex !== postIdx) {
@@ -622,7 +665,26 @@ function initLightbox(galleryImages: GalleryItem[], signal: AbortSignal) {
     currentIdx = -1;
   };
   const prev = () => currentIdx > 0 && show(currentIdx - 1);
-  const next = () => currentIdx < galleryImages.length - 1 && show(currentIdx + 1);
+  const next = () => {
+    if (currentIdx < galleryImages.length - 1) {
+      show(currentIdx + 1);
+      return;
+    }
+    if (!deps?.canLoadMore()) return;
+    const wasIdx = currentIdx;
+    lbNext.classList.add("is-loading");
+    lbNext.disabled = true;
+    if (lbNextLabel) lbNextLabel.textContent = "loading…";
+    deps.loadMore().finally(() => {
+      if (currentIdx !== wasIdx) return; // user moved on
+      if (wasIdx + 1 < galleryImages.length) {
+        show(wasIdx + 1);
+      } else {
+        // No new images materialised; re-evaluate tail state for current frame.
+        show(wasIdx);
+      }
+    });
+  };
   const skipNextPost = () => {
     const target = findNextPostStart(currentIdx);
     if (target >= 0) show(target);
