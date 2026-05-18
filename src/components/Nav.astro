@@ -48,6 +48,7 @@ const navItems = [
 
 <script>
   import { toggleTheme } from "../scripts/theme";
+  import { bootOnReady } from "../scripts/boot";
 
   let ac: AbortController | null = null;
 
@@ -99,12 +100,7 @@ const navItems = [
     }
   };
 
-  document.addEventListener("astro:page-load", init);
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, { once: true });
-  } else {
-    init();
-  }
+  bootOnReady(init);
 </script>
 
 <style>

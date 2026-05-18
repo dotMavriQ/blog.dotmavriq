@@ -79,6 +79,7 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
 
 <script>
   import { toggleTheme } from "../scripts/theme";
+  import { bootOnReady } from "../scripts/boot";
 
   type ChatPayload = {
     detail?: string;
@@ -88,7 +89,7 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
 
   let olivAbortController: AbortController | null = null;
 
-  function initOliviaChat() {
+  function initOlivChat() {
     olivAbortController?.abort();
     olivAbortController = new AbortController();
     const { signal } = olivAbortController;
@@ -210,12 +211,7 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
     }, { signal });
   }
 
-  document.addEventListener("astro:page-load", initOliviaChat);
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initOliviaChat, { once: true });
-  } else {
-    initOliviaChat();
-  }
+  bootOnReady(initOlivChat);
 </script>
 
 <style>
