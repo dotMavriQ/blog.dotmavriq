@@ -204,14 +204,16 @@ const jsonLd = JSON.stringify({
         </div>
         <div class="primary-body">
           <h2>STXTOFR</h2>
-          <p class="card-desc">Pulls Swedish traffic and roadside data from several mismatched sources, maps it, cleans and standardizes it, then hands it to Baserow for manual review before exporting the finished set as a DTO. Python, FastAPI, PostgreSQL.</p>
+          <p class="card-desc">Patron saint of truckers. A middleware ETL pipeline for Swedish roadside infrastructure: pulls rest areas, truck stops, and facility data from a handful of mismatched public sources, normalizes the schemas, geocodes and dedupes, then routes everything through a Baserow human-review layer before shipping versioned JSON DTO bundles over a FastAPI surface. Python workers on a Postgres&nbsp;spine, containerized and scheduled, so the people who actually sleep in their cabs get a single clean dataset instead of seven broken ones.</p>
           <div class="card-tags">
             <span class="tag">Python</span>
             <span class="tag">FastAPI</span>
             <span class="tag">PostgreSQL</span>
-            <span class="tag">Docker</span>
+            <span class="tag">Baserow</span>
             <span class="tag">Geospatial</span>
             <span class="tag">ETL</span>
+            <span class="tag">DTO Versioning</span>
+            <span class="tag">Docker</span>
           </div>
           <div class="card-links">
             <a href="https://github.com/dotMavriQ/STXTOFR" target="_blank" rel="noopener">GitHub&nbsp;→</a>
