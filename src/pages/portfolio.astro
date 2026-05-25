@@ -29,6 +29,15 @@ const jsonLd = JSON.stringify({
       {
         "@type": "SoftwareApplication",
         "position": 2,
+        "name": "Luzzle",
+        "description": "Self-hostable, team-aware life-task tracker. Habits, dailies, todos, shared grocery list, and a live team activity feed. TanStack Start + Postgres + Better Auth, deployed on Oracle Cloud.",
+        "url": "https://luzzle.dotmavriq.life",
+        "applicationCategory": "WebApplication",
+        "operatingSystem": "Web"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "position": 3,
         "name": "Ankode",
         "description": "Spaced-recall study tool for software engineering interview prep. Full-stack React SPA with Hono API, GitHub OAuth, and spaced-repetition scheduling.",
         "url": "https://ankode-web-dotmavriq-eu-de.s3-web.eu-de.cloud-object-storage.appdomain.cloud",
@@ -37,7 +46,7 @@ const jsonLd = JSON.stringify({
       },
       {
         "@type": "SoftwareApplication",
-        "position": 3,
+        "position": 4,
         "name": "TeamTailor Integrator",
         "description": "WordPress plugin that imports TeamTailor job ads into CPTs with taxonomy mapping and WP-Cron sync.",
         "url": "https://github.com/dotMavriQ/TeamTailor-Integrator-For-WordPress",
@@ -45,7 +54,7 @@ const jsonLd = JSON.stringify({
       },
       {
         "@type": "SoftwareApplication",
-        "position": 3,
+        "position": 5,
         "name": "STXTOFR",
         "description": "Multi-provider ETL pipeline for Swedish roadside facility data. Normalizes heterogeneous sources, routes through a Baserow human-review layer, and exports versioned JSON DTO bundles via FastAPI.",
         "url": "https://github.com/dotMavriQ/STXTOFR",
@@ -53,7 +62,7 @@ const jsonLd = JSON.stringify({
       },
       {
         "@type": "SoftwareApplication",
-        "position": 5,
+        "position": 6,
         "name": "Habsiad",
         "description": "Obsidian-Habitica bridge that syncs tasks, stats, and streak insights.",
         "url": "https://github.com/dotMavriQ/Habsiad",
@@ -61,7 +70,7 @@ const jsonLd = JSON.stringify({
       },
       {
         "@type": "SoftwareApplication",
-        "position": 6,
+        "position": 7,
         "name": "Linea Web",
         "description": "AI-powered Linear issue resolution running entirely in the browser.",
         "url": "https://dotmavriq.github.io/linea-web/",
@@ -69,7 +78,7 @@ const jsonLd = JSON.stringify({
       },
       {
         "@type": "SoftwareApplication",
-        "position": 7,
+        "position": 8,
         "name": "Linian",
         "description": "Transforms Linear shortcodes into rich status-aware links inside Obsidian notes.",
         "url": "https://github.com/dotMavriQ/Linian",
@@ -77,7 +86,7 @@ const jsonLd = JSON.stringify({
       },
       {
         "@type": "SoftwareApplication",
-        "position": 8,
+        "position": 9,
         "name": "Slactac",
         "description": "Browser extension that normalizes Slack channel names for cleaner focus.",
         "url": "https://github.com/dotMavriQ/Slactac",
@@ -85,7 +94,7 @@ const jsonLd = JSON.stringify({
       },
       {
         "@type": "SoftwareApplication",
-        "position": 9,
+        "position": 10,
         "name": "Lyncs",
         "description": "Terminal music sync for DAPs with FAT32 filename sanitization and batch transfer.",
         "url": "https://github.com/dotMavriQ/lyncs",
@@ -149,6 +158,35 @@ const jsonLd = JSON.stringify({
         </div>
       </div>
     </article>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- LUZZLE — full-width primary                      -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="row-primary row-single">
+      <article class="primary-card neu-box">
+        <div class="primary-img-wrap luzzle-img">
+          <img class="img-contain" src="/img/portfolio/luzzle.png" alt="Luzzle" loading="lazy" width="512" height="512" />
+          <div class="grain" aria-hidden="true"></div>
+        </div>
+        <div class="primary-body">
+          <h2>Luzzle</h2>
+          <p class="card-desc">Self-hostable, team-aware life-task tracker. Habits, dailies, todos, a shared grocery list, and a left-sidebar activity feed that updates across teammates&rsquo; browsers. TanStack Start end-to-end, Postgres via Drizzle, Better Auth, shipped behind Caddy on an Oracle ARM&nbsp;box.</p>
+          <div class="card-tags">
+            <span class="tag">TypeScript</span>
+            <span class="tag">TanStack Start</span>
+            <span class="tag">Drizzle</span>
+            <span class="tag">Postgres</span>
+            <span class="tag">Better Auth</span>
+            <span class="tag">Tailwind v4</span>
+            <span class="tag">Docker</span>
+          </div>
+          <div class="card-links">
+            <a href="https://luzzle.dotmavriq.life" target="_blank" rel="noopener">Live&nbsp;→</a>
+            <a href="https://github.com/dotMavriQ/luzzle" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+          </div>
+        </div>
+      </article>
+    </div>
 
     <!-- ════════════════════════════════════════════════ -->
     <!-- PRIMARY — 2-col                                  -->
@@ -592,6 +630,13 @@ const jsonLd = JSON.stringify({
     gap: 1.5rem;
     margin-bottom: 1.5rem;
   }
+
+  .row-primary.row-single {
+    grid-template-columns: 1fr;
+  }
+
+  .primary-img-wrap.luzzle-img { background: #0b0b0b; }
+  .primary-card:hover .primary-img-wrap.luzzle-img { background: #161616; }
 
   .primary-card {
     background: var(--bg);
