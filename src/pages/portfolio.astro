@@ -165,6 +165,30 @@ const jsonLd = JSON.stringify({
     <div class="row-primary">
 
       <article class="primary-card neu-box">
+        <div class="primary-img-wrap luzzle-img">
+          <img class="img-contain" src="/img/portfolio/luzzle.png" alt="Luzzle" loading="lazy" width="512" height="512" />
+          <div class="grain" aria-hidden="true"></div>
+        </div>
+        <div class="primary-body">
+          <h2>Luzzle</h2>
+          <p class="card-desc">Life&rsquo;s a puzzle. Bring a team. Self-hostable life-task tracker: habits, dailies, todos, a shared grocery list, and a left-sidebar activity feed that updates across teammates&rsquo; browsers. TanStack Start end-to-end, Postgres via Drizzle, Better Auth, shipped behind Caddy on an Oracle ARM&nbsp;box.</p>
+          <div class="card-tags">
+            <span class="tag">TypeScript</span>
+            <span class="tag">TanStack Start</span>
+            <span class="tag">Drizzle</span>
+            <span class="tag">Postgres</span>
+            <span class="tag">Better Auth</span>
+            <span class="tag">Tailwind v4</span>
+            <span class="tag">Docker</span>
+          </div>
+          <div class="card-links">
+            <a href="https://luzzle.dotmavriq.life" target="_blank" rel="noopener">Live&nbsp;→</a>
+            <a href="https://github.com/dotMavriQ/luzzle" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="primary-card neu-box">
         <div class="primary-img-wrap stxtofr-split">
           <img class="stxtofr-baserow" src="/img/portfolio/stxtofr-baserow.png" alt="" loading="lazy" width="712" height="346" aria-hidden="true" />
           <img class="stxtofr-map" src="/img/portfolio/stxtofr-map.png" alt="STXTOFR — Swedish roadside facility ETL" loading="lazy" width="712" height="346" />
@@ -190,28 +214,6 @@ const jsonLd = JSON.stringify({
         </div>
       </article>
 
-      <article class="primary-card neu-box">
-        <div class="primary-img-wrap">
-          <img class="img-contain" src="/img/portfolio/ankode.png" alt="Ankode" loading="lazy" width="1024" height="1024" />
-          <div class="grain" aria-hidden="true"></div>
-        </div>
-        <div class="primary-body">
-          <h2>Ankode</h2>
-          <p class="card-desc">Spaced-repetition drill for software engineering interview prep. React SPA + Hono API with a shared Zod/grading/SRS package across both ends. Static frontend on IBM Cloud Object Storage, API on Cloud Code Engine with GitHub OAuth and HMAC-signed sessions.</p>
-          <div class="card-tags">
-            <span class="tag">React</span>
-            <span class="tag">Hono</span>
-            <span class="tag">TypeScript</span>
-            <span class="tag">Zod</span>
-            <span class="tag">IBM Cloud</span>
-          </div>
-          <div class="card-links">
-            <a href="https://ankode-web-dotmavriq-eu-de.s3-web.eu-de.cloud-object-storage.appdomain.cloud" target="_blank" rel="noopener">Live&nbsp;→</a>
-            <a href="https://github.com/dotMavriQ/Ankode" target="_blank" rel="noopener">GitHub&nbsp;→</a>
-          </div>
-        </div>
-      </article>
-
     </div>
 
     <!-- ════════════════════════════════════════════════ -->
@@ -220,21 +222,22 @@ const jsonLd = JSON.stringify({
     <div class="row-secondary">
 
       <article class="compact-card neu-box-sm">
-        <div class="compact-img-wrap luzzle-img">
-          <img class="img-contain" src="/img/portfolio/luzzle.png" alt="Luzzle" loading="lazy" width="512" height="512" />
+        <div class="compact-img-wrap">
+          <img class="img-contain" src="/img/portfolio/ankode.png" alt="Ankode" loading="lazy" width="1024" height="1024" />
           <div class="grain" aria-hidden="true"></div>
         </div>
         <div class="compact-body">
-          <h2>Luzzle</h2>
-          <p class="card-desc">Life&rsquo;s a puzzle. Bring a team. Self-hostable habits, dailies, todos, shared grocery list, and a live team activity feed. TanStack Start, Postgres, Better Auth.</p>
+          <h2>Ankode</h2>
+          <p class="card-desc">Spaced-repetition drill for software engineering interview prep. React SPA + Hono API, GitHub OAuth, HMAC-signed sessions, hosted on IBM Cloud.</p>
           <div class="card-tags">
+            <span class="tag">React</span>
+            <span class="tag">Hono</span>
             <span class="tag">TypeScript</span>
-            <span class="tag">TanStack Start</span>
-            <span class="tag">Postgres</span>
+            <span class="tag">IBM Cloud</span>
           </div>
           <div class="card-links">
-            <a href="https://luzzle.dotmavriq.life" target="_blank" rel="noopener">Live&nbsp;→</a>
-            <a href="https://github.com/dotMavriQ/luzzle" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+            <a href="https://ankode-web-dotmavriq-eu-de.s3-web.eu-de.cloud-object-storage.appdomain.cloud" target="_blank" rel="noopener">Live&nbsp;→</a>
+            <a href="https://github.com/dotMavriQ/Ankode" target="_blank" rel="noopener">GitHub&nbsp;→</a>
           </div>
         </div>
       </article>
@@ -622,8 +625,8 @@ const jsonLd = JSON.stringify({
     margin-bottom: 1.5rem;
   }
 
-  .compact-img-wrap.luzzle-img { background: #0b0b0b; transition: background 0.4s ease; }
-  .compact-card:hover .compact-img-wrap.luzzle-img { background: #161616; }
+  .primary-img-wrap.luzzle-img { background: #0b0b0b; transition: background 0.4s ease; }
+  .primary-card:hover .primary-img-wrap.luzzle-img { background: #161616; }
 
   .primary-card {
     background: var(--bg);
