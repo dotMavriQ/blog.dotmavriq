@@ -160,35 +160,6 @@ const jsonLd = JSON.stringify({
     </article>
 
     <!-- ════════════════════════════════════════════════ -->
-    <!-- LUZZLE — full-width primary                      -->
-    <!-- ════════════════════════════════════════════════ -->
-    <div class="row-primary row-single">
-      <article class="primary-card neu-box">
-        <div class="primary-img-wrap luzzle-img">
-          <img class="img-contain" src="/img/portfolio/luzzle.png" alt="Luzzle" loading="lazy" width="512" height="512" />
-          <div class="grain" aria-hidden="true"></div>
-        </div>
-        <div class="primary-body">
-          <h2>Luzzle</h2>
-          <p class="card-desc">Self-hostable, team-aware life-task tracker. Habits, dailies, todos, a shared grocery list, and a left-sidebar activity feed that updates across teammates&rsquo; browsers. TanStack Start end-to-end, Postgres via Drizzle, Better Auth, shipped behind Caddy on an Oracle ARM&nbsp;box.</p>
-          <div class="card-tags">
-            <span class="tag">TypeScript</span>
-            <span class="tag">TanStack Start</span>
-            <span class="tag">Drizzle</span>
-            <span class="tag">Postgres</span>
-            <span class="tag">Better Auth</span>
-            <span class="tag">Tailwind v4</span>
-            <span class="tag">Docker</span>
-          </div>
-          <div class="card-links">
-            <a href="https://luzzle.dotmavriq.life" target="_blank" rel="noopener">Live&nbsp;→</a>
-            <a href="https://github.com/dotMavriQ/luzzle" target="_blank" rel="noopener">GitHub&nbsp;→</a>
-          </div>
-        </div>
-      </article>
-    </div>
-
-    <!-- ════════════════════════════════════════════════ -->
     <!-- PRIMARY — 2-col                                  -->
     <!-- ════════════════════════════════════════════════ -->
     <div class="row-primary">
@@ -247,6 +218,26 @@ const jsonLd = JSON.stringify({
     <!-- SECONDARY — 3-col compact                        -->
     <!-- ════════════════════════════════════════════════ -->
     <div class="row-secondary">
+
+      <article class="compact-card neu-box-sm">
+        <div class="compact-img-wrap luzzle-img">
+          <img class="img-contain" src="/img/portfolio/luzzle.png" alt="Luzzle" loading="lazy" width="512" height="512" />
+          <div class="grain" aria-hidden="true"></div>
+        </div>
+        <div class="compact-body">
+          <h2>Luzzle</h2>
+          <p class="card-desc">Life&rsquo;s a puzzle. Bring a team. Self-hostable habits, dailies, todos, shared grocery list, and a live team activity feed. TanStack Start, Postgres, Better Auth.</p>
+          <div class="card-tags">
+            <span class="tag">TypeScript</span>
+            <span class="tag">TanStack Start</span>
+            <span class="tag">Postgres</span>
+          </div>
+          <div class="card-links">
+            <a href="https://luzzle.dotmavriq.life" target="_blank" rel="noopener">Live&nbsp;→</a>
+            <a href="https://github.com/dotMavriQ/luzzle" target="_blank" rel="noopener">GitHub&nbsp;→</a>
+          </div>
+        </div>
+      </article>
 
       <article class="compact-card neu-box-sm">
         <div class="compact-img-wrap">
@@ -631,12 +622,8 @@ const jsonLd = JSON.stringify({
     margin-bottom: 1.5rem;
   }
 
-  .row-primary.row-single {
-    grid-template-columns: 1fr;
-  }
-
-  .primary-img-wrap.luzzle-img { background: #0b0b0b; }
-  .primary-card:hover .primary-img-wrap.luzzle-img { background: #161616; }
+  .compact-img-wrap.luzzle-img { background: #0b0b0b; transition: background 0.4s ease; }
+  .compact-card:hover .compact-img-wrap.luzzle-img { background: #161616; }
 
   .primary-card {
     background: var(--bg);
