@@ -15,9 +15,9 @@ partsTotal: 3
   <p class="series-kicker">Part II of III</p>
   <p class="series-label">Series</p>
   <ol class="series-links">
-    <li><a href="/blog/ai-a-retrospective/">Part I: Genealogy</a></li>
+    <li><a href="/blog/ai-a-retrospective">Part I: Genealogy</a></li>
     <li><span aria-current="page">"AI" - A Retrospective, Part II: The Confidence Game</span></li>
-    <li><a href="/blog/ai-a-retrospective-part-3/">Part III: Where the Leverage Is Now</a></li>
+    <li><a href="/blog/ai-a-retrospective-part-3">Part III: Where the Leverage Is Now</a></li>
   </ol>
   <p class="standfirst">The models are useful enough that pretending otherwise is unserious. The marketing around them is dishonest enough that accepting it at face value is worse.</p>
   <p class="standfirst">The chatbot-conquers-mankind discourse is mostly a distraction from the real problems already in the room: inaccurate output sold as intelligence, unstable products sold as infrastructure, fear sold as inevitability, and a data bargain far more intimate than anything Web 2.0 managed to normalise.</p>
@@ -121,12 +121,12 @@ I use the tools because they work, but I do not grant the companies selling them
 
 Part III is where that leaves a working developer right now.
 
-Continue with [Part III: Where the Leverage Is Now](/blog/ai-a-retrospective-part-3/).
+Continue with [Part III: Where the Leverage Is Now](/blog/ai-a-retrospective-part-3).
 
 Series:
-1. [Part I: Genealogy](/blog/ai-a-retrospective/)
+1. [Part I: Genealogy](/blog/ai-a-retrospective)
 2. `"AI" - A Retrospective, Part II: The Confidence Game`
-3. [Part III: Where the Leverage Is Now](/blog/ai-a-retrospective-part-3/)
+3. [Part III: Where the Leverage Is Now](/blog/ai-a-retrospective-part-3)
 
 [^bender]: Bender, E. M., Gebru, T., McMillan-Major, A., Shmitchell, S. (2021). [On the Dangers of Stochastic Parrots: Can Language Models Be Too Big? 🦜](https://dl.acm.org/doi/10.1145/3442188.3445922). FAccT '21.
 [^gsm-symbolic]: Mirzadeh, I. et al. (2024). [GSM-Symbolic: Understanding the Limitations of Mathematical Reasoning in Large Language Models](https://arxiv.org/abs/2410.05229). ICLR 2025. Apple Machine Learning Research.

@@ -31,6 +31,9 @@ jobs:
       - name: Guard against local Git remotes
         run: npm run guard:remotes
 
+      - name: Guard against trailing-slash internal links
+        run: npm run guard:links
+
       - name: Install poppler-utils (pdfinfo + pdftotext for CV PDF tests)
         run: sudo apt-get update && sudo apt-get install -y poppler-utils
 

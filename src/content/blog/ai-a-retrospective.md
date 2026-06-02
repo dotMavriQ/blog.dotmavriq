@@ -16,8 +16,8 @@ partsTotal: 3
   <p class="series-label">Series</p>
   <ol class="series-links">
     <li><span aria-current="page">"AI" - A Retrospective, Part I: Genealogy</span></li>
-    <li><a href="/blog/ai-a-retrospective-part-2/">Part II: The Confidence Game</a></li>
-    <li><a href="/blog/ai-a-retrospective-part-3/">Part III: Where the Leverage Is Now</a></li>
+    <li><a href="/blog/ai-a-retrospective-part-2">Part II: The Confidence Game</a></li>
+    <li><a href="/blog/ai-a-retrospective-part-3">Part III: Where the Leverage Is Now</a></li>
   </ol>
   <p class="standfirst">The consumer LLM story is usually told as a straight capability curve. A bigger model lands, the benchmarks move, the internet yells for a week, and everyone pretends the previous release was obviously primitive.</p>
   <p class="standfirst">From inside actual work, the useful history is stranger and more practical than that. The models mattered, but interface, context windows, pricing, and the terminal all mattered alongside them. The moment a model became easy to fit into a real workflow usually mattered more than the launch-day benchmark table.</p>
@@ -51,7 +51,7 @@ GPT-4 landed in March 2023 with the first benchmark jump large enough to make th
 
 The public conversation changed almost overnight. The Future of Life Institute published its pause letter the same month, calling for a six-month stop on training systems more powerful than GPT-4.[^4] Microsoft Research published *Sparks of Artificial General Intelligence*. The tone moved from "interesting chatbot" to "this might reshape knowledge work."
 
-My test case was my Obsidian journaling setup, the one I later wrote up in [Structured Notes for Developers](/blog/structured-journaling-for-developers/). The plugin had a parser, an index, and a query layer that had grown together for long enough that responsibility boundaries were getting blurry.
+My test case was my Obsidian journaling setup, the one I later wrote up in [Structured Notes for Developers](/blog/structured-journaling-for-developers). The plugin had a parser, an index, and a query layer that had grown together for long enough that responsibility boundaries were getting blurry.
 
 I fed GPT-4 the files one by one, with enough orientation to explain how they interacted. I did not ask it to write a rewrite. I asked where responsibility was split incorrectly.
 
@@ -137,12 +137,12 @@ That is the genealogy as I experienced it. Less a clean march toward artificial 
 
 Part II is where the accounting starts.
 
-Continue with [Part II: The Confidence Game](/blog/ai-a-retrospective-part-2/).
+Continue with [Part II: The Confidence Game](/blog/ai-a-retrospective-part-2).
 
 Series:
 1. `"AI" - A Retrospective, Part I: Genealogy`
-2. [Part II: The Confidence Game](/blog/ai-a-retrospective-part-2/)
-3. [Part III: Where the Leverage Is Now](/blog/ai-a-retrospective-part-3/)
+2. [Part II: The Confidence Game](/blog/ai-a-retrospective-part-2)
+3. [Part III: Where the Leverage Is Now](/blog/ai-a-retrospective-part-3)
 
 [^1]: Hu, K. (2023). [ChatGPT sets record for fastest-growing user base](https://www.reuters.com/technology/chatgpt-sets-record-fastest-growing-user-base-analyst-note-2023-02-01/). Reuters.
 [^2]: Stack Overflow Meta. (2022). [Temporary policy: Generative AI (e.g., ChatGPT) is banned](https://meta.stackoverflow.com/questions/421831/).

@@ -15,8 +15,8 @@ partsTotal: 3
   <p class="series-kicker">Part III of III</p>
   <p class="series-label">Series</p>
   <ol class="series-links">
-    <li><a href="/blog/ai-a-retrospective/">Part I: Genealogy</a></li>
-    <li><a href="/blog/ai-a-retrospective-part-2/">Part II: The Confidence Game</a></li>
+    <li><a href="/blog/ai-a-retrospective">Part I: Genealogy</a></li>
+    <li><a href="/blog/ai-a-retrospective-part-2">Part II: The Confidence Game</a></li>
     <li><span aria-current="page">"AI" - A Retrospective, Part III: Where the Leverage Is Now</span></li>
   </ol>
   <p class="standfirst">Part II spent most of its energy on the political and structural critique. This part is what to actually do with the tools on Monday morning, given how fast the underlying landscape moved in April.</p>
@@ -122,8 +122,8 @@ The ones who have not stepped into the tooling yet are not morally wrong. They a
 That is where I land after the hype, the critique, and the daily use: use the tools where they pay rent, distrust the theatre around them, and keep doing the parts of the work that are still yours.
 
 Series:
-1. [Part I: Genealogy](/blog/ai-a-retrospective/)
-2. [Part II: The Confidence Game](/blog/ai-a-retrospective-part-2/)
+1. [Part I: Genealogy](/blog/ai-a-retrospective)
+2. [Part II: The Confidence Game](/blog/ai-a-retrospective-part-2)
 3. `"AI" - A Retrospective, Part III: Where the Leverage Is Now`
 
 [^deepseek-v4]: Willison, S. (2026). [DeepSeek V4 — almost on the frontier, a fraction of the price](https://simonwillison.net/2026/apr/24/deepseek-v4/).
