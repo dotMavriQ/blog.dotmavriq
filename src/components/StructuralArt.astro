@@ -454,7 +454,10 @@
       measure();
       if (rafId) cancelAnimationFrame(rafId);
       frame = 0;
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // Render a single static frame when the user prefers reduced motion OR
+      // on mobile (≤768px). The continuous rAF loop behind the /social feed is
+      // a major source of mobile jank/crashing, so phones get a still backdrop.
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || compactMq.matches) {
         // Static render with organic edges
         const buf: string[][] = [];
         for (let r = 0; r < H; r++) buf.push(buildRow(r, H, W));
@@ -478,9 +481,10 @@
     ro.observe(wrapper);
     if (obstacle) ro.observe(obstacle);
     prevStructuralRo = ro;
+    // Re-run init() (not just measure) on the 768px boundary so the rAF loop
+    // is started/stopped when crossing between mobile and desktop.
     const compactHandler = () => {
-      measure();
-      invalidateCache();
+      init();
     };
     compactMq.addEventListener("change", compactHandler);
     prevStructuralMq = compactMq;

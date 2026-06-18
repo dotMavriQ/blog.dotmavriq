@@ -19,7 +19,40 @@ import StructuralArt from "../components/StructuralArt.astro";
 
   <section class="social-page">
     <div id="social-feed" class="social-feed">
-      <div class="social-loading">loading…</div>
+      <!-- Skeleton placeholders paint instantly (no JS) so the feed has shape
+           before the first fetch resolves; cleared by feedEl.innerHTML on load. -->
+      <div class="social-feed-skeleton" aria-hidden="true">
+        <article class="social-post-skeleton">
+          <div class="sk-head">
+            <span class="sk sk-avatar"></span>
+            <span class="sk-meta"><span class="sk sk-name"></span><span class="sk sk-date"></span></span>
+          </div>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line sk-line--short"></span>
+          <span class="sk sk-media"></span>
+        </article>
+        <article class="social-post-skeleton">
+          <div class="sk-head">
+            <span class="sk sk-avatar"></span>
+            <span class="sk-meta"><span class="sk sk-name"></span><span class="sk sk-date"></span></span>
+          </div>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line sk-line--short"></span>
+        </article>
+        <article class="social-post-skeleton">
+          <div class="sk-head">
+            <span class="sk sk-avatar"></span>
+            <span class="sk-meta"><span class="sk sk-name"></span><span class="sk sk-date"></span></span>
+          </div>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line"></span>
+          <span class="sk sk-line sk-line--short"></span>
+        </article>
+      </div>
+      <div class="social-loading" role="status" aria-live="polite">
+        <span class="social-loading-label">loading</span><span class="social-loading-dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>
+      </div>
     </div>
     <div id="social-load-more" class="social-load-more" style="display:none;">
       <button class="social-load-more-btn" id="social-load-more-btn">// load more</button>
@@ -426,21 +459,97 @@ import StructuralArt from "../components/StructuralArt.astro";
       color: var(--muted);
       font-size: 0.9rem;
       font-family: var(--font-commit-mono), var(--font-mono);
-      /* Match the post-card backing so the placeholder reads above the
-         StructuralArt backdrop instead of drowning in it. */
-      background: color-mix(in srgb, var(--bg) 95%, transparent);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
+      /* Near-opaque backing so the placeholder reads above the StructuralArt
+         backdrop. Blur is desktop-only (see @media min-width:769px) — on mobile
+         stacking backdrop-filter over the animated backdrop is the crash cause. */
+      background: color-mix(in srgb, var(--bg) 98%, transparent);
       border-bottom: 1px solid var(--cloud);
+    }
+
+    /* Inviting animated loader: "loading" with a sequenced ellipsis. */
+    .social-loading-label { letter-spacing: 0.04em; }
+    .social-loading-dots span {
+      display: inline-block;
+      opacity: 0.2;
+      animation: social-dot 1.4s infinite both;
+    }
+    .social-loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .social-loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes social-dot {
+      0%, 60%, 100% { opacity: 0.2; transform: translateY(0); }
+      30%           { opacity: 1;   transform: translateY(-2px); }
+    }
+
+    /* Manual retry shown only after auto-retries are exhausted, so a visitor
+       is never dead-ended on "could not load posts." */
+    :global(.social-retry) {
+      display: inline-block;
+      margin-top: 0.75rem;
+      background: var(--bg);
+      border: 1px solid var(--cloud);
+      color: var(--muted);
+      font-family: var(--font-commit-mono), var(--font-mono);
+      font-size: 0.85rem;
+      padding: 0.4rem 1.2rem;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      text-transform: lowercase;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    :global(.social-retry:hover) {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* ── Skeleton placeholders ── */
+    .social-feed-skeleton:empty { display: none; }
+    .social-post-skeleton {
+      border-bottom: 1px solid var(--cloud);
+      padding: 1.5rem 1.25rem;
+      background: color-mix(in srgb, var(--bg) 98%, transparent);
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .social-post-skeleton:first-child { padding-top: 1.25rem; }
+    .sk-head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.4rem; }
+    .sk-meta { display: flex; flex-direction: column; gap: 0.4rem; }
+    .sk {
+      display: block;
+      background: var(--cloud);
+      border-radius: 4px;
+    }
+    .sk-avatar { width: 36px; height: 36px; flex-shrink: 0; }
+    .sk-name { width: 7rem; height: 0.7rem; }
+    .sk-date { width: 4.5rem; height: 0.6rem; }
+    .sk-line { width: 100%; height: 0.7rem; }
+    .sk-line--short { width: 55%; }
+    .sk-media { width: 100%; height: 180px; margin-top: 0.4rem; }
+
+    /* Shimmer sweep — motion only when the user allows it. */
+    @media (prefers-reduced-motion: no-preference) {
+      .sk {
+        background: linear-gradient(
+          90deg,
+          var(--cloud) 0%,
+          color-mix(in srgb, var(--cloud) 55%, var(--bg)) 50%,
+          var(--cloud) 100%
+        );
+        background-size: 200% 100%;
+        animation: social-shimmer 1.4s ease-in-out infinite;
+      }
+      @keyframes social-shimmer {
+        0%   { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
     }
 
     /* ── Post ── */
     :global(.social-post) {
       border-bottom: 1px solid var(--cloud);
       padding: 1.5rem 1.25rem;
-      background: color-mix(in srgb, var(--bg) 95%, transparent);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
+      /* Near-opaque on mobile; frosted-glass blur is layered on at ≥769px only. */
+      background: color-mix(in srgb, var(--bg) 98%, transparent);
     }
     :global(.social-post:first-child) { padding-top: 1.25rem; }
     :global(.social-post:last-child) { border-bottom: none; }
@@ -591,9 +700,22 @@ import StructuralArt from "../components/StructuralArt.astro";
     .social-load-more {
       padding: 1.5rem 1.25rem;
       text-align: center;
-      background: color-mix(in srgb, var(--bg) 95%, transparent);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
+      background: color-mix(in srgb, var(--bg) 98%, transparent);
+    }
+
+    /* ── Desktop-only frosted glass ──
+       backdrop-filter over the animated ASCII backdrop is fine on desktop GPUs
+       but is the cause of mobile jank/crashing, so it is gated to ≥769px. */
+    @media (min-width: 769px) {
+      :global(.social-post),
+      .social-loading,
+      .social-empty,
+      .social-post-skeleton,
+      .social-load-more {
+        background: color-mix(in srgb, var(--bg) 95%, transparent);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+      }
     }
     .social-load-more-btn {
       background: var(--bg);

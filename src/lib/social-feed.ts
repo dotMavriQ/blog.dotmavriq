@@ -12,6 +12,10 @@ interface MediaAttachment {
   url: string;
   preview_url?: string;
   description?: string;
+  meta?: {
+    small?: { width?: number; height?: number };
+    original?: { width?: number; height?: number };
+  };
 }
 
 interface Post {
@@ -81,6 +85,20 @@ export function initSocialFeed() {
   let postCount = 0;
   const galleryImages: GalleryItem[] = [];
 
+  // Initial-load resilience. Mobile browsers (seen on Vivaldi mobile) drop or
+  // stall the first request often enough that a single failure must not be what
+  // the visitor sees — so the first page makes several serious attempts before
+  // surfacing an error, and even then offers a manual retry.
+  const MAX_ATTEMPTS = 3;
+  const RETRY_BASE_MS = 700;
+  const FETCH_TIMEOUT_MS = 9000;
+
+  const loadingHtml =
+    '<div class="social-loading" role="status" aria-live="polite">' +
+    '<span class="social-loading-label">loading</span>' +
+    '<span class="social-loading-dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>' +
+    "</div>";
+
   function formatDate(iso: string): string {
     const d = new Date(iso);
     const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
@@ -120,7 +138,7 @@ export function initSocialFeed() {
         const descAttr = desc ? escAttr(desc) : "attached image";
         if (m.type === "video" || m.type === "gifv") {
           return wrapCW(
-            `<video src="${escAttr(m.url)}" controls muted playsinline${desc ? ` title="${escAttr(desc)}"` : ""}></video>`
+            `<video src="${escAttr(m.url)}" controls muted playsinline preload="none"${desc ? ` title="${escAttr(desc)}"` : ""}></video>`
           );
         }
         const gIdx = galleryImages.length;
@@ -132,8 +150,12 @@ export function initSocialFeed() {
           sensitive: isSensitive,
           spoiler,
         });
+        // Emit intrinsic dimensions when the instance provides them so the
+        // browser reserves space and avoids layout shift as images stream in.
+        const dim = m.meta?.small || m.meta?.original;
+        const dimAttr = dim?.width && dim?.height ? ` width="${dim.width}" height="${dim.height}"` : "";
         return wrapCW(
-          `<img src="${escAttr(m.preview_url || m.url)}" alt="${descAttr}" loading="lazy" data-gallery="${gIdx}">`
+          `<img src="${escAttr(m.preview_url || m.url)}" alt="${descAttr}" loading="lazy" decoding="async"${dimAttr} data-gallery="${gIdx}">`
         );
       }).join("");
       mediaHtml = `<div class="social-post-media ${gridClass}">${items}</div>`;
@@ -155,7 +177,19 @@ export function initSocialFeed() {
     return article;
   }
 
-  function loadPosts(): Promise<void> {
+  function renderError() {
+    feedEl!.innerHTML =
+      '<div class="social-empty">could not load posts. ' +
+      '<button type="button" class="social-retry" id="social-retry">// try again</button>' +
+      "</div>";
+    const retry = document.getElementById("social-retry");
+    retry?.addEventListener("click", () => {
+      feedEl!.innerHTML = loadingHtml;
+      loadPosts(0);
+    }, { signal });
+  }
+
+  function loadPosts(attempt = 0): Promise<void> {
     if (loading) return Promise.resolve();
     loading = true;
     if (loadMoreBtn) loadMoreBtn.disabled = true;
@@ -163,12 +197,25 @@ export function initSocialFeed() {
     let url = `${API}?local=true&limit=${LIMIT}`;
     if (maxId) url += `&max_id=${maxId}`;
 
-    return fetch(url, { signal })
+    // Per-attempt timeout: a stalled mobile request would otherwise hang on the
+    // skeletons forever. Abort via a dedicated controller chained to the
+    // page-level signal so teardown still cancels in-flight work.
+    const attemptCtl = new AbortController();
+    const onParentAbort = () => attemptCtl.abort();
+    signal.addEventListener("abort", onParentAbort, { once: true });
+    const timer = window.setTimeout(() => attemptCtl.abort(), FETCH_TIMEOUT_MS);
+    const cleanup = () => {
+      window.clearTimeout(timer);
+      signal.removeEventListener("abort", onParentAbort);
+    };
+
+    return fetch(url, { signal: attemptCtl.signal })
       .then((res) => {
         if (!res.ok) throw new Error(`API error ${res.status}`);
         return res.json() as Promise<Post[]>;
       })
       .then((posts) => {
+        cleanup();
         const filtered = posts.filter(isVisiblePost);
 
         if (posts.length === 0) {
@@ -197,17 +244,52 @@ export function initSocialFeed() {
         if (loadMoreBtn) loadMoreBtn.disabled = false;
       })
       .catch((err) => {
-        if ((err as Error).name === "AbortError") return;
-        if (!maxId) feedEl!.innerHTML = '<div class="social-empty">could not load posts.</div>';
+        cleanup();
+        // Benign: the page-level controller superseded this load (navigation or
+        // re-init). Stay silent — a fresh load is already taking over.
+        if (signal.aborted) return;
+
         // eslint-disable-next-line no-console
         console.error(err);
         loading = false;
+
+        // First page only: make another serious attempt before showing an error.
+        // Covers genuine failures AND timeout-aborts (a hung request).
+        const isInitial = !maxId;
+        if (isInitial && attempt < MAX_ATTEMPTS - 1) {
+          window.setTimeout(() => {
+            if (!signal.aborted) loadPosts(attempt + 1);
+          }, RETRY_BASE_MS * (attempt + 1));
+          return;
+        }
+
+        if (isInitial) renderError();
         if (loadMoreBtn) loadMoreBtn.disabled = false;
       });
   }
 
   if (loadMoreBtn) {
-    loadMoreBtn.addEventListener("click", loadPosts, { signal });
+    loadMoreBtn.addEventListener("click", () => loadPosts(), { signal });
+  }
+
+  // Auto-load the next page as the load-more bar nears the viewport. This is
+  // the primary "load more" path on mobile (the button is the fallback); the
+  // generous rootMargin pre-fetches before the user hits the bottom so the
+  // feed feels continuous. loadPosts() self-guards against re-entrancy via the
+  // `loading` flag, and only runs while the bar is actually visible.
+  if (loadMoreEl && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting && !loading && loadMoreEl.style.display !== "none") {
+            loadPosts();
+          }
+        }
+      },
+      { rootMargin: "600px 0px" }
+    );
+    io.observe(loadMoreEl);
+    signal.addEventListener("abort", () => io.disconnect());
   }
 
   loadPosts();
