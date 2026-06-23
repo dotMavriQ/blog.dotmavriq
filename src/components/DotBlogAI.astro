@@ -148,7 +148,7 @@ const endpoint = "https://dotblogai.dotmavriq-6d3.workers.dev";
       return message;
     };
 
-    launch.addEventListener("click", () => setOpen(panel.hidden), { signal });
+    launch.addEventListener("click", () => setOpen(Boolean(panel.hidden)), { signal });
     close.addEventListener("click", () => setOpen(false), { signal });
 
     const olivThemeToggle = document.getElementById("oliv-theme-toggle") as HTMLButtonElement | null;
