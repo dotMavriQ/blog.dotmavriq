@@ -68,7 +68,7 @@ const jsonLd = JSON.stringify({
         </p>
         <p class="about-hero__meta">Lisbon Area &middot; EU&nbsp;Time&nbsp;Zones &middot; Open to&nbsp;opportunities</p>
       </div>
-      <div class="about-hero__photo">
+      <div class="about-hero__photo neu-box">
         <img
           src="/cool.webp"
           alt="Jonatan looking towards ten o'clock"
@@ -385,10 +385,9 @@ const jsonLd = JSON.stringify({
 
   /* ── Hero Photo, neubrutalist frame ── */
   .about-hero__photo {
+    /* frame + offset shadow provided by .neu-box; just set the offset */
+    --neu-offset: 6px;
     width: clamp(180px, 22vw, 280px);
-    border: 3px solid var(--fg);
-    box-shadow: 6px 6px 0 var(--fg);
-    background: var(--bg);
     padding: 6px;
     transform: rotate(1.5deg);
     transition: transform 0.2s ease, box-shadow 0.2s ease;

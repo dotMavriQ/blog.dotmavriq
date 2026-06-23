@@ -240,18 +240,35 @@ a:hover {
 
 /* ── Neubrutalist Utilities ── */
 
-/* Base neu-box: thick border + offset shadow, no border-radius */
+/* Neubrutalist surface helpers.
+   The offset shadow and border are driven by per-element custom properties so a
+   component can keep its own size/colour while still sharing one definition:
+     --neu-offset : shadow offset (x = y), e.g. `style="--neu-offset: 8px"`
+     --neu-color  : shadow colour, defaults to --fg (e.g. --muted, --bg)
+     --neu-border : border width, defaults to 3px
+   Defaults reproduce the original hard-coded values, so existing markup is
+   visually unchanged. These are local helper vars, not theme tokens — the
+   6 theme variables in :root are still the only palette knobs. */
 .neu-box {
-  border: 3px solid var(--fg);
-  box-shadow: 4px 4px 0 var(--fg);
+  border: var(--neu-border, 3px) solid var(--fg);
+  box-shadow: var(--neu-offset, 4px) var(--neu-offset, 4px) 0 var(--neu-color, var(--fg));
   background: var(--bg);
 }
 
 /* Smaller variant for secondary/compact cards */
 .neu-box-sm {
-  border: 2px solid var(--fg);
-  box-shadow: 3px 3px 0 var(--fg);
+  --neu-border: 2px;
+  --neu-offset: 3px;
+  border: var(--neu-border) solid var(--fg);
+  box-shadow: var(--neu-offset) var(--neu-offset) 0 var(--neu-color, var(--fg));
   background: var(--bg);
+}
+
+/* Resting offset shadow only (no border/background). Override size/colour with
+   --neu-offset / --neu-color. For the bare `box-shadow: Npx Npx 0 var(--…)`
+   pattern that previously got copy-pasted into scoped styles. */
+.neu-shadow-static {
+  box-shadow: var(--neu-offset, 4px) var(--neu-offset, 4px) 0 var(--neu-color, var(--fg));
 }
 
 /* Base transition for any neu element that moves on hover */
