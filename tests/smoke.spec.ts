@@ -298,6 +298,17 @@ test.describe('Feeds & SEO', () => {
     expect(content).toContain('sitemap');
   });
 
+  test('sitemap emits <lastmod> for every blog post URL', async () => {
+    const fs = await import('fs');
+    const path = await import('path');
+    const xml = fs.readFileSync(path.resolve('dist', 'sitemap-0.xml'), 'utf-8');
+    const blogUrls = [...xml.matchAll(/<loc>([^<]*\/blog\/[a-z0-9-]+)<\/loc>(<lastmod>[^<]*<\/lastmod>)?/g)];
+    expect(blogUrls.length).toBeGreaterThan(0);
+    for (const [, loc, lastmod] of blogUrls) {
+      expect(lastmod, `missing <lastmod> for ${loc}`).toBeTruthy();
+    }
+  });
+
   test('search-index.json returns valid JSON array', async ({ page }) => {
     const res = await page.goto('/search-index.json');
     expect(res?.status()).toBe(200);
