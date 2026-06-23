@@ -2,7 +2,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 
 export type BlogPost = CollectionEntry<"blog">;
 
-export const BLOG_PUBLICATION_ENABLED =
+const BLOG_PUBLICATION_ENABLED =
   import.meta.env.DEV || process.env.DOTBLOG_PUBLISH_POSTS === "1";
 
 export const BLOG_CURATION_COPY = {

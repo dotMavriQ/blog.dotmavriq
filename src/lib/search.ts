@@ -12,7 +12,7 @@ export interface PostEntry {
 }
 
 /** Levenshtein distance, bails early past `limit` */
-export function editDist(a: string, b: string, limit: number): number {
+function editDist(a: string, b: string, limit: number): number {
   if (Math.abs(a.length - b.length) > limit) return limit + 1;
   const prev = Array.from({ length: b.length + 1 }, (_, i) => i);
   const curr = new Array<number>(b.length + 1);
@@ -29,7 +29,7 @@ export function editDist(a: string, b: string, limit: number): number {
 }
 
 /** Max fuzzy edits per query-word length */
-export function maxEdits(len: number): number {
+function maxEdits(len: number): number {
   if (len <= 4) return 0;
   if (len <= 7) return 1;
   if (len <= 11) return 2;
@@ -37,7 +37,7 @@ export function maxEdits(len: number): number {
 }
 
 /** Score a query word against all words in a text field */
-export function scoreWord(qw: string, textWords: string[]): number {
+function scoreWord(qw: string, textWords: string[]): number {
   let best = 0;
   const me = maxEdits(qw.length);
   for (const tw of textWords) {
@@ -52,7 +52,7 @@ export function scoreWord(qw: string, textWords: string[]): number {
 }
 
 /** Score all query words against a field */
-export function scoreField(qWords: string[], fieldWords: string[]): number {
+function scoreField(qWords: string[], fieldWords: string[]): number {
   if (!fieldWords.length) return 0;
   let total = 0;
   for (const qw of qWords) {
@@ -64,7 +64,7 @@ export function scoreField(qWords: string[], fieldWords: string[]): number {
 }
 
 /** Tokenize text into lowercase words */
-export function tokenize(text: string): string[] {
+function tokenize(text: string): string[] {
   return text.toLowerCase().split(/[\s,.:;!?'"_\-/\\()\[\]{}|]+/).filter(w => w.length > 0);
 }
 

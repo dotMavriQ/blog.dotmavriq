@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -11,7 +13,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -34,6 +36,12 @@ jobs:
       - name: Guard against trailing-slash internal links
         run: npm run guard:links
 
+      - name: Guard structural invariants (image budgets, no framework/icon deps, <pre> aria)
+        run: npm run guard:structure
+
+      - name: Guard against unused deps / exports / files (knip)
+        run: npm run guard:deps
+
       - name: Install poppler-utils (pdfinfo + pdftotext for CV PDF tests)
         run: sudo apt-get update && sudo apt-get install -y poppler-utils
 
@@ -48,6 +56,9 @@ jobs:
       - name: Guard against broken internal links (built site)
         run: npm run guard:builtlinks
 
+      - name: Guard JS bundle-size budget (no runtime creep)
+        run: npm run guard:bundle
+
       - name: Install Playwright (chromium only — fast deploy gate)
         run: npx playwright install --with-deps chromium
 
@@ -59,9 +70,10 @@ jobs:
         with:
           path: dist
 
-  # --- deploy: gated by verify ---
+  # --- deploy: gated by verify; never runs on pull_request (verify-only there) ---
   deploy:
     needs: verify
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

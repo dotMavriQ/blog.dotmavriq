@@ -1,4 +1,4 @@
-export const THEME_STORAGE_KEY = "blog-theme";
+const THEME_STORAGE_KEY = "blog-theme";
 
 export type Theme = "light" | "dark";
 
