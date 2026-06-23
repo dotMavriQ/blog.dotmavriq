@@ -27,18 +27,16 @@
     return intervals;
   }
 
-  let prevStructuralRaf: number | null = null;
-  let prevStructuralRo: ResizeObserver | null = null;
-  let prevStructuralMq: MediaQueryList | null = null;
-  let prevStructuralMqHandler: (() => void) | null = null;
+  // Full teardown of the previous instance. ClientRouter re-runs init on every
+  // navigation, so this must actually stop the live loop and observers —
+  // cancelling a snapshotted rafId did not (the loop reassigns it each frame),
+  // which orphaned a forever-running loop per navigation.
+  let prevStructuralCleanup: (() => void) | null = null;
 
   function initStructuralArt() {
-    if (prevStructuralRaf) cancelAnimationFrame(prevStructuralRaf);
-    if (prevStructuralRo) prevStructuralRo.disconnect();
-    if (prevStructuralMq && prevStructuralMqHandler) {
-      prevStructuralMq.removeEventListener("change", prevStructuralMqHandler);
-      prevStructuralMq = null;
-      prevStructuralMqHandler = null;
+    if (prevStructuralCleanup) {
+      prevStructuralCleanup();
+      prevStructuralCleanup = null;
     }
 
     const sceneEl = document.getElementById("ascii-scene");
@@ -162,6 +160,12 @@
     let frame = 0;
     let rafId = 0;
     let charW = 0;
+    // Animation gating: the rAF loop only runs in animated mode (desktop, motion
+    // allowed) AND while the backdrop is actually on screen. Scrolling it fully
+    // out of view pauses rendering so it doesn't burn CPU/battery off-screen.
+    let animatedMode = false;
+    let onscreen = true;
+    let disposed = false;
     let charH = 0;
 
     // ── Per-resize caches ───────────────────────────────────────────
@@ -447,18 +451,35 @@
 
       scene.textContent = buffer.map(row => row.join("")).join("\n");
       frame++;
-      rafId = requestAnimationFrame(render);
+      // Keep looping only while alive and on screen; otherwise idle until the
+      // IntersectionObserver resumes us. Avoids a runaway off-screen loop.
+      rafId = (!disposed && onscreen) ? requestAnimationFrame(render) : 0;
+    }
+
+    function startLoop() {
+      if (animatedMode && onscreen && !disposed && !rafId) {
+        rafId = requestAnimationFrame(render);
+      }
+    }
+
+    function stopLoop() {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
     }
 
     function init() {
       measure();
-      if (rafId) cancelAnimationFrame(rafId);
+      stopLoop();
       frame = 0;
       // Render a single static frame when the user prefers reduced motion OR
       // on mobile (≤768px). The continuous rAF loop behind the /social feed is
       // a major source of mobile jank/crashing, so phones get a still backdrop.
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || compactMq.matches) {
         // Static render with organic edges
+        animatedMode = false;
+        stopLoop();
         const buf: string[][] = [];
         for (let r = 0; r < H; r++) buf.push(buildRow(r, H, W));
         if (!compactMq.matches) {
@@ -467,7 +488,8 @@
         }
         scene.textContent = buf.map(row => row.join("")).join("\n");
       } else {
-        rafId = requestAnimationFrame(render);
+        animatedMode = true;
+        startLoop();
       }
     }
 
@@ -480,18 +502,32 @@
     });
     ro.observe(wrapper);
     if (obstacle) ro.observe(obstacle);
-    prevStructuralRo = ro;
+
+    // Pause the animation loop whenever the backdrop is fully scrolled out of
+    // view, and resume on re-entry. Near-zero CPU when off-screen; only matters
+    // in animated mode (mobile/reduced-motion are static and never start it).
+    const io = new IntersectionObserver((entries) => {
+      onscreen = entries.some((e) => e.isIntersecting);
+      if (onscreen) startLoop();
+      else stopLoop();
+    });
+    io.observe(wrapper);
     // Re-run init() (not just measure) on the 768px boundary so the rAF loop
     // is started/stopped when crossing between mobile and desktop.
     const compactHandler = () => {
       init();
     };
     compactMq.addEventListener("change", compactHandler);
-    prevStructuralMq = compactMq;
-    prevStructuralMqHandler = compactHandler;
+
+    prevStructuralCleanup = () => {
+      disposed = true;
+      stopLoop();
+      ro.disconnect();
+      io.disconnect();
+      compactMq.removeEventListener("change", compactHandler);
+    };
 
     init();
-    prevStructuralRaf = rafId;
     }
   }
 
