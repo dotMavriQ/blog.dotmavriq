@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Operating contract & backlog
+    url: https://github.com/dotMavriQ/blog.dotmavriq/blob/main/docs/PRODUCTION_READINESS.md
+    about: Read the production-readiness manual (locked decisions, CI gates, invariants) before filing structural work.
