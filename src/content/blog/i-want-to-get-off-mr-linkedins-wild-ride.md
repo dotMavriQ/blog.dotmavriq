@@ -81,7 +81,7 @@ The hardest part of the loop is the silence afterwards. You send the application
 
 ## Why nothing else has saved us
 
-It is not as though LinkedIn lacks competitors. [Indeed](https://en.wikipedia.org/wiki/Indeed) exists, and acquired [Glassdoor](https://en.wikipedia.org/wiki/Glassdoor) in 2018.[^indeed] [StepStone](https://en.wikipedia.org/wiki/StepStone) holds meaningful share in Europe. [Welcome to the Jungle](https://www.welcometothejungle.com/) and [Otta](https://otta.com/) have built thoughtful UIs for the kinds of roles software engineers actually want. [XING](https://en.wikipedia.org/wiki/XING) is still the dominant network in the German-speaking world. None of them have meaningfully threatened LinkedIn.
+It is not as though LinkedIn lacks competitors. [Indeed](https://en.wikipedia.org/wiki/Indeed) exists, and acquired [Glassdoor](https://en.wikipedia.org/wiki/Glassdoor) in 2018.[^indeed] StepStone holds meaningful share in Europe. [Welcome to the Jungle](https://www.welcometothejungle.com/) and [Otta](https://otta.com/) have built thoughtful UIs for the kinds of roles software engineers actually want. [XING](https://en.wikipedia.org/wiki/XING) is still the dominant network in the German-speaking world. None of them have meaningfully threatened LinkedIn.
 
 What LinkedIn has, and what nobody else has cloned at scale, is the social graph. Even when its product is worse, the directory underneath is the part everyone needs and nobody can replicate without spending another decade convincing people to upload their CVs. That is the lock-in. The obvious upgrade has to be either an entirely new graph nobody has the patience to build, or a federated alternative that does not need a single graph at all.
 
