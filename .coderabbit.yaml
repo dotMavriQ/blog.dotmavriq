@@ -1,0 +1,47 @@
+# https://docs.coderabbit.ai/getting-started/configure-coderabbit
+# Tunes the public CodeRabbit GitHub App: thorough on code, silent on prose and
+# generated files, and aware of this project's structural invariants.
+language: en-US
+early_access: false
+
+reviews:
+  profile: assertive
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - main
+
+  # Don't spend review on hand-written prose or generated/lock files.
+  path_filters:
+    - "!package-lock.json"
+    - "!src/content/blog/**"
+    - "!public/fonts/**"
+    - "!**/*.woff2"
+
+  path_instructions:
+    - path: "src/**/*.astro"
+      instructions: >-
+        Enforce the structural invariants in CLAUDE.md and docs/SITE_NOTES.md:
+        no SVG icon libraries or icon packs, no client-side framework runtime,
+        decorative ASCII <pre> elements must be aria-hidden, and design tokens
+        are limited to the CSS variables in src/styles/global.css. Flag any
+        client-side script that would ship a framework runtime or pull in an
+        icon library. Confirm animated components honor prefers-reduced-motion.
+    - path: "scripts/**/*.mjs"
+      instructions: >-
+        These are deterministic CI guard scripts. Prioritize correctness of exit
+        codes and the risk of false positives or false negatives over style.
+    - path: ".github/workflows/**"
+      instructions: >-
+        Verify the verify -> deploy -> healthcheck gating holds and that deploy
+        never runs on pull_request events.
+
+chat:
+  auto_reply: true
