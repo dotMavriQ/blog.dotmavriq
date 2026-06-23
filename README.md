@@ -1,5 +1,7 @@
 # blog.dotmavriq.life
 
+[![Deploy to GitHub Pages](https://github.com/dotMavriQ/blog.dotmavriq/actions/workflows/deploy.yml/badge.svg)](https://github.com/dotMavriQ/blog.dotmavriq/actions/workflows/deploy.yml)
+
 This is the source for `blog.dotmavriq.life`: my CV, portfolio, and devblog in
 one place. It runs on Astro, deploys to GitHub Pages, and looks the way it does
 on purpose.
@@ -84,4 +86,5 @@ Jonatan Jansson, going by dotMavriQ in most places online. Developer, systems th
 
 ## License
 
-The code is here for reference and learning. If something in the implementation helps you build your own thing, take it. If you want to fork the whole aesthetic — make it yours first, then ship it.
+The code is released under the [MIT License](LICENSE) — use it, modify it, ship
+it. If you want to fork the whole aesthetic, make it yours first.
