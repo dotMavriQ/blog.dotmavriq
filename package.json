@@ -13,6 +13,10 @@
     "guard:remotes": "node scripts/assert-no-local-remotes.mjs",
     "guard:links": "node scripts/assert-no-trailing-slash-links.mjs",
     "guard:builtlinks": "node scripts/assert-no-broken-links.mjs",
+    "guard:structure": "node scripts/assert-structural-invariants.mjs",
+    "guard:bundle": "node scripts/assert-bundle-budget.mjs",
+    "guard:deps": "knip",
+    "verify:local": "npm run guard:remotes && npm run guard:links && npm run guard:structure && npm run guard:deps && npx astro check && npm run build && npm run guard:builtlinks && npm run guard:bundle",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "archive": "node scripts/archive-links.mjs",
@@ -40,7 +44,10 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
-    "playwright": "^1.59.1"
+    "knip": "^6.18.0",
+    "playwright": "^1.59.1",
+    "sharp": "^0.35.2",
+    "unist-util-visit": "^5.1.0"
   },
   "overrides": {
     "vite": "^7"

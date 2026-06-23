@@ -1,0 +1,14 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignore": [
+    "src/lib/name-animation.ts"
+  ],
+  "ignoreDependencies": [
+    "@astrojs/check",
+    "@fontsource-variable/recursive"
+  ],
+  "ignoreBinaries": [
+    "pdfinfo",
+    "pdftotext"
+  ]
+}
