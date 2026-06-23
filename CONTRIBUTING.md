@@ -50,6 +50,19 @@ reads the same from issue to branch to PR to log.
 
 Other in-use labels: `ci`, `refactor`, `documentation`, `dependencies` (Dependabot).
 
+## Outbound-link checking (weekly, not per-push)
+
+Dead-link rot is time-driven, not commit-driven, and the check hits the network
+for every outbound URL (flaky on transient failures). So `archive:check` runs on
+a **weekly schedule** (`.github/workflows/archive-check.yml`, Mondays), not in
+the per-push pipeline. Only genuine **404/410** rot fails the run; bot-blocks
+(403/429), method errors, and timeouts are reported but ignored. On failure the
+workflow opens — or updates — a single tracking issue with the dead-link list.
+
+Run it yourself anytime with `npm run archive:check` (read-only) or trigger the
+workflow manually from the Actions tab. `npm run archive` (no flag) additionally
+saves new Wayback snapshots and is a local/manual op.
+
 ## Pre-push checklist
 
 Mirror the blocking CI gates locally before opening a PR:

@@ -1,0 +1,74 @@
+name: Weekly link check
+
+# Outbound-link rot is time-driven, not commit-driven, and the check is
+# network-dependent (flaky on transient failures). So it runs on a weekly
+# schedule instead of per-push. Only genuine 404/410 rot fails the run; bot
+# blocks (403/429), method errors, and timeouts are reported but ignored
+# (see scripts/archive-links.mjs). On failure it opens — or updates — a single
+# tracking issue with the dead-link list.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: archive-check
+  cancel-in-progress: false
+
+jobs:
+  archive-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Check outbound links
+        id: check
+        run: |
+          set +e
+          npm run archive:check 2>&1 | tee archive-output.txt
+          echo "code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+          set -e
+
+      - name: Open or update dead-link issue
+        if: steps.check.outputs.code != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TITLE="🔗 Dead links detected by the weekly sweep"
+
+          # Extract the fenced dead-link list emitted by the script.
+          sed -n '/<<<DEAD_LINKS_START>>>/,/<<<DEAD_LINKS_END>>>/p' archive-output.txt \
+            | sed '1d;$d' > dead-links.txt
+
+          {
+            echo "The weekly link check found outbound links returning **404/410** (genuinely gone — bot-blocks and timeouts are excluded)."
+            echo
+            echo "_Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} · $(date -u +%Y-%m-%d)_"
+            echo
+            cat dead-links.txt
+            echo
+            echo "These live in post bodies — fix or remove per the content fast-path in CONTRIBUTING.md. Close this issue once resolved; the next sweep reopens it if any remain."
+          } > issue-body.md
+
+          EXISTING=$(gh issue list --state open --search "in:title $TITLE" --json number,title \
+            --jq ".[] | select(.title == \"$TITLE\") | .number" | head -n1)
+
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body-file issue-body.md
+            echo "Commented on existing issue #$EXISTING."
+          else
+            gh issue create --title "$TITLE" --body-file issue-body.md --label content --label chore
+          fi
