@@ -39,8 +39,6 @@ export const AUTHOR = {
   ],
 } as const;
 
-export type Author = typeof AUTHOR;
-
 /** Site-level constants paired with the author for convenience. */
 export const SITE = {
   url: AUTHOR.url,
