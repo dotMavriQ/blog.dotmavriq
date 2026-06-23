@@ -1,15 +1,64 @@
+import { readFileSync, readdirSync } from 'node:fs';
 import { defineConfig, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import remarkArchiveLinks from './src/plugins/remark-archive-links.mjs';
 import rehypeCitationScope from './src/plugins/rehype-citation-scope.mjs';
 
+// Map each /blog/<slug> path to its most recent frontmatter date
+// (updatedDate if present, else pubDate) so the sitemap can emit an accurate
+// <lastmod>. Read at config time with a minimal frontmatter parse — avoids a
+// dependency just to pull two date fields.
+function blogLastmodByPath() {
+  const dir = './src/content/blog';
+  const map = new Map();
+  let files = [];
+  try {
+    files = readdirSync(dir).filter((f) => /\.(md|mdx)$/.test(f));
+  } catch {
+    return map; // bodies may be gitignored during the curation window
+  }
+  for (const file of files) {
+    const fm = readFileSync(`${dir}/${file}`, 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    if (!fm) continue;
+    const block = fm[1];
+    const slugMatch = block.match(/^slug:\s*["']?([^"'\n]+)["']?\s*$/m);
+    const slug = (slugMatch ? slugMatch[1] : file.replace(/\.(md|mdx)$/, '')).trim();
+    const updated = block.match(/^updatedDate:\s*["']?(\d{4}-\d{2}-\d{2})/m);
+    const published = block.match(/^pubDate:\s*["']?(\d{4}-\d{2}-\d{2})/m);
+    const date = updated?.[1] ?? published?.[1];
+    if (date) map.set(`/blog/${slug}`, date);
+  }
+  return map;
+}
+
+const BLOG_LASTMOD = blogLastmodByPath();
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://blog.dotmavriq.life',
   outDir: './dist',
   publicDir: './public',
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    sitemap({
+      serialize(item) {
+        const path = new URL(item.url).pathname.replace(/\/$/, '') || '/';
+        const date = BLOG_LASTMOD.get(path);
+        if (date) {
+          // The regex only checks shape (YYYY-MM-DD); a value like 2024-02-30
+          // is format-valid but not a real date. Fail loud with a useful message
+          // rather than letting toISOString() throw a cryptic RangeError.
+          const parsed = new Date(`${date}T00:00:00Z`);
+          if (Number.isNaN(parsed.getTime())) {
+            throw new Error(`Invalid frontmatter date "${date}" for sitemap path ${path}`);
+          }
+          item.lastmod = parsed.toISOString();
+        }
+        return item;
+      },
+    }),
+  ],
   fonts: [
     {
       provider: fontProviders.local(),
