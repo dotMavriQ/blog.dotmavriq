@@ -4,7 +4,11 @@
 */
 
 :root {
-  /* High-contrast Terminal Aesthetic */
+  /* High-contrast Terminal Aesthetic.
+     Text pairings meet WCAG AA in both themes (4.5:1 body / 3:1 large):
+     --fg and --muted on --bg both pass; --cloud is a decorative/border tone,
+     not a text color. Enforced by tests/contrast.spec.ts (axe-core, both themes).
+     Do not de-emphasize text with low opacity — use --muted instead. */
   --bg: #f5f3ec;
   --fg: #1a1a1a;
   --cloud: #d5d3cc;

@@ -435,17 +435,18 @@ import CloudMarquee from "../components/CloudMarquee.astro";
     .fof-home {
       font-family: var(--font-mono);
       font-size: clamp(0.75rem, 1.1vw, 0.95rem);
-      color: var(--fg);
+      /* --muted is the de-emphasis token and meets WCAG AA in both themes;
+         the previous color:var(--fg) + opacity:0.4 rendered at ~3.3:1 (issue #22). */
+      color: var(--muted);
       text-decoration: none;
-      opacity: 0.4;
-      transition: opacity 0.2s, border-color 0.2s;
+      transition: color 0.2s, border-color 0.2s;
       letter-spacing: 0.05em;
       border: 1px solid transparent;
       padding: 0.3em 0.6em;
     }
 
     .fof-home:hover {
-      opacity: 0.9;
+      color: var(--fg);
       border-color: var(--cloud);
     }
 
