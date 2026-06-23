@@ -30,6 +30,26 @@ During the curation window they may be pushed directly and are excluded from AI
 review. Everything else (components, layouts, scripts, config, CI) goes through a
 PR.
 
+## Issue & PR templates, labels
+
+New issues pick a type from `.github/ISSUE_TEMPLATE/`; each applies its label and
+a matching title prefix. PRs use `.github/PULL_REQUEST_TEMPLATE.md` (summary,
+test plan, related issues). The same vocabulary is used for the title prefix, the
+branch name (`<type>/<short-description>`), and the commit subject, so a change
+reads the same from issue to branch to PR to log.
+
+| Type | Label | Prefix | For |
+|------|-------|--------|-----|
+| Feature | `enhancement` | `feat:` | New capability or improvement |
+| Bug | `bug` | `bug:` | Incorrect render/build/behavior |
+| Chore | `chore` | `chore:` | Tooling, CI, deps, housekeeping |
+| Accessibility | `accessibility` | `a11y:` | Contrast, semantics, keyboard, motion |
+| Performance | `performance` | `perf:` | Page weight, runtime cost, jank, budgets |
+| SEO/AEO | `seo` | `seo:` | Metadata, structured data, sitemap, feeds |
+| Content | `content` | `content:` | Blog prose, dead links, new writing |
+
+Other in-use labels: `ci`, `refactor`, `documentation`, `dependencies` (Dependabot).
+
 ## Pre-push checklist
 
 Mirror the blocking CI gates locally before opening a PR:
