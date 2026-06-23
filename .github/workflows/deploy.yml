@@ -108,6 +108,13 @@ jobs:
           exit 1
 
   # --- audit: advisory, runs in parallel with deploy, never blocks ---
+  # Non-blocking is enforced once, at the job level: `continue-on-error` here
+  # lets the workflow run pass even if this job goes red, and `audit` is not a
+  # required status check on `main` (only `verify` is). The individual steps
+  # deliberately do NOT use step-level continue-on-error — that would mask a
+  # budget/link/cross-browser regression as a green check and kill the loud
+  # signal. `if: ${{ !cancelled() }}` keeps every advisory step running and
+  # reporting its true status regardless of an earlier advisory failure.
   audit:
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -127,19 +134,20 @@ jobs:
         run: npm run build
 
       - name: Lighthouse CI (advisory budgets)
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         uses: treosh/lighthouse-ci-action@v12
         with:
           uploadArtifacts: true
           configPath: ./lighthouserc.json
 
       - name: Archive link check (advisory)
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         run: npm run archive:check
 
       - name: Install Playwright (firefox + webkit)
+        if: ${{ !cancelled() }}
         run: npx playwright install --with-deps firefox webkit
 
       - name: Cross-browser smoke (firefox + webkit)
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         run: npx playwright test --project=firefox --project=webkit
