@@ -100,4 +100,4 @@ So it is Vivaldi for now. I will keep an eye on Gecko. Some part of me is still 
 
 [^7]: Wikipedia. [Mozilla Corporation](https://en.wikipedia.org/wiki/Mozilla_Corporation). Historically, approximately 80% of revenue derives from the Google search deal.
 
-[^8]: Vivaldi. (2016). [Vivaldi browser launch](https://vivaldi.com/blog/vivaldi-1-0-the-browser-for-our-friends/). Founder statement on building a browser for power users, funded through search partnerships without user tracking.
+[^8]: Vivaldi. (2016). [Vivaldi browser launch](https://vivaldi.com/blog/vivaldi-finale-1-0/). Founder statement on building a browser for power users, funded through search partnerships without user tracking.

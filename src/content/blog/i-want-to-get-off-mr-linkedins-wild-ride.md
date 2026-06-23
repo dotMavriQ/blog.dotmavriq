@@ -81,7 +81,7 @@ The hardest part of the loop is the silence afterwards. You send the application
 
 ## Why nothing else has saved us
 
-It is not as though LinkedIn lacks competitors. [Indeed](https://en.wikipedia.org/wiki/Indeed) exists, and acquired [Glassdoor](https://en.wikipedia.org/wiki/Glassdoor) in 2018.[^indeed] [StepStone](https://en.wikipedia.org/wiki/StepStone) holds meaningful share in Europe. [Welcome to the Jungle](https://www.welcometothejungle.com/) and [Otta](https://otta.com/) have built thoughtful UIs for the kinds of roles software engineers actually want. [XING](https://en.wikipedia.org/wiki/XING) is still the dominant network in the German-speaking world. None of them have meaningfully threatened LinkedIn.
+It is not as though LinkedIn lacks competitors. [Indeed](https://en.wikipedia.org/wiki/Indeed) exists, and acquired [Glassdoor](https://en.wikipedia.org/wiki/Glassdoor) in 2018.[^indeed] StepStone holds meaningful share in Europe. [Welcome to the Jungle](https://www.welcometothejungle.com/) and [Otta](https://otta.com/) have built thoughtful UIs for the kinds of roles software engineers actually want. [XING](https://en.wikipedia.org/wiki/XING) is still the dominant network in the German-speaking world. None of them have meaningfully threatened LinkedIn.
 
 What LinkedIn has, and what nobody else has cloned at scale, is the social graph. Even when its product is worse, the directory underneath is the part everyone needs and nobody can replicate without spending another decade convincing people to upload their CVs. That is the lock-in. The obvious upgrade has to be either an entirely new graph nobody has the patience to build, or a federated alternative that does not need a single graph at all.
 
@@ -109,4 +109,4 @@ Until that floor exists somewhere else, I will keep working behind the glass. Th
 
 [^cp]: [Autoridade da Mobilidade e dos Transportes (AMT)](https://www.amt-autoridade.pt/) publishes annual quality-of-service reports for [CP Comboios de Portugal](https://www.cp.pt/) and Metro de Lisboa, documenting punctuality, cancellations, and infrastructure incidents. Lisbon-area commuter rail in particular has been the subject of repeated coverage over declining reliability in 2024 and 2025.
 
-[^indeed]: Recruit Holdings. (2018). [Recruit Holdings to acquire Glassdoor](https://recruit-holdings.com/en/news/2018/0509_18065.html). The $1.2 billion acquisition closed in 2018; Glassdoor's job-search functionality has since been progressively merged into Indeed's listings infrastructure.
+[^indeed]: Recruit Holdings. (2018). Recruit Holdings to acquire Glassdoor. The $1.2 billion acquisition closed in 2018; Glassdoor's job-search functionality has since been progressively merged into Indeed's listings infrastructure.

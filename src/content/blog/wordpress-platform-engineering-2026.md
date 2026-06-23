@@ -111,7 +111,7 @@ The web still runs on WordPress, and that is not going to change this year or ne
 
 [^4]: WordPress Core. (2026). [Changes to the Interactivity API in WordPress 7.0](https://make.wordpress.org/core/2026/02/23/changes-to-the-interactivity-api-in-wordpress-7-0/). Introduction of the `watch()` function.
 
-[^5]: Patchstack. (2026). [State of WordPress Security 2026](https://patchstack.com/whitepaper-2026/). 4,100+ vulnerabilities disclosed in 2024, 13% highly exploitable, 33% receive no patch, 120-day average exposure window, 60%+ of attacks exploit unapplied patches.
+[^5]: Patchstack. (2026). [State of WordPress Security 2026](https://patchstack.com/whitepaper/state-of-wordpress-security-in-2026/). 4,100+ vulnerabilities disclosed in 2024, 13% highly exploitable, 33% receive no patch, 120-day average exposure window, 60%+ of attacks exploit unapplied patches.
 
 [^ai-engine]: eSecurity Planet. (2025). [AI Engine Flaw Exposes 100,000 WordPress Sites to Attack](https://www.esecurityplanet.com/threats/news-wordpress-vulnerability-100k-impact/). Reports on CVE-2025-11749, published 4 November 2025.
 

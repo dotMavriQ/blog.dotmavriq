@@ -23,6 +23,21 @@ const WAYBACK_SAVE = "https://web.archive.org/save/";
 const DELAY_MS = 3000;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// Browser-like headers cut down on anti-bot 403/429 responses from sites that
+// reject obvious scrapers (Wikipedia, LinkedIn, Cloudflare-fronted hosts, …).
+const BROWSER_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "Accept-Language": "en-US,en;q=0.9",
+};
+
+// Only these status codes mean the resource is genuinely gone. Any other
+// response (401/403/405/429/451/5xx/999/…) means the server is reachable and is
+// blocking or transiently erroring — NOT dead. No response at all
+// (timeout/DNS) is inconclusive, also not dead.
+const DEAD_CODES = new Set([404, 410]);
+
 const args = process.argv.slice(2);
 const DRY_RUN = args.includes("--dry-run");
 const CHECK_ONLY = args.includes("--check");
@@ -147,29 +162,39 @@ async function saveToWayback(url) {
   return null;
 }
 
+async function fetchStatus(url, method) {
+  const res = await fetch(url, {
+    method,
+    signal: AbortSignal.timeout(15000),
+    redirect: "follow",
+    headers: BROWSER_HEADERS,
+  });
+  return res.status;
+}
+
+// Classify a URL's liveness. Returns { state, code } where state is:
+//   "alive"   — 2xx/3xx: resource is there
+//   "dead"    — 404/410: genuinely gone (the only state that fails --check)
+//   "blocked" — got a response, but it's an anti-bot/transient code (403/429/5xx/…)
+//   "unknown" — no response at all (timeout/DNS); inconclusive
+// HEAD is tried first (cheap); GET is the fallback because many servers reject
+// HEAD or bot-block it differently than a full GET.
 async function checkLiveness(url) {
-  try {
-    const res = await fetch(url, {
-      method: "HEAD",
-      signal: AbortSignal.timeout(10000),
-      redirect: "follow",
-      headers: { "User-Agent": "blog.dotmavriq.life link checker" },
-    });
-    return res.ok;
-  } catch {
-    // Try GET as fallback — some servers reject HEAD
+  let lastCode = null;
+  for (const method of ["HEAD", "GET"]) {
+    let code;
     try {
-      const res = await fetch(url, {
-        method: "GET",
-        signal: AbortSignal.timeout(10000),
-        redirect: "follow",
-        headers: { "User-Agent": "blog.dotmavriq.life link checker" },
-      });
-      return res.ok;
+      code = await fetchStatus(url, method);
     } catch {
-      return false;
+      continue; // network error/timeout for this method — try the next
     }
+    lastCode = code;
+    if (code >= 200 && code < 400) return { state: "alive", code };
+    if (DEAD_CODES.has(code)) return { state: "dead", code };
+    // reachable but blocked/transient — fall through to try GET before concluding
   }
+  if (lastCode !== null) return { state: "blocked", code: lastCode };
+  return { state: "unknown", code: null };
 }
 
 // ── Main ──
@@ -189,6 +214,8 @@ async function main() {
   let saved = 0;
   let checked = 0;
   let dead = 0;
+  let blocked = 0;
+  let unknown = 0;
   let newlyArchived = 0;
 
   for (const url of urls) {
@@ -198,16 +225,25 @@ async function main() {
     process.stdout.write(`  ${url}\n`);
 
     // Check liveness
-    const alive = await checkLiveness(url);
-    entry.alive = alive;
+    const result = await checkLiveness(url);
+    entry.alive = result.state === "alive";
+    entry.linkStatus = result.state;
+    if (result.code != null) entry.lastStatusCode = result.code;
+    else delete entry.lastStatusCode;
     entry.lastChecked = today;
     checked++;
 
-    if (!alive) {
+    if (result.state === "dead") {
       dead++;
-      process.stdout.write(`    ⚠ DEAD\n`);
-    } else {
+      process.stdout.write(`    ✗ DEAD (${result.code})\n`);
+    } else if (result.state === "alive") {
       process.stdout.write(`    ✓ alive\n`);
+    } else if (result.state === "blocked") {
+      blocked++;
+      process.stdout.write(`    ● ${result.code} — reachable but blocked/transient (not dead)\n`);
+    } else {
+      unknown++;
+      process.stdout.write(`    ○ no response (timeout/DNS) — inconclusive (not dead)\n`);
     }
 
     // Archive if not yet archived (skip if --check only)
@@ -259,10 +295,15 @@ async function main() {
 
   console.log(`\nDone!`);
   console.log(`  Checked: ${checked}`);
-  console.log(`  Dead: ${dead}`);
+  console.log(`  Dead (404/410): ${dead}`);
+  console.log(`  Blocked/transient (not dead): ${blocked}`);
+  console.log(`  Inconclusive — timeout/DNS (not dead): ${unknown}`);
   console.log(`  Newly archived: ${newlyArchived}`);
   console.log(`  Total archived: ${Object.values(archive).filter((e) => e.archived).length}/${urls.length}`);
 
+  // Only genuine rot (404/410) fails the check. Bot-blocks and transient
+  // errors are reported above but never break CI — that was the false-positive
+  // source that made this signal untrustworthy.
   if (CHECK_ONLY && dead > 0) {
     process.exitCode = 1;
   }

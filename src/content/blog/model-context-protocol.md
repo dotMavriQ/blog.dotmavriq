@@ -31,7 +31,7 @@ The Figma MCP is genuinely useful. When someone shares a Figma URL, Claude can p
 
 Linear became my most-used integration. Instead of navigating its various views and menus, I let Claude query the API for issues assigned to me or tagged with specific labels. The real value is that the issue itself becomes the working context. Claude reads it, helps resolve it, and that context persists until the work is done. I regularly had multiple Claude sessions running against different Linear issues until reviewers signed off. It felt less like "AI project management" and more like keeping the ticket pinned to the side of the workbench.
 
-### [Slack](https://github.com/modelcontextprotocol/servers/tree/main/src/slack)
+### [Slack](https://web.archive.org/web/20250515050741/https://github.com/modelcontextprotocol/servers/tree/main/src/slack)
 
 Searching inside Slack is a well-documented pain point, which is part of why I built the [Slactac](https://github.com/dotMavriQ/slactac) browser extension. Having a model that can read channel history and threads without leaving the terminal is useful for catching up on a deployment conversation or the trail of context behind a ticket. It can send messages as well, but that is the part I started doing manually after a while. An AI drafting a message into a work channel is fine. An AI sending one without me reading it character by character is not. In practice that meant I let the MCP read Slack as much as it wanted, and I copied the draft into Slack myself when it was time to actually post.
 
