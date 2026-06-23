@@ -12,6 +12,7 @@
     "astro": "astro",
     "guard:remotes": "node scripts/assert-no-local-remotes.mjs",
     "guard:links": "node scripts/assert-no-trailing-slash-links.mjs",
+    "guard:builtlinks": "node scripts/assert-no-broken-links.mjs",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "archive": "node scripts/archive-links.mjs",

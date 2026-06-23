@@ -45,8 +45,14 @@ jobs:
           DOTBLOG_PUBLISH_POSTS: '1'
         run: npm run build
 
-      # Playwright smoke tests temporarily disabled while we refactor;
-      # type-check + build above remain as deploy gates.
+      - name: Guard against broken internal links (built site)
+        run: npm run guard:builtlinks
+
+      - name: Install Playwright (chromium only — fast deploy gate)
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke tests (chromium) — blocks deploy on failure
+        run: npx playwright test --project=chromium
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
@@ -63,6 +69,31 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # --- healthcheck: confirms the live site actually serves after deploy ---
+  healthcheck:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify live site responds 200 with expected content
+        run: |
+          set -euo pipefail
+          url="https://blog.dotmavriq.life/"
+          # Pages CDN can lag a few seconds after deploy; retry briefly.
+          for attempt in 1 2 3 4 5; do
+            if body=$(curl -fsSL --max-time 20 "$url"); then
+              if printf '%s' "$body" | grep -q "blog.dotmavriq.life // welcome"; then
+                echo "Live site OK (attempt $attempt)."
+                exit 0
+              fi
+              echo "200 but marker missing (attempt $attempt); retrying…"
+            else
+              echo "Request failed (attempt $attempt); retrying…"
+            fi
+            sleep 15
+          done
+          echo "::error::Live site failed health check at $url"
+          exit 1
 
   # --- audit: advisory, runs in parallel with deploy, never blocks ---
   audit:
