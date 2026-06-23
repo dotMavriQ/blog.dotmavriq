@@ -70,12 +70,21 @@ function isVisiblePost(post: Post): boolean {
 let prevAbort: AbortController | null = null;
 
 export function initSocialFeed() {
+  const feedEl = document.getElementById("social-feed");
+  if (!feedEl) return;
+
+  // Idempotency, per #social-feed element. On initial load both the immediate
+  // bootstrap call and the astro:page-load event fire — without this guard the
+  // second call aborts the first's in-flight fetch and starts its own, so a
+  // transient failure in that redundant fetch would clobber a feed that had
+  // already loaded (the intermittent "blank feed on first hit"). A client-side
+  // navigation swaps in a fresh element with no flag, so re-init still runs.
+  if (feedEl.dataset.feedInit === "1") return;
+  feedEl.dataset.feedInit = "1";
+
   prevAbort?.abort();
   prevAbort = new AbortController();
   const { signal } = prevAbort;
-
-  const feedEl = document.getElementById("social-feed");
-  if (!feedEl) return;
 
   const loadMoreEl = document.getElementById("social-load-more");
   const loadMoreBtn = document.getElementById("social-load-more-btn") as HTMLButtonElement | null;

@@ -410,11 +410,21 @@ import StructuralArt from "../components/StructuralArt.astro";
 
   <script>
     import { initSocialFeed } from "../lib/social-feed";
-    document.addEventListener("astro:page-load", initSocialFeed);
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", initSocialFeed, { once: true });
-    } else {
-      initSocialFeed();
+    // Guard the bootstrap: this <script> re-executes on every Astro client-side
+    // navigation, so without a flag we'd stack a new astro:page-load listener
+    // (and an extra init) on each revisit. Register once; astro:page-load then
+    // drives re-init on every navigation, and the ready-state path covers the
+    // initial load if the event already fired before this ran. initSocialFeed
+    // is idempotent per #social-feed element, so the two initial-load paths
+    // can't double-fetch.
+    if (!(window as any).__socialFeedBootstrapped) {
+      (window as any).__socialFeedBootstrapped = true;
+      document.addEventListener("astro:page-load", initSocialFeed);
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initSocialFeed, { once: true });
+      } else {
+        initSocialFeed();
+      }
     }
   </script>
 
