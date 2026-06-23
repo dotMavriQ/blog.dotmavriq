@@ -217,6 +217,7 @@ async function main() {
   let blocked = 0;
   let unknown = 0;
   let newlyArchived = 0;
+  const deadUrls = [];
 
   for (const url of urls) {
     const existing = archive[url] || {};
@@ -235,6 +236,7 @@ async function main() {
 
     if (result.state === "dead") {
       dead++;
+      deadUrls.push({ url, code: result.code });
       process.stdout.write(`    ✗ DEAD (${result.code})\n`);
     } else if (result.state === "alive") {
       process.stdout.write(`    ✓ alive\n`);
@@ -300,6 +302,14 @@ async function main() {
   console.log(`  Inconclusive — timeout/DNS (not dead): ${unknown}`);
   console.log(`  Newly archived: ${newlyArchived}`);
   console.log(`  Total archived: ${Object.values(archive).filter((e) => e.archived).length}/${urls.length}`);
+
+  // Machine-readable dead-link list, fenced with stable markers so the weekly
+  // workflow (archive-check.yml) can extract it into a GitHub issue body.
+  if (deadUrls.length > 0) {
+    console.log("\n<<<DEAD_LINKS_START>>>");
+    for (const { url, code } of deadUrls) console.log(`- ${url} (HTTP ${code})`);
+    console.log("<<<DEAD_LINKS_END>>>");
+  }
 
   // Only genuine rot (404/410) fails the check. Bot-blocks and transient
   // errors are reported above but never break CI — that was the false-positive
