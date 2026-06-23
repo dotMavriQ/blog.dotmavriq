@@ -23,7 +23,7 @@ Twenty-five years on, the position has aged better than the optics. Ulrich has r
 
 The cruel postscript is that Spotify, the platform that eventually made piracy obsolete, won mostly on convenience. People had not been pirating because it was free. They had been pirating because it was faster and easier than the legal alternatives.[^spotify-vs-piracy] Once a legal product matched the user experience, the demand for piracy collapsed. There is also a not-quite-buried origin story about how Spotify built that user experience in the first place: by reportedly seeding its early development with a library of pirated MP3s before its licensing deals were fully in place.[^spotify-pirated] The platform that displaced piracy was, by some accounts, bootstrapped on it.
 
-My main source of music for years was an orange [iRiver T10](https://en.wikipedia.org/wiki/IRiver_T10). 512 megabytes of storage, which is roughly one album in FLAC, but in the mid-2000s you could fit a decent rotation of compressed tracks on it. I spent more time curating what made it onto that device than I spend on most professional decisions today. Every slot mattered.
+My main source of music for years was an orange [iRiver T10](https://www.cnet.com/reviews/iriver-t10-review/). 512 megabytes of storage, which is roughly one album in FLAC, but in the mid-2000s you could fit a decent rotation of compressed tracks on it. I spent more time curating what made it onto that device than I spend on most professional decisions today. Every slot mattered.
 
 The T10 stayed with me right up until my first smartphone, an [HTC Wildfire](https://en.wikipedia.org/wiki/HTC_Wildfire) in 2010. Spotify quietly took over from there. Not overnight, but steadily, the way defaults usually win.
 
@@ -75,7 +75,7 @@ If you have ever caught yourself skipping through songs ten seconds in, never qu
 
 I should admit that the years I spent in Sweden running Spotify were also, in parallel, years where I owned a fair stack of vinyl. Honestly, most of it was bought for the novelty. The records mostly sat there looking handsome. The single honourable exception was my copy of Fleetwood Mac's *Rumours*, which earned its keep as the clean-the-house album and still does.
 
-The shelf is back, for real this time. It just lives in my music folder now, with [rmpc](https://github.com/miezekatze64/rmpc) talking to [MPD](https://www.musicpd.org/) at home. And on the go, I have my trusty DAP.
+The shelf is back, for real this time. It just lives in my music folder now, with [rmpc](https://github.com/mierak/rmpc) talking to [MPD](https://www.musicpd.org/) at home. And on the go, I have my trusty DAP.
 
 [^1]: Global recorded music revenue peaked at $23.3 billion in 1999 (IFPI). Adjusted for inflation, the industry did not approach that figure again until the early 2020s, and the revenue now flows primarily to platforms and major labels rather than working musicians.
 [^2]: Albums regularly disappear from Spotify when licensing agreements lapse. See discussions on r/spotify and music industry reporting throughout 2024-2025.
