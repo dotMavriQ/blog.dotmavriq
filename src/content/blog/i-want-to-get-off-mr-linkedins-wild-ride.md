@@ -109,4 +109,4 @@ Until that floor exists somewhere else, I will keep working behind the glass. Th
 
 [^cp]: [Autoridade da Mobilidade e dos Transportes (AMT)](https://www.amt-autoridade.pt/) publishes annual quality-of-service reports for [CP Comboios de Portugal](https://www.cp.pt/) and Metro de Lisboa, documenting punctuality, cancellations, and infrastructure incidents. Lisbon-area commuter rail in particular has been the subject of repeated coverage over declining reliability in 2024 and 2025.
 
-[^indeed]: Recruit Holdings. (2018). [Recruit Holdings to acquire Glassdoor](https://recruit-holdings.com/en/news/2018/0509_18065.html). The $1.2 billion acquisition closed in 2018; Glassdoor's job-search functionality has since been progressively merged into Indeed's listings infrastructure.
+[^indeed]: Recruit Holdings. (2018). Recruit Holdings to acquire Glassdoor. The $1.2 billion acquisition closed in 2018; Glassdoor's job-search functionality has since been progressively merged into Indeed's listings infrastructure.
