@@ -45,6 +45,26 @@ outsourced to icon packs, gradients, and stock blobs.
 This is not minimalism for its own sake. Text is fast, inspectable, and hard to
 fake into looking like every other portfolio template.
 
+### Neubrutalist surfaces
+
+The thick-border + hard offset-shadow (no `border-radius`) pattern is defined
+once in `global.css`. New surfaces should use those classes instead of
+copy-pasting `box-shadow: Npx Npx 0 var(--…)` into scoped styles — that
+copy-paste is what drifts as pages are added.
+
+- `.neu-box` / `.neu-box-sm` — bordered card with offset shadow + `--bg`.
+- `.neu-shadow-static` — resting offset shadow only (no border/background).
+- Size and colour are per-element custom properties, so a surface keeps its own
+  look while sharing the definition:
+  - `--neu-offset` — shadow offset (x = y), default `4px` (`3px` for `-sm`).
+  - `--neu-color` — shadow colour, default `--fg` (e.g. `--muted`, `--bg`).
+  - `--neu-border` — border width, default `3px`.
+  - e.g. `<div class="neu-box" style="--neu-offset: 8px; --neu-color: var(--muted)">`.
+- Interactive hover/active state shadows stay in the component's scoped styles —
+  they are per-component motion, not the shared resting pattern. The hover
+  helpers (`.neu-shadow`, `.neu-shadow-lg`, `.neu-pressed`) cover the common
+  lift/press transitions.
+
 ## Content
 
 Blog posts live in `src/content/blog/`. The renderer should make long-form
