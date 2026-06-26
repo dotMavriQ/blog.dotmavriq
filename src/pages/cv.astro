@@ -104,6 +104,82 @@ const jsonLd = JSON.stringify({
       <pre
         class="cv-actions-rule"
         aria-hidden="true">───────────────────────</pre>
+      <button class="cv-due-diligence-btn neu-box neu-pressed" id="cv-dd-btn" type="button" aria-expanded="false" aria-controls="cv-dd-modal" onclick="document.getElementById('cv-dd-overlay').toggleAttribute('hidden');this.setAttribute('aria-expanded',String(!document.getElementById('cv-dd-overlay').hasAttribute('hidden')));document.body.style.overflow=document.getElementById('cv-dd-overlay').hasAttribute('hidden')?'':'hidden'">
+        <span class="btn-arrow" aria-hidden="true">&rarr;</span> Due Diligence
+      </button>
+    </div>
+
+    <!-- ─── Due Diligence modal ─── -->
+    <div class="cv-dd-overlay" id="cv-dd-overlay" role="dialog" aria-labelledby="cv-dd-title" hidden onclick="if(event.target===this){this.setAttribute('hidden','');document.getElementById('cv-dd-btn').setAttribute('aria-expanded','false');document.body.style.overflow=''}">
+      <div class="cv-dd-modal">
+        <button class="cv-dd-close" id="cv-dd-close" type="button" aria-label="Close" onclick="document.getElementById('cv-dd-overlay').setAttribute('hidden','');document.getElementById('cv-dd-btn').setAttribute('aria-expanded','false');document.body.style.overflow=''">&times;</button>
+        <h2 class="cv-dd-heading" id="cv-dd-title">Due Diligence</h2>
+        <p class="cv-dd-standfirst">Supporting evidence, certifications, and verifiable track record.</p>
+
+        <section class="cv-dd-section" id="certifications">
+          <h3 class="cv-dd-section-title"><span class="cv-dd-num">01</span> Certifications</h3>
+          <div class="cv-dd-grid">
+            <!-- TODO: add certifications here -->
+            <div class="cv-dd-card">
+              <h4>AWS Certified Solutions Architect</h4>
+              <p class="cv-dd-card-meta">Amazon Web Services · 2024</p>
+              <p>Designing distributed systems on AWS. Verification: <a href="#" target="_blank" rel="noopener">credential link</a></p>
+            </div>
+            <div class="cv-dd-card">
+              <h4>Certified ScrumMaster</h4>
+              <p class="cv-dd-card-meta">Scrum Alliance · 2023</p>
+              <p>Agile project management and team facilitation.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="cv-dd-section" id="engagements">
+          <h3 class="cv-dd-section-title"><span class="cv-dd-num">02</span> Notable Engagements</h3>
+          <div class="cv-dd-grid">
+            <!-- TODO: list sites/clients here -->
+            <div class="cv-dd-card">
+              <h4>Nordhealth Platform</h4>
+              <p class="cv-dd-card-meta">11 multi-market web properties · 2022–present</p>
+              <p>Unified legacy platforms onto a single stack. CI/CD pipelines, zero-downtime deployments, Core Web Vitals optimisation.</p>
+            </div>
+            <div class="cv-dd-card">
+              <h4>Client Projects (70+)</h4>
+              <p class="cv-dd-card-meta">Various · 2014–present</p>
+              <p>WordPress, Laravel, React, and e-commerce builds across multiple industries.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="cv-dd-section" id="languages">
+          <h3 class="cv-dd-section-title"><span class="cv-dd-num">03</span> Languages</h3>
+          <div class="cv-dd-grid">
+            <div class="cv-dd-card">
+              <h4>Swedish</h4>
+              <p class="cv-dd-card-meta">Native · C2 CEFR</p>
+            </div>
+            <div class="cv-dd-card">
+              <h4>English</h4>
+              <p class="cv-dd-card-meta">Fluent · C1 CEFR</p>
+            </div>
+            <div class="cv-dd-card">
+              <h4>Portuguese</h4>
+              <p class="cv-dd-card-meta">Conversational · B1 CEFR</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="cv-dd-section" id="references">
+          <h3 class="cv-dd-section-title"><span class="cv-dd-num">04</span> References</h3>
+          <div class="cv-dd-grid">
+            <!-- TODO: add references / testimonials -->
+            <div class="cv-dd-card cv-dd-card--quote">
+              <blockquote>
+                <p>References available upon request. Contact via <a href="mailto:dotmavriq@gmail.com">dotmavriq@gmail.com</a> or <a href="https://www.linkedin.com/in/janssonjonatan/" target="_blank" rel="noopener">LinkedIn</a>.</p>
+              </blockquote>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
 
     <!-- ═══════════════════════════════════════════════
@@ -579,13 +655,23 @@ const jsonLd = JSON.stringify({
       }
     }
     const printButton = document.getElementById("cv-print-btn");
-    if (!printButton || printButton.dataset.printBound === "true") return;
-
-    printButton.dataset.printBound = "true";
-    printButton.addEventListener("click", () => {
-      window.print();
-    });
+    if (printButton && printButton.dataset.printBound !== "true") {
+      printButton.dataset.printBound = "true";
+      printButton.addEventListener("click", () => {
+        window.print();
+      });
+    }
   }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    const overlay = document.getElementById("cv-dd-overlay");
+    if (!overlay || overlay.hasAttribute("hidden")) return;
+    overlay.setAttribute("hidden", "");
+    const btn = document.getElementById("cv-dd-btn");
+    if (btn) btn.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  });
 
   document.addEventListener("astro:page-load", initCV);
   if (document.readyState === "loading") {
@@ -733,6 +819,28 @@ const jsonLd = JSON.stringify({
     box-shadow: 1px 1px 0 var(--fg);
   }
 
+  .cv-due-diligence-btn {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 0.7rem 1.6rem;
+    background: var(--bg);
+    color: var(--fg);
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    letter-spacing: 0.03em;
+  }
+
+  .cv-due-diligence-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--fg);
+  }
+
+  .cv-due-diligence-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--fg);
+  }
+
   .btn-arrow {
     display: inline-block;
     margin-right: 0.4rem;
@@ -755,6 +863,147 @@ const jsonLd = JSON.stringify({
     text-align: right;
     overflow: hidden;
     user-select: none;
+  }
+
+  /* ══════════════════════════════════════════════════
+     DUE DILIGENCE MODAL
+  ══════════════════════════════════════════════════ */
+  .cv-dd-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-mobile-overlay);
+    background: var(--bg);
+    overflow-y: auto;
+  }
+
+  .cv-dd-overlay:not([hidden]) {
+    display: block;
+  }
+
+  .cv-dd-modal {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 20px 6rem;
+    position: relative;
+  }
+
+  .cv-dd-close {
+    position: fixed;
+    top: 1rem;
+    right: 1.5rem;
+    z-index: calc(var(--z-mobile-overlay) + 1);
+    background: none;
+    border: 0;
+    color: var(--fg);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 1.6rem;
+    line-height: 1;
+    padding: 0.5rem;
+  }
+
+  .cv-dd-close:hover {
+    color: var(--accent);
+  }
+
+  .cv-dd-heading {
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .cv-dd-standfirst {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 2.5rem;
+    max-width: 500px;
+  }
+
+  .cv-dd-section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--cloud);
+  }
+
+  .cv-dd-section:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .cv-dd-section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .cv-dd-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid var(--fg);
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .cv-dd-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .cv-dd-card {
+    border: 2px solid var(--fg);
+    padding: 1.25rem;
+    background: var(--bg);
+    box-shadow: 3px 3px 0 var(--fg);
+  }
+
+  .cv-dd-card h4 {
+    font-size: 0.92rem;
+    margin-bottom: 0.25rem;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .cv-dd-card-meta {
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .cv-dd-card p {
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  .cv-dd-card--quote blockquote {
+    margin: 0;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .cv-dd-card a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 768px) {
+    .cv-dd-modal {
+      padding: 2rem 16px 4rem;
+    }
+    .cv-dd-heading {
+      font-size: 1.4rem;
+    }
+    .cv-dd-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   /* ══════════════════════════════════════════════════
@@ -791,6 +1040,7 @@ const jsonLd = JSON.stringify({
   .cv-summary strong {
     color: var(--fg);
     font-weight: 700;
+    margin-inline-start: 0.2em;
   }
 
   .cv-summary-coda {
