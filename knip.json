@@ -9,6 +9,7 @@
   ],
   "ignoreBinaries": [
     "pdfinfo",
-    "pdftotext"
+    "pdftotext",
+    "pyftsubset"
   ]
 }

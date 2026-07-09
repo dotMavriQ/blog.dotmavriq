@@ -25,7 +25,8 @@
     "text:audit": "node scripts/text-audit.mjs",
     "text:audit:ai": "node scripts/text-audit.mjs src/content/blog/ai-a-retrospective.md src/content/blog/ai-a-retrospective-part-2.md src/content/blog/ai-a-retrospective-part-3.md",
     "og": "node scripts/generate-og.mjs",
-    "guard:og": "node scripts/assert-og-cards.mjs"
+    "guard:og": "node scripts/assert-og-cards.mjs",
+    "fonts:subset": "node scripts/subset-fonts.mjs"
   },
   "keywords": [],
   "author": "dotmavriq",
