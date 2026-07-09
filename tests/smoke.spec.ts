@@ -58,7 +58,10 @@ test.describe('Pages load', () => {
   test('about page uses the existing WebP profile image', async ({ page }) => {
     await page.goto('/about');
 
-    await expect(page.locator('.about-hero__photo img')).toHaveAttribute('src', '/cool.webp');
+    await expect(page.locator('.about-hero__photo img')).toHaveAttribute(
+      'src',
+      '/img/jonatan-jansson-software-engineer-portrait.webp',
+    );
     const profileJson = await page
       .locator('script[type="application/ld+json"]')
       .evaluate((script) => script.textContent || '');
