@@ -6,7 +6,10 @@ const siteUrl = "https://blog.dotmavriq.life";
 const pageTitle = "about // dotmavriq";
 const description =
   "Jonatan Jansson, Software Engineer, Product Systems in the Lisbon area. 15+ years building across the full web stack, currently at Nordhealth.";
-const ogImage = `${siteUrl}/cool.webp`;
+// The link-preview card and the Person's photograph are different things:
+// schema.org/Person#image wants a picture of the person.
+const ogImage = `${siteUrl}/img/og/about.png`;
+const portrait = `${siteUrl}/img/jonatan-jansson-software-engineer-portrait.webp`;
 
 const jsonLd = JSON.stringify({
   "@context": "https://schema.org",
@@ -18,7 +21,7 @@ const jsonLd = JSON.stringify({
     alternateName: "dotMavriQ",
     jobTitle: "Software Engineer, Product Systems",
     url: `${siteUrl}/about`,
-    image: ogImage,
+    image: portrait,
     sameAs: [
       "https://github.com/dotMavriQ",
       "https://www.linkedin.com/in/janssonjonatan/",
