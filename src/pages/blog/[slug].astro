@@ -133,7 +133,7 @@ const breadcrumbLd = JSON.stringify(breadcrumbJsonLd);
   title={`${post.data.title} // dotmavriq`}
   description={postDescription}
   ogType="article"
-  ogImage={heroImageUrl}
+  ogImage={`${siteUrl}/img/og/${post.id}.png`}
 >
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={jsonLd} />

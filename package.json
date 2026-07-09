@@ -16,14 +16,16 @@
     "guard:structure": "node scripts/assert-structural-invariants.mjs",
     "guard:bundle": "node scripts/assert-bundle-budget.mjs",
     "guard:deps": "knip",
-    "verify:local": "npm run guard:remotes && npm run guard:links && npm run guard:structure && npm run guard:deps && npx astro check && npm run build && npm run guard:builtlinks && npm run guard:bundle",
+    "verify:local": "npm run guard:remotes && npm run guard:links && npm run guard:structure && npm run guard:deps && npx astro check && npm run build && npm run guard:builtlinks && npm run guard:og && npm run guard:bundle",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "archive": "node scripts/archive-links.mjs",
     "archive:check": "node scripts/archive-links.mjs --check",
     "archive:dry": "node scripts/archive-links.mjs --dry-run",
     "text:audit": "node scripts/text-audit.mjs",
-    "text:audit:ai": "node scripts/text-audit.mjs src/content/blog/ai-a-retrospective.md src/content/blog/ai-a-retrospective-part-2.md src/content/blog/ai-a-retrospective-part-3.md"
+    "text:audit:ai": "node scripts/text-audit.mjs src/content/blog/ai-a-retrospective.md src/content/blog/ai-a-retrospective-part-2.md src/content/blog/ai-a-retrospective-part-3.md",
+    "og": "node scripts/generate-og.mjs",
+    "guard:og": "node scripts/assert-og-cards.mjs"
   },
   "keywords": [],
   "author": "dotmavriq",

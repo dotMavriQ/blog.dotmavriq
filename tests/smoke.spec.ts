@@ -62,10 +62,19 @@ test.describe('Pages load', () => {
       'src',
       '/img/jonatan-jansson-software-engineer-portrait.webp',
     );
+    // schema.org/Person#image is the photograph; the OG card is a separate asset.
     const profileJson = await page
       .locator('script[type="application/ld+json"]')
       .evaluate((script) => script.textContent || '');
-    expect(profileJson).toContain('/cool.webp');
+    expect(profileJson).toContain('/img/jonatan-jansson-software-engineer-portrait.webp');
+  });
+
+  test('every page advertises a landscape OG card, never a portrait or SVG', async ({ page }) => {
+    for (const path of ['/', '/about', '/cv', '/portfolio', '/blog']) {
+      await page.goto(path);
+      const og = await page.locator('meta[property="og:image"]').getAttribute('content');
+      expect(og, `${path} og:image`).toMatch(/\/img\/og\/[a-z0-9-]+\.png$/);
+    }
   });
 });
 
