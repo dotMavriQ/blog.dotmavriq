@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CloudMarquee from "../components/CloudMarquee.astro";
+import { lastCommitDate, formatMonthYear } from "../lib/last-modified";
+
+const cvUpdated = formatMonthYear(lastCommitDate("src/pages/cv.astro"));
 
 const siteUrl = "https://blog.dotmavriq.life";
 const jsonLd = JSON.stringify({
@@ -97,10 +100,12 @@ const jsonLd = JSON.stringify({
 
     <!-- ─── Actions bar ─── -->
     <div class="cv-actions">
+      <!-- No glyph: U+2399 (print symbol) is absent from CommitMono and would
+           fall back to a system font, and an icon library is out of bounds. -->
       <button class="cv-download-btn neu-box neu-pressed" id="cv-print-btn">
-        <span class="btn-arrow" aria-hidden="true">&darr;</span> Download PDF
+        Print CV
       </button>
-      <span class="cv-updated">Updated Apr 2026</span>
+      <span class="cv-updated">Updated {cvUpdated}</span>
     </div>
 
     <!-- ═══════════════════════════════════════════════
@@ -730,11 +735,6 @@ const jsonLd = JSON.stringify({
     box-shadow: 1px 1px 0 var(--fg);
   }
 
-  .btn-arrow {
-    display: inline-block;
-    margin-right: 0.4rem;
-    font-weight: 400;
-  }
 
   .cv-updated {
     font-size: 0.75rem;
