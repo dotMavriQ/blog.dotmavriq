@@ -39,6 +39,11 @@ const jsonLd = JSON.stringify({
             <span class="hero-name__first" id="name-first">dot</span>
             <span class="hero-name__last" id="name-last">MavriQ</span>
           </h1>
+          <p class="hero-identity">
+            Jonatan Jansson <span class="hero-identity__sep" aria-hidden="true">//</span>
+            Full-Stack Developer <span class="hero-identity__sep" aria-hidden="true">//</span>
+            Lisbon
+          </p>
           <p class="hero-slogan">
             We keep building tools,<br>
             hoping that they<br>
@@ -47,6 +52,9 @@ const jsonLd = JSON.stringify({
             This is a small corner<br>
             about the craft of trying.
           </p>
+          <a class="hero-cta neu-box-sm" href="/cv">
+            Read the CV <span aria-hidden="true">&rarr;</span>
+          </a>
         </div>
 
         <nav class="hero-links" aria-label="External links">
@@ -199,6 +207,50 @@ const jsonLd = JSON.stringify({
     }
     .hero-name--real .hero-name__last {
       letter-spacing: 0em;
+    }
+
+    /* The h1 types "dot MavriQ" <-> "Jonatan Jansson", but that reveal needs JS
+       and never runs under prefers-reduced-motion. This line is the one place a
+       cold visitor is guaranteed to learn who this is and what he does. */
+    .hero-identity {
+      margin: 0.6rem 0 0;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg);
+    }
+
+    .hero-identity__sep {
+      color: var(--cloud);
+      /* The 0.16em tracking swallows the word space either side of the slashes. */
+      margin: 0 0.45em 0 0.3em;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      margin-top: 1.4rem;
+      padding: 0.55rem 0.95rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .hero-cta:hover,
+    .hero-cta:focus-visible {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 var(--fg);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-cta {
+        transition: none;
+      }
     }
 
     .hero-slogan {
