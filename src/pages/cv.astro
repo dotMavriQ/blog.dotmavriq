@@ -1,6 +1,12 @@
 ---
+import { execSync } from "node:child_process";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import CloudMarquee from "../components/CloudMarquee.astro";
+
+const cvUpdated = execSync(
+  'git log -1 --format="%ad" --date=format:"%b %Y" -- src/pages/cv.astro',
+  { cwd: process.cwd(), encoding: "utf8" }
+).trim();
 
 const siteUrl = "https://blog.dotmavriq.life";
 const jsonLd = JSON.stringify({
@@ -100,7 +106,7 @@ const jsonLd = JSON.stringify({
       <button class="cv-download-btn neu-box neu-pressed" id="cv-print-btn">
         <span class="btn-arrow" aria-hidden="true">&darr;</span> Download PDF
       </button>
-      <span class="cv-updated">Updated Apr 2026</span>
+      <span class="cv-updated">Updated {cvUpdated}</span>
     </div>
 
     <!-- ═══════════════════════════════════════════════
