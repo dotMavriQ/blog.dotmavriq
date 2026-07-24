@@ -485,6 +485,31 @@
         if (!compactMq.matches) {
           applyCleanEdgeGutters(buf, W);
           applyEdgeDissolve(buf, W);
+
+          // Obstacle carving — punch a hole where hero content lives.
+          // Same logic as the animated render() path.
+          if (obstacle && charW > 0 && charH > 0) {
+            refreshHeroRect();
+            if (cachedHeroRect) {
+              const heroRect = cachedHeroRect;
+              const padH = charW * 3;
+              const padV = charH * 1;
+              for (let r = 0; r < H; r++) {
+                const bandTop = r * charH;
+                const bandBottom = (r + 1) * charH;
+                const blocked = getRectIntervalsForBand(
+                  [heroRect], bandTop, bandBottom, padH, padV
+                );
+                for (const interval of blocked) {
+                  const colStart = Math.max(0, Math.floor(interval.left / charW));
+                  const colEnd = Math.min(W, Math.ceil(interval.right / charW));
+                  for (let c = colStart; c < colEnd; c++) {
+                    buf[r]![c] = ' ';
+                  }
+                }
+              }
+            }
+          }
         }
         scene.textContent = buf.map(row => row.join("")).join("\n");
       } else {
