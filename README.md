@@ -1,6 +1,28 @@
-# blog.dotmavriq.life
+# blog.dotmavriq.life (archived)
 
-[![Deploy to GitHub Pages](https://github.com/dotMavriQ/blog.dotmavriq/actions/workflows/deploy.yml/badge.svg)](https://github.com/dotMavriQ/blog.dotmavriq/actions/workflows/deploy.yml)
+> **This repository is archived and no longer maintained.** The site now lives at
+> **[dotmavriq.life](https://dotmavriq.life)**. Every old `blog.dotmavriq.life`
+> address redirects to the same page there.
+
+## Why it stopped
+
+This was a static Astro build: posts, CV and portfolio lived as files in this
+repo, and every edit meant a commit, a rebuild and a GitHub Pages deploy. That
+was fine for code, and clumsy for writing.
+
+The site moved to my own server and now runs on
+**[LagomCMS](https://github.com/dotMavriQ/LagomCMS)**, the headless CMS I built
+for it: content is Markdown on disk with a SQLite index over it, and an Astro
+app renders each page from the CMS API. I edit a post, it's live. No rebuild.
+
+The redesign dropped the ASCII-Core look in favour of something calmer, so there
+was nothing left here worth keeping in sync. The URLs, feeds (`/rss.xml`,
+`/atom.xml`) and post slugs all carried over.
+
+The code stays up for reference under the MIT License. The original README
+follows.
+
+---
 
 This is the source for `blog.dotmavriq.life`: my CV, portfolio, and devblog in
 one place. It runs on Astro, deploys to GitHub Pages, and looks the way it does
